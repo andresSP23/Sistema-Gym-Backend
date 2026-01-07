@@ -19,6 +19,6 @@ public class ClaseRequest {
     private String nombre;
 
     @NotNull(message = "El entrenador es obligatorio")
-    private Integer entrenadorId;
+    private Long entrenadorId;
 
 }

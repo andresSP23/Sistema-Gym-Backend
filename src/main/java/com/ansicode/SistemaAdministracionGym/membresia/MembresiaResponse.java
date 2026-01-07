@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class MembresiaResponse {
 
-    private Integer id;
+    private Long id;
     private String nombre;
     private Integer duracionDias;
     private BigDecimal precio;

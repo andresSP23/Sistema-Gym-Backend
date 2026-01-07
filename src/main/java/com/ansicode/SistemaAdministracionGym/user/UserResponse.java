@@ -12,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserResponse {
-    private Integer id;
+    private Long id;
 
     private String nombre;
     private String apellido;

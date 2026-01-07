@@ -12,17 +12,17 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PagoResponse {
-    private Integer id;
+    private Long id;
 
     private BigDecimal monto;
     private MetodoPago metodoPago;
     private LocalDateTime fechaPago;
     private EstadoPago estadoPago;
 
-    private Integer ventaId;
+    private Long ventaId;
     private String ventaCodigo; // opcional para mostrar info legible
 
-    private Integer membresiaClienteId;
+    private Long membresiaClienteId;
     private String clienteNombre; // opcional para mostrar info legible
 
     private boolean activo;

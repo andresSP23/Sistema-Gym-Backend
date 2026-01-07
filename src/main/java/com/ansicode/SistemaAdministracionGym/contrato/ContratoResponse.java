@@ -9,9 +9,9 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ContratoResponse {
-    private Integer id;
+    private Long id;
 
-    private Integer clienteId;
+    private Long clienteId;
     private String clienteNombre; // nombres + apellidos del cliente
 
     private String archivoUrl;

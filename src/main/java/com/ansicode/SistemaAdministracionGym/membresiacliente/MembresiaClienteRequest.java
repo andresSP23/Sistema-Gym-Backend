@@ -14,10 +14,10 @@ import java.time.LocalDate;
 public class MembresiaClienteRequest {
 
     @NotNull(message = "El cliente es obligatorio")
-    private Integer clienteId;
+    private Long clienteId;
 
     @NotNull(message = "La membresía es obligatoria")
-    private Integer membresiaId;
+    private Long membresiaId;
 
     @NotNull(message = "La fecha de inicio es obligatoria")
     private LocalDate fechaInicio;

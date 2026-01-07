@@ -16,10 +16,10 @@ import java.time.LocalDateTime;
 public class VentaRequest {
 
     @NotNull(message = "El cliente es obligatorio")
-    private Integer clienteId;
+    private Long clienteId;
 
     @NotNull(message = "El vendedor es obligatorio")
-    private Integer usuarioId;
+    private Long usuarioId;
 
     @NotNull(message = "El total de la venta es obligatorio")
     @DecimalMin(value = "0.01", message = "El total debe ser mayor a 0")

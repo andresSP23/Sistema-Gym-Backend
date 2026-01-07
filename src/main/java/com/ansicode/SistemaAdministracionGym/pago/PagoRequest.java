@@ -28,6 +28,6 @@ public class PagoRequest {
     @NotNull(message = "El estado del pago es obligatorio")
     private EstadoPago estadoPago;
 
-    private Integer ventaId; // opcional: pago asociado a venta
-    private Integer membresiaClienteId;
+    private Long ventaId; // opcional: pago asociado a venta
+    private Long membresiaClienteId;
 }

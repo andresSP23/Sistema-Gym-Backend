@@ -13,12 +13,12 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class VentaResponse {
 
-    private Integer id;
+    private Long id;
 
-    private Integer clienteId;
+    private Long clienteId;
     private String clienteNombre; // nombres + apellidos
 
-    private Integer vendedorId;
+    private Long vendedorId;
     private String vendedorNombre; // nombres + apellidos
 
     private BigDecimal total;

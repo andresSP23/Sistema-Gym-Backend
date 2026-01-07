@@ -11,9 +11,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class AsistenciaResponse {
 
-    private Integer id;
+    private Long id;
 
-    private Integer clienteId;
+    private Long clienteId;
     private String clienteNombre; // combinación de nombres + apellidos
 
     private LocalDateTime fechaEntrada;

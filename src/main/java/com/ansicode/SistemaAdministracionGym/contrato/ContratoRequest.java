@@ -13,7 +13,7 @@ import lombok.*;
 public class ContratoRequest {
 
     @NotNull(message = "El cliente es obligatorio")
-    private Integer clienteId;
+    private Long clienteId;
 
     @NotBlank(message = "La URL del archivo es obligatoria")
     private String archivoUrl;

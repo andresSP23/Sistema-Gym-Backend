@@ -3,18 +3,19 @@ package com.ansicode.SistemaAdministracionGym.asistencia;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.awt.print.Pageable;
+import org.springframework.data.domain.Pageable;
+
 import java.time.LocalDateTime;
 
 public interface AsistenciaRepository  extends JpaRepository<Asistencia, Long> {
     boolean existsByClienteIdAndFechaEntradaBetween(
-            Integer clienteId,
+            Long clienteId,
             LocalDateTime inicio,
             LocalDateTime fin
     );
 
     Page<Asistencia> findByClienteId(
-            Integer clienteId,
+            Long clienteId,
             Pageable pageable
     );
 }

@@ -16,10 +16,10 @@ import java.math.BigDecimal;
 public class DetalleVentaRequest {
 
     @NotNull(message = "La venta es obligatoria")
-    private Integer ventaId;
+    private Long ventaId;
 
     @NotNull(message = "El producto es obligatorio")
-    private Integer productoId;
+    private Long productoId;
 
     @NotNull(message = "La cantidad es obligatoria")
     @Min(value = 1, message = "La cantidad debe ser al menos 1")

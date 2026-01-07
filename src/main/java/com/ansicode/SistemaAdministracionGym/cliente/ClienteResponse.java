@@ -10,7 +10,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ClienteResponse {
-    private Integer id;
+    private Long id;
     private String cedula;
     private String nombres;
     private String apellidos;

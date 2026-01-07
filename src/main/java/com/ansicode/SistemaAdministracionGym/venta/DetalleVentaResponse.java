@@ -12,12 +12,12 @@ import java.math.BigDecimal;
 public class DetalleVentaResponse {
 
 
-    private Integer id;
+    private Long id;
 
-    private Integer ventaId;
+    private Long ventaId;
     private BigDecimal ventaTotal; // opcional para mostrar info de la venta
 
-    private Integer productoId;
+    private Long productoId;
     private String productoNombre; // nombre del producto
 
     private Integer cantidad;

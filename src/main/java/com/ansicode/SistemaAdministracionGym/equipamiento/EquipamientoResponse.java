@@ -9,7 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EquipamientoResponse {
-    private Integer id;
+    private Long id;
     private String nombre;
     private String ubicacion;
     private EstadoEquipamiento estadoEquipamiento;

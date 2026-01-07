@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 public class MovimientoInventarioRequest {
 
     @NotNull(message = "El producto es obligatorio")
-    private Integer productoId;
+    private Long productoId;
 
     @NotNull(message = "La cantidad es obligatoria")
     @Min(value = 1, message = "La cantidad debe ser mayor a 0")
@@ -25,7 +25,7 @@ public class MovimientoInventarioRequest {
     private TipoMovimientoInventario tipoMovimiento;
 
     @NotNull(message = "El usuario que realiza el movimiento es obligatorio")
-    private Integer usuarioId;
+    private Long usuarioId;
 
     @NotNull(message = "La fecha del movimiento es obligatoria")
     private LocalDateTime fechaMovimiento;

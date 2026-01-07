@@ -8,10 +8,10 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ClaseResponse {
-    private Integer id;
+    private Long id;
 
     private String nombre;
 
-    private Integer entrenadorId;
+    private Long entrenadorId;
     private String entrenadorNombre;
 }

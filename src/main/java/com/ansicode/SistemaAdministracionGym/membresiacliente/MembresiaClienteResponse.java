@@ -11,12 +11,12 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MembresiaClienteResponse {
-    private Integer id;
+    private Long id;
 
-    private Integer clienteId;
+    private Long clienteId;
     private String clienteNombre; // nombres + apellidos del cliente
 
-    private Integer membresiaId;
+    private Long membresiaId;
     private String membresiaNombre;
 
     private LocalDate fechaInicio;

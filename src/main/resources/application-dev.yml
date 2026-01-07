@@ -2,8 +2,8 @@ server:
   port: 8081
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/plantilla_login
-    username: andresito
+    url: jdbc:postgresql://localhost:5435/sistema_gym
+    username: postgres
     password: pelusa
     driver-class-name: org.postgresql.Driver
   jpa:
@@ -18,21 +18,6 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
 
 
-  mail:
-    host: localhost
-    port: 1025
-    username: andres
-    password: andres
-    properties:
-      mail:
-        SMTP:
-          trust: "*"
-        auth: true
-        STARTTLS:
-          enable: true
-        connection timeout: 5000
-        timeout: 3000
-        write timeout: 5000
 
 
 application:
@@ -41,6 +26,3 @@ application:
       secret-key: Qx9L2mR7T4ZCwEJp8DkS5A6HfYVbN0UeXW3M7N4JcRZpUeA2S9H5LkX
       expiration: 8640000
 
-  mailing:
-    frontend:
-      activation-url: http//localhost:4200/activate-account

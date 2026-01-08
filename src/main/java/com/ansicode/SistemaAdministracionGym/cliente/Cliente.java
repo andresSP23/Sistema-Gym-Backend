@@ -17,7 +17,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @SuperBuilder
-@SQLDelete(sql = "UPDATE usuarios SET activo = false WHERE id = ?")
+@SQLDelete(sql = "UPDATE Cliente SET activo = false WHERE id = ?")
 @Where(clause = "activo = true")
 @AllArgsConstructor
 @NoArgsConstructor

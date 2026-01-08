@@ -37,16 +37,16 @@ public class ClienteMapper {
                 .build();
     }
 
-//    // Mapear actualización (opcional)
-//    public void updateClienteFromRequest(Cliente cliente, ClienteRequest request) {
-//        cliente.setCedula(request.getCedula());
-//        cliente.setNombres(request.getNombres());
-//        cliente.setApellidos(request.getApellidos());
-//        cliente.setEmail(request.getEmail());
-//        cliente.setTelefono(request.getTelefono());
-//        cliente.setDireccion(request.getDireccion());
-//        cliente.setEdad(request.getEdad());
-//        cliente.setCodigoInterno(request.getCodigoInterno());
-//        cliente.setFechaRegistro(request.getFechaRegistro());
-//    }
+    // Mapear actualización (opcional)
+    public void updateClienteFromRequest(Cliente cliente, ClienteRequest request) {
+        cliente.setCedula(request.getCedula());
+        cliente.setNombres(request.getNombres());
+        cliente.setApellidos(request.getApellidos());
+        cliente.setEmail(request.getEmail());
+        cliente.setTelefono(request.getTelefono());
+        cliente.setDireccion(request.getDireccion());
+        cliente.setEdad(request.getEdad());
+        cliente.setCodigoInterno(request.getCodigoInterno());
+        cliente.setFechaRegistro(request.getFechaRegistro());
+    }
 }

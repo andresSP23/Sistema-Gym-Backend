@@ -19,7 +19,7 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @NoArgsConstructor
-@SQLDelete(sql = "UPDATE usuarios SET activo = false WHERE id = ?")
+@SQLDelete(sql = "UPDATE membresias SET activo = false WHERE id = ?")
 @Where(clause = "activo = true")
 @AllArgsConstructor
 @SuperBuilder

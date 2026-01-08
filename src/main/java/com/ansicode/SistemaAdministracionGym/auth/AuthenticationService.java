@@ -29,25 +29,25 @@ public class AuthenticationService {
 
     private final AuthenticationManager authenticationManager;
 
-    public void register(RegistrationRequest request) throws MessagingException {
-
-        //se puede modificar el valor del rol para que por defecto agarre un rol al momento de registrar un usuario
-        var userRole = roleRepository.findByName("USER").orElseThrow(()-> new IllegalStateException("El rol no a sido inicializado"));
-
-
-        var user = User.builder()
-                .nombre(request.getNombre())
-                .apellido(request.getApellido())
-                .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .cuentaBloqueada(false)
-                .activa(true)
-                .roles(List.of(userRole))
-                .build();
-
-        userRepository.save(user);
-
-    }
+//    public void register(RegistrationRequest request) throws MessagingException {
+//
+//        //se puede modificar el valor del rol para que por defecto agarre un rol al momento de registrar un usuario
+//        var userRole = roleRepository.findByName("USER").orElseThrow(()-> new IllegalStateException("El rol no a sido inicializado"));
+//
+//
+//        var user = User.builder()
+//                .nombre(request.getNombre())
+//                .apellido(request.getApellido())
+//                .email(request.getEmail())
+//                .password(passwordEncoder.encode(request.getPassword()))
+//                .cuentaBloqueada(false)
+//                .activa(true)
+//                .roles(List.of(userRole))
+//                .build();
+//
+//        userRepository.save(user);
+//
+//    }
 
 
 

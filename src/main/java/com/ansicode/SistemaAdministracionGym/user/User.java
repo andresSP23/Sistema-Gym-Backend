@@ -25,8 +25,8 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @Entity
 @Table(name= "_user")
-@SQLDelete(sql = "UPDATE usuarios SET activo = false WHERE id = ?")
-@Where(clause = "activo = true")
+@SQLDelete(sql = "UPDATE _user SET activa = false WHERE id = ?")
+@Where(clause = "activa = true")
 @EntityListeners(AuditingEntityListener.class)
 
 public class User implements UserDetails , Principal {

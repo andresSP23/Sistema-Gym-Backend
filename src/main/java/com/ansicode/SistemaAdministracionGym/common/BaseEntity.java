@@ -37,9 +37,9 @@ public class BaseEntity {
   private LocalDateTime lastModifiedDate;
   @CreatedBy
   @Column(nullable = false,updatable = false)
-  private Integer createdBy;
+  private Long createdBy;
   @LastModifiedBy
-  private Integer lastModifiedBy;
+  private Long lastModifiedBy;
 
   /** Borrado lógico */
   @Column(nullable = false)

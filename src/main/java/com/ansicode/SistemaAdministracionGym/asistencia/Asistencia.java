@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import java.time.LocalDateTime;
 
@@ -19,6 +21,8 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
+@SQLDelete(sql = "UPDATE asistencias SET activo = false WHERE id = ?")
+@Where(clause = "activo = true")
 @AllArgsConstructor
 @SuperBuilder
 public class Asistencia extends BaseEntity {

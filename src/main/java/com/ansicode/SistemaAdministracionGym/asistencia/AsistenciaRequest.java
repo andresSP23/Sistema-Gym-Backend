@@ -14,7 +14,7 @@ public class AsistenciaRequest {
 
 
     @NotNull(message = "El cliente es obligatorio")
-    private Integer clienteId;
+    private Long clienteId;
 
     @NotNull(message = "La fecha de entrada es obligatoria")
     private LocalDateTime fechaEntrada;

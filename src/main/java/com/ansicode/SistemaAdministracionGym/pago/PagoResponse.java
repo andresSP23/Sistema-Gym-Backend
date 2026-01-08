@@ -19,9 +19,6 @@ public class PagoResponse {
     private LocalDateTime fechaPago;
     private EstadoPago estadoPago;
 
-    private Long ventaId;
-    private String ventaCodigo; // opcional para mostrar info legible
-
     private Long membresiaClienteId;
     private String clienteNombre; // opcional para mostrar info legible
 

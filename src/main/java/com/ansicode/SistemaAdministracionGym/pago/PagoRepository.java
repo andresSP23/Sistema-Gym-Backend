@@ -12,8 +12,5 @@ public interface PagoRepository extends JpaRepository<Pago, Long> {
             Pageable pageable
     );
 
-    Page<Pago> findByVentaId(
-            Integer ventaId,
-            Pageable pageable
-    );
+
 }

@@ -9,13 +9,12 @@ public class PagoMapper {
 
 
     // Crear entidad desde request
-    public Pago toPago(PagoRequest request, Venta venta, MembresiaCliente membresiaCliente) {
+    public Pago toPago(PagoRequest request ,MembresiaCliente membresiaCliente) {
         return Pago.builder()
                 .monto(request.getMonto())
                 .metodoPago(request.getMetodoPago())
                 .fechaPago(request.getFechaPago())
                 .estadoPago(request.getEstadoPago())
-                .venta(venta) // puede ser null
                 .membresiaCliente(membresiaCliente) // puede ser null
                 .build();
     }
@@ -29,10 +28,7 @@ public class PagoMapper {
         response.setFechaPago(pago.getFechaPago());
         response.setEstadoPago(pago.getEstadoPago());
 
-        if (pago.getVenta() != null) {
-            response.setVentaId(pago.getVenta().getId());
-            response.setVentaCodigo("VENTA-" + pago.getVenta().getId()); // ejemplo de código legible
-        }
+
 
         if (pago.getMembresiaCliente() != null) {
             response.setMembresiaClienteId(pago.getMembresiaCliente().getId());
@@ -45,12 +41,11 @@ public class PagoMapper {
     }
 
     // Actualizar entidad desde request
-    public void updatePagoFromRequest(Pago pago, PagoRequest request, Venta venta, MembresiaCliente membresiaCliente) {
+    public void updatePagoFromRequest(Pago pago, PagoRequest request, MembresiaCliente membresiaCliente) {
         pago.setMonto(request.getMonto());
         pago.setMetodoPago(request.getMetodoPago());
         pago.setFechaPago(request.getFechaPago());
         pago.setEstadoPago(request.getEstadoPago());
-        pago.setVenta(venta); // puede ser null
         pago.setMembresiaCliente(membresiaCliente); // puede ser null
     }
 }

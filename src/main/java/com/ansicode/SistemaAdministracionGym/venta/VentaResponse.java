@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -12,19 +13,18 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class VentaResponse {
-
     private Long id;
 
     private Long clienteId;
-    private String clienteNombre; // nombres + apellidos
+    private String clienteNombre;
 
     private Long vendedorId;
-    private String vendedorNombre; // nombres + apellidos
+    private String vendedorNombre;
 
     private BigDecimal total;
-    private EstadoVenta estadoVenta;
-
     private LocalDateTime fechaVenta;
+
+    private List<DetalleVentaResponse> detalles;
 
     private boolean activo;
 }

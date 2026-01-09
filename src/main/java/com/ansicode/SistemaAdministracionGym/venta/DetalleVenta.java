@@ -2,10 +2,7 @@ package com.ansicode.SistemaAdministracionGym.venta;
 
 import com.ansicode.SistemaAdministracionGym.common.BaseEntity;
 import com.ansicode.SistemaAdministracionGym.producto.Producto;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,7 +29,12 @@ public class DetalleVenta  extends BaseEntity {
     @JoinColumn(name = "producto_id")
     private Producto producto;
 
+    @Column(nullable = false)
     private Integer cantidad;
+
+    @Column(nullable = false)
     private BigDecimal precioUnitario;
+
+    @Column(nullable = false)
     private BigDecimal subtotal;
 }

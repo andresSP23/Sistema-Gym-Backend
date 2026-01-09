@@ -9,8 +9,4 @@ import org.springframework.data.domain.Pageable;
 public interface VentaRepository extends JpaRepository<Venta,Long> {
 
 
-    Page<Venta> findByEstadoVenta(
-            EstadoVenta estadoVenta,
-            Pageable pageable
-    );
 }

@@ -28,11 +28,14 @@ public class Producto extends BaseEntity {
     @Column(nullable = false)
     private String nombre;
 
+    @Column(nullable = false)
     private BigDecimal precio;
 
+    @Column(nullable = false)
     private Integer stock;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private TipoProducto tipoProducto;
 
 }

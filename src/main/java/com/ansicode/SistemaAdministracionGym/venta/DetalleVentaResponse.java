@@ -12,17 +12,13 @@ import java.math.BigDecimal;
 public class DetalleVentaResponse {
 
 
+
     private Long id;
 
-    private Long ventaId;
-    private BigDecimal ventaTotal; // opcional para mostrar info de la venta
-
     private Long productoId;
-    private String productoNombre; // nombre del producto
+    private String productoNombre;
 
     private Integer cantidad;
     private BigDecimal precioUnitario;
     private BigDecimal subtotal;
-
-    private boolean activo;
 }

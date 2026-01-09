@@ -14,19 +14,13 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class MovimientoInventarioRequest {
 
-    @NotNull(message = "El producto es obligatorio")
+    @NotNull
     private Long productoId;
 
-    @NotNull(message = "La cantidad es obligatoria")
-    @Min(value = 1, message = "La cantidad debe ser mayor a 0")
+    @NotNull
+    private TipoMovimientoInventario tipo;
+
+    @NotNull
+    @Min(1)
     private Integer cantidad;
-
-    @NotNull(message = "El tipo de movimiento es obligatorio")
-    private TipoMovimientoInventario tipoMovimiento;
-
-    @NotNull(message = "El usuario que realiza el movimiento es obligatorio")
-    private Long usuarioId;
-
-    @NotNull(message = "La fecha del movimiento es obligatoria")
-    private LocalDateTime fechaMovimiento;
 }

@@ -1,58 +1,89 @@
 package com.ansicode.SistemaAdministracionGym.producto;
 
+import com.ansicode.SistemaAdministracionGym.common.PageResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("productos")
 @Tag( name = "Producto")
+@RequiredArgsConstructor
 public class ProductoController {
 
-    private final ProductoService service;
+    private final ProductoService productoService;
 
-    public ProductoController(ProductoService service) {
-        this.service = service;
-    }
-
-    @PostMapping("/create")
-    public ResponseEntity<ProductoResponse> create(@RequestBody ProductoRequest request) {
-        ProductoResponse response = service.create(request);
+    @PostMapping("/crear")
+    public ResponseEntity<ProductoResponse> create(
+            @Valid @RequestBody ProductoRequest request,
+            Authentication authentication
+    ) {
+        ProductoResponse response =
+                productoService.create(request, authentication);
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("findAll")
-    public ResponseEntity<?> findAll(Pageable pageable) {
-        return ResponseEntity.ok(service.findAll(pageable));
-    }
-
-    @GetMapping("/stock")
-    public ResponseEntity<?> findByStockGreaterThan(
-            @RequestParam Integer stock,
+    @GetMapping("/findAll")
+    public ResponseEntity<PageResponse<ProductoResponse>> findAll(
             Pageable pageable
     ) {
-        return ResponseEntity.ok(service.findByStockGreaterThan(stock, pageable));
+        return ResponseEntity.ok(
+                productoService.findAll(pageable)
+        );
     }
 
     @GetMapping("/findById/{id}")
-    public ResponseEntity<ProductoResponse> findById(@PathVariable Long id) {
-        ProductoResponse response = service.findById(id);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<ProductoResponse> findById(
+            @PathVariable Long id
+    ) {
+        return ResponseEntity.ok(
+                productoService.findById(id)
+        );
     }
 
     @PutMapping("/update/{id}")
     public ResponseEntity<ProductoResponse> update(
             @PathVariable Long id,
-            @RequestBody ProductoRequest request
+            @Valid @RequestBody ProductoRequest request
     ) {
-        ProductoResponse response = service.update(id, request);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(
+                productoService.update(id, request)
+        );
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        service.delete(id);
+    public ResponseEntity<Void> delete(
+            @PathVariable Long id
+    ) {
+        productoService.delete(id);
         return ResponseEntity.noContent().build();
     }
+
+
+    @PostMapping("/agregarStock/{id}")
+    public ResponseEntity<Void> agregarStock(
+            @PathVariable Long id,
+            @RequestParam Integer cantidad,
+            Authentication authentication
+    ) {
+        productoService.agregarStock(id, cantidad, authentication);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/{id}/stock/ajuste")
+    public ResponseEntity<Void> ajustarStock(
+            @PathVariable Long id,
+            @RequestParam Integer stockReal,
+            Authentication authentication
+    ) {
+        productoService.ajustarStock(id, stockReal, authentication);
+        return ResponseEntity.ok().build();
+    }
+
+
 }

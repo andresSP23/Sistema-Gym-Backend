@@ -17,19 +17,18 @@ import java.math.BigDecimal;
 public class ProductoRequest {
 
 
-    @NotBlank(message = "El nombre del producto es obligatorio")
+    @NotBlank
     private String nombre;
 
-    @NotNull(message = "El precio es obligatorio")
-    @DecimalMin(value = "0.01", message = "El precio debe ser mayor a 0")
+    @NotNull
+    @DecimalMin("0.01")
     private BigDecimal precio;
 
-    @NotNull(message = "El stock es obligatorio")
-    @Min(value = 0, message = "El stock no puede ser negativo")
-    private Integer stock;
-
-    @NotNull(message = "El tipo de producto es obligatorio")
+    @NotNull
     private TipoProducto tipoProducto;
+
+    @Min(0)
+    private Integer stockInicial;
 
 
 }

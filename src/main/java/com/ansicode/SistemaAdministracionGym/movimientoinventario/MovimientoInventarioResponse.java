@@ -12,17 +12,11 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class MovimientoInventarioResponse {
     private Long id;
-
-    private Long productoId;
-    private String productoNombre;
-
+    private String producto;
+    private TipoMovimientoInventario tipo;
     private Integer cantidad;
-    private TipoMovimientoInventario tipoMovimiento;
-
-    private Long usuarioId;
-    private String usuarioNombre;
-
-    private LocalDateTime fechaMovimiento;
-
-    private boolean activo;
+    private Integer stockAnterior;
+    private Integer stockActual;
+    private LocalDateTime fecha;
+    private String usuario;
 }

@@ -13,12 +13,10 @@ import java.math.BigDecimal;
 public class ProductoResponse {
 
 
-    private Integer id;
-
+    private Long id;
     private String nombre;
     private BigDecimal precio;
     private Integer stock;
     private TipoProducto tipoProducto;
-
     private boolean activo;
 }

@@ -30,6 +30,8 @@ public class ProductoController {
 
     @GetMapping("/findAll")
     public ResponseEntity<PageResponse<ProductoResponse>> findAll(
+            @RequestParam(name = "page", defaultValue = "0" ,required = false) int page,
+            @RequestParam(name = "size", defaultValue = "10" ,required = false) int size,
             Pageable pageable
     ) {
         return ResponseEntity.ok(
@@ -75,7 +77,7 @@ public class ProductoController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/{id}/stock/ajuste")
+    @PostMapping("/ajuste/{id}")
     public ResponseEntity<Void> ajustarStock(
             @PathVariable Long id,
             @RequestParam Integer stockReal,

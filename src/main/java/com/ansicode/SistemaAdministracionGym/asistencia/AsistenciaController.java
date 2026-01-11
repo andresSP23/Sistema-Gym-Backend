@@ -1,10 +1,12 @@
 package com.ansicode.SistemaAdministracionGym.asistencia;
 
+import com.ansicode.SistemaAdministracionGym.common.PageResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,34 +16,24 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AsistenciaController {
 
-
     private final AsistenciaService asistenciaService;
 
-    @PostMapping("/registrar-asistencia")
-    public ResponseEntity<AsistenciaResponse> create(@Valid @RequestBody AsistenciaRequest request) {
-        AsistenciaResponse response = asistenciaService.create(request);
-        return ResponseEntity.ok(response);
-    }
-
-    @GetMapping("/findById/{id}")
-    public ResponseEntity<AsistenciaResponse> findById(@PathVariable Long id) {
-        AsistenciaResponse response = asistenciaService.findById(id);
+    @PostMapping("/registrar")
+    public ResponseEntity<AsistenciaResponse> registrarAsistencia(
+            @RequestBody @Valid AsistenciaRequest request
+    ) {
+        AsistenciaResponse response = asistenciaService.registrarPorCedula(request);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/cliente/{clienteId}")
-    public ResponseEntity<?> findByCliente(
+    public ResponseEntity<PageResponse<AsistenciaResponse>> listarPorCliente(
             @PathVariable Long clienteId,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
+            @RequestParam(name = "page", defaultValue = "0" ,required = false) int page,
+            @RequestParam(name = "size", defaultValue = "10" ,required = false) int size
     ) {
-        Pageable pageable = PageRequest.of(page, size);
-        return ResponseEntity.ok(asistenciaService.findByCliente(clienteId, pageable));
-    }
-
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        asistenciaService.delete(id);
-        return ResponseEntity.noContent().build();
+        Pageable pageable = PageRequest.of(page, size, Sort.by("fechaEntrada").descending());
+        PageResponse<AsistenciaResponse> response = asistenciaService.listarPorCliente(clienteId, pageable);
+        return ResponseEntity.ok(response);
     }
 }

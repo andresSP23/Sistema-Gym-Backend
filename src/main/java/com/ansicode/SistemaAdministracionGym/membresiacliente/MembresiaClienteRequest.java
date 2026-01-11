@@ -19,13 +19,5 @@ public class MembresiaClienteRequest {
     @NotNull(message = "La membresía es obligatoria")
     private Long membresiaId;
 
-    @NotNull(message = "La fecha de inicio es obligatoria")
-    private LocalDate fechaInicio;
-
-    @NotNull(message = "La fecha de fin es obligatoria")
-    private LocalDate fechaFin;
-
-    @NotNull(message = "El estado de la membresía es obligatorio")
-    private EstadoMembresia estado;
 
 }

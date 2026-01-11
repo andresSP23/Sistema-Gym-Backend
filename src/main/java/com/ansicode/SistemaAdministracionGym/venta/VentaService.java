@@ -47,6 +47,7 @@ public class VentaService {
         //  Crear venta con total inicial
         Venta venta = ventaMapper.toVenta(cliente, vendedor, request.getFechaVenta());
         venta.setTotal(BigDecimal.ZERO);
+        venta.setActivo(true);
         venta = ventaRepository.save(venta);
 
         BigDecimal total = BigDecimal.ZERO;

@@ -1,11 +1,14 @@
 package com.ansicode.SistemaAdministracionGym.user;
 
 import com.ansicode.SistemaAdministracionGym.common.PageResponse;
+import com.ansicode.SistemaAdministracionGym.pago.PagoResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,10 +26,13 @@ public class UserController {
     public UserResponse create(@RequestBody @Valid UserRequest request , Authentication connectedUser) {
         return userService.create(request , connectedUser);
     }
-
     @GetMapping("/findAll")
-    public PageResponse<UserResponse> findAll(Pageable pageable) {
-        return userService.findAll(pageable);
+    public ResponseEntity<PageResponse<UserResponse>> findAll(
+
+            @RequestParam(name = "page", defaultValue = "0" ,required = false) int page,
+            @RequestParam(name = "size", defaultValue = "10" ,required = false) int size,
+            @ParameterObject Pageable pageable) {
+        return ResponseEntity.ok(userService.findAll(pageable));
     }
 
     @GetMapping("/findById/{id}")

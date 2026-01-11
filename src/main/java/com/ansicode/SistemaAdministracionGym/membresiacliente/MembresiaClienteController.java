@@ -2,10 +2,14 @@ package com.ansicode.SistemaAdministracionGym.membresiacliente;
 
 import com.ansicode.SistemaAdministracionGym.common.PageResponse;
 import com.ansicode.SistemaAdministracionGym.enums.EstadoMembresia;
+import com.ansicode.SistemaAdministracionGym.pago.PagoResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,44 +19,58 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Membresias Clientes")
 public class MembresiaClienteController {
 
+
     private final MembresiaClienteService service;
 
-    @PostMapping("/create")
-    public ResponseEntity<MembresiaClienteResponse> create(
+
+    @PostMapping("/crear-asignacion")
+    @ResponseStatus(HttpStatus.CREATED)
+    public MembresiaClienteResponse create(
             @Valid @RequestBody MembresiaClienteRequest request
     ) {
-        return ResponseEntity.ok(service.create(request));
+        return service.create(request);
     }
 
-    @GetMapping("/findAll")
-    public ResponseEntity<PageResponse<MembresiaClienteResponse>> findAll(Pageable pageable) {
-        return ResponseEntity.ok(service.findAll(pageable));
-    }
-
-    @GetMapping("/estado/{estado}")
-    public ResponseEntity<PageResponse<MembresiaClienteResponse>> findByEstado(
-            @PathVariable EstadoMembresia estado,
-            Pageable pageable
-    ) {
-        return ResponseEntity.ok(service.findByEstado(estado, pageable));
-    }
-
-    @GetMapping("/findById/{id}")
-    public ResponseEntity<MembresiaClienteResponse> findById(@PathVariable Long id) {
-        return ResponseEntity.ok(service.findById(id));
-    }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<MembresiaClienteResponse> update(
+    public MembresiaClienteResponse update(
             @PathVariable Long id,
             @Valid @RequestBody MembresiaClienteRequest request
     ) {
-        return ResponseEntity.ok(service.update(id, request));
+        return service.update(id, request);
     }
 
+
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long id) {
         service.delete(id);
-        return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/findAll")
+    public ResponseEntity<PageResponse<MembresiaClienteResponse>> findAll(
+
+            @RequestParam(name = "page", defaultValue = "0" ,required = false) int page,
+            @RequestParam(name = "size", defaultValue = "10" ,required = false) int size,
+            @ParameterObject Pageable pageable) {
+        return ResponseEntity.ok(service.findAll(pageable));
+    }
+
+
+    @GetMapping("/estado/{estado}")
+    public PageResponse<MembresiaClienteResponse> findByEstado(
+            @PathVariable EstadoMembresia estado,
+            Pageable pageable
+    ) {
+        return service.findByEstado(estado, pageable);
+    }
+
+
+    @GetMapping("/cliente/{clienteId}/activa")
+    public MembresiaCliente obtenerMembresiaActiva(
+            @PathVariable Long clienteId
+    ) {
+        return service.obtenerMembresiaActivaPorCliente(clienteId);
+    }
+
 }

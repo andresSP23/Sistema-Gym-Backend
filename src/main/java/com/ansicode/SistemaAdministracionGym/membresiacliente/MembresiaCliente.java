@@ -35,4 +35,20 @@ public class MembresiaCliente extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private EstadoMembresia estado;
+
+
+
+    public boolean puedeEditarAsignacion() {
+        return estado == EstadoMembresia.PENDIENTE_PAGO;
+    }
+
+    public void activar() {
+        this.fechaInicio = LocalDate.now();
+        this.fechaFin = fechaInicio.plusDays(membresia.getDuracionDias());
+        this.estado = EstadoMembresia.ACTIVA;
+    }
+
+    public void vencer() {
+        this.estado = EstadoMembresia.VENCIDA;
+    }
 }

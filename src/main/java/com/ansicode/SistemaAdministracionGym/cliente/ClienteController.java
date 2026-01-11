@@ -1,10 +1,13 @@
 package com.ansicode.SistemaAdministracionGym.cliente;
 
 import com.ansicode.SistemaAdministracionGym.common.PageResponse;
+import com.ansicode.SistemaAdministracionGym.pago.PagoResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,10 +27,14 @@ public class ClienteController {
         return clienteService.create(request);
     }
 
-    @GetMapping("/findAll")
    // @PreAuthorize("hasAnyRole('ADMIN','USER')")
-    public PageResponse<ClienteResponse> findAll(Pageable pageable) {
-        return clienteService.findAll(pageable);
+    @GetMapping("/findAll")
+    public ResponseEntity<PageResponse<ClienteResponse>> findAll(
+
+            @RequestParam(name = "page", defaultValue = "0" ,required = false) int page,
+            @RequestParam(name = "size", defaultValue = "10" ,required = false) int size,
+            @ParameterObject Pageable pageable) {
+        return ResponseEntity.ok(clienteService.findAll(pageable));
     }
 
     @GetMapping("/findById/{id}")

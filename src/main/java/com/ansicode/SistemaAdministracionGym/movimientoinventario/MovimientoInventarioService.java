@@ -22,6 +22,7 @@ public class MovimientoInventarioService {
 
     private final MovimientoInventarioRepository repository;
     private final ProductoRepository productoRepository;
+    private final MovimientoInventarioMapper mapper;
 
     @Transactional
     public void registrarEntrada(
@@ -88,8 +89,27 @@ public class MovimientoInventarioService {
         productoRepository.save(producto);
     }
 
+    public PageResponse<MovimientoInventarioResponse> listarPorProducto(
+            Long productoId, Pageable pageable
+    ) {
+        // Obtener la página de movimientos desde el repositorio
+        Page<MovimientoInventario> page = repository.findByProductoId(productoId, pageable);
 
-    public List<MovimientoInventario> listarPorProducto(Long productoId) {
-        return repository.findByProductoId(productoId);
+        // Mapear los movimientos a responses
+        List<MovimientoInventarioResponse> content = page.getContent()
+                .stream()
+                .map(mapper::toResponse)
+                .toList();
+
+        // Construir y devolver el PageResponse
+        return PageResponse.<MovimientoInventarioResponse>builder()
+                .content(content)
+                .number(page.getNumber())
+                .size(page.getSize())
+                .totalElements(page.getTotalElements())
+                .totalPages(page.getTotalPages())
+                .first(page.isFirst())
+                .last(page.isLast())
+                .build();
     }
 }

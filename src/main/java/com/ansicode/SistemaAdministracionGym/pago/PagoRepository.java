@@ -8,7 +8,7 @@ import org.springframework.data.domain.Pageable;
 public interface PagoRepository extends JpaRepository<Pago, Long> {
 
     Page<Pago> findByMembresiaClienteId(
-            Integer membresiaClienteId,
+            Long membresiaClienteId,
             Pageable pageable
     );
 

@@ -13,7 +13,6 @@ public class DetalleVentaResponse {
 
 
 
-    private Long id;
 
     private Long productoId;
     private String productoNombre;

@@ -1,46 +1,57 @@
 package com.ansicode.SistemaAdministracionGym.membresiacliente;
 
 import com.ansicode.SistemaAdministracionGym.cliente.Cliente;
+import com.ansicode.SistemaAdministracionGym.enums.EstadoMembresia;
 import com.ansicode.SistemaAdministracionGym.membresia.Membresia;
 import org.springframework.stereotype.Service;
 
 @Service
 public class MembresiaClienteMapper {
 
-
-    // Crear entidad desde request
-    public MembresiaCliente toMembresiaCliente(MembresiaClienteRequest request, Cliente cliente, Membresia membresia) {
+    /* =====================
+   CREATE
+   ===================== */
+    public MembresiaCliente toNewEntity(
+            Cliente cliente,
+            Membresia membresia
+    ) {
         return MembresiaCliente.builder()
                 .cliente(cliente)
                 .membresia(membresia)
-                .fechaInicio(request.getFechaInicio())
-                .fechaFin(request.getFechaFin())
-                .estado(request.getEstado())
+                .estado(EstadoMembresia.PENDIENTE_PAGO)
+                .activo(true)
                 .build();
     }
 
-    // Convertir entidad a response
-    public MembresiaClienteResponse toMembresiaClienteResponse(MembresiaCliente membresiaCliente) {
+    /* =====================
+       UPDATE (solo asignación)
+       ===================== */
+    public void updateAsignacion(
+            MembresiaCliente mc,
+            Cliente cliente,
+            Membresia membresia
+    ) {
+        mc.setCliente(cliente);
+        mc.setMembresia(membresia);
+    }
+
+    /* =====================
+       RESPONSE
+       ===================== */
+    public MembresiaClienteResponse toResponse(MembresiaCliente mc) {
         return MembresiaClienteResponse.builder()
-                .id(membresiaCliente.getId())
-                .clienteId(membresiaCliente.getCliente().getId())
-                .clienteNombre(membresiaCliente.getCliente().getNombres() + " " + membresiaCliente.getCliente().getApellidos())
-                .membresiaId(membresiaCliente.getMembresia().getId())
-                .membresiaNombre(membresiaCliente.getMembresia().getNombre())
-                .fechaInicio(membresiaCliente.getFechaInicio())
-                .fechaFin(membresiaCliente.getFechaFin())
-                .estado(membresiaCliente.getEstado())
-                .activo(membresiaCliente.getActivo())
+                .id(mc.getId())
+                .clienteId(mc.getCliente().getId())
+                .clienteNombre(
+                        mc.getCliente().getNombres() + " " +
+                                mc.getCliente().getApellidos()
+                )
+                .membresiaId(mc.getMembresia().getId())
+                .membresiaNombre(mc.getMembresia().getNombre())
+                .fechaInicio(mc.getFechaInicio())
+                .fechaFin(mc.getFechaFin())
+                .estado(mc.getEstado())
+                .activo(mc.getActivo())
                 .build();
     }
-
-    // Actualizar entidad desde request
-    public void updateMembresiaClienteFromRequest(MembresiaCliente membresiaCliente, MembresiaClienteRequest request, Cliente cliente, Membresia membresia) {
-        membresiaCliente.setCliente(cliente);
-        membresiaCliente.setMembresia(membresia);
-        membresiaCliente.setFechaInicio(request.getFechaInicio());
-        membresiaCliente.setFechaFin(request.getFechaFin());
-        membresiaCliente.setEstado(request.getEstado());
-    }
-
 }

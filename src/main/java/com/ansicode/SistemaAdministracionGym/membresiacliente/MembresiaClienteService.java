@@ -98,6 +98,7 @@ public class MembresiaClienteService {
         }
 
         mc.setEstado(EstadoMembresia.CANCELADA);
+        repository.delete(mc);
     }
     /* =====================
        FIND ALL (PAGINADO)

@@ -15,20 +15,21 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductoRequest {
-
-
     @NotBlank
     private String nombre;
 
     @NotNull
     @DecimalMin("0.01")
-    private BigDecimal precio;
+    private BigDecimal precioCompra;
 
     @NotNull
-    private TipoProducto tipoProducto;
+    @DecimalMin("0.01")
+    private BigDecimal precioVenta;
+
+    @NotNull
+    private Long categoriaProductoId;
 
     @Min(0)
     private Integer stockInicial;
-
 
 }

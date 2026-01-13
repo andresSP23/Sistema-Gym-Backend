@@ -45,6 +45,5 @@ public class MovimientoInventario extends BaseEntity {
     @Column(nullable = false)
     private LocalDateTime fechaMovimiento;
 
-    @ManyToOne(optional = false)
-    private User usuario;
+
 }

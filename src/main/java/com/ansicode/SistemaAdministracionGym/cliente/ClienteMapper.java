@@ -15,7 +15,6 @@ public class ClienteMapper {
                 .telefono(request.getTelefono())
                 .direccion(request.getDireccion())
                 .edad(request.getEdad())
-                .codigoInterno(request.getCodigoInterno())
                 .fechaRegistro(request.getFechaRegistro())
                 .build();
     }
@@ -46,7 +45,6 @@ public class ClienteMapper {
         cliente.setTelefono(request.getTelefono());
         cliente.setDireccion(request.getDireccion());
         cliente.setEdad(request.getEdad());
-        cliente.setCodigoInterno(request.getCodigoInterno());
         cliente.setFechaRegistro(request.getFechaRegistro());
     }
 }

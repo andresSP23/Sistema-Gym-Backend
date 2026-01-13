@@ -27,10 +27,9 @@ public class MovimientoInventarioService {
     @Transactional
     public void registrarEntrada(
             Producto producto,
-            Integer cantidad,
-            User usuario
+            Integer cantidad
     ) {
-        registrar(producto, cantidad, TipoMovimientoInventario.ENTRADA, usuario);
+        registrar(producto, cantidad, TipoMovimientoInventario.ENTRADA);
     }
 
     @Transactional
@@ -43,30 +42,27 @@ public class MovimientoInventarioService {
             throw new IllegalStateException("Stock insuficiente");
         }
 
-        registrar(producto, cantidad, TipoMovimientoInventario.SALIDA, usuario);
+        registrar(producto, cantidad, TipoMovimientoInventario.SALIDA);
     }
 
     @Transactional
     public void registrarAjuste(
             Producto producto,
-            Integer stockReal,
-            User usuario
+            Integer stockReal
     ) {
-        registrar(producto, stockReal, TipoMovimientoInventario.AJUSTE, usuario);
+        registrar(producto, stockReal, TipoMovimientoInventario.AJUSTE);
     }
 
     private void registrar(
             Producto producto,
             Integer cantidad,
-            TipoMovimientoInventario tipo,
-            User usuario
+            TipoMovimientoInventario tipo
     ) {
         MovimientoInventario m = new MovimientoInventario();
 
         m.setProducto(producto);
         m.setCantidad(cantidad);
         m.setTipoMovimiento(tipo);
-        m.setUsuario(usuario);
         m.setFechaMovimiento(LocalDateTime.now());
 
         // Guardar stock anterior

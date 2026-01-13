@@ -1,5 +1,6 @@
 package com.ansicode.SistemaAdministracionGym.producto;
 
+import com.ansicode.SistemaAdministracionGym.categoriaproducto.CategoriaProducto;
 import com.ansicode.SistemaAdministracionGym.common.BaseEntity;
 import com.ansicode.SistemaAdministracionGym.enums.TipoProducto;
 import jakarta.persistence.*;
@@ -28,14 +29,23 @@ public class Producto extends BaseEntity {
     @Column(nullable = false)
     private String nombre;
 
-    @Column(nullable = false)
-    private BigDecimal precio;
+    @Column(nullable = false, precision = 10, scale = 2)
+    private BigDecimal precioCompra;
+
+    @Column(nullable = false, precision = 10, scale = 2)
+    private BigDecimal precioVenta;
 
     @Column(nullable = false)
     private Integer stock;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private TipoProducto tipoProducto;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "categoria_producto_id")
+    private CategoriaProducto categoriaProducto;
+
+    // Ganancia calculada (no persistente)
+    @Transient
+    public BigDecimal getGanancia() {
+        return precioVenta.subtract(precioCompra);
+    }
 
 }

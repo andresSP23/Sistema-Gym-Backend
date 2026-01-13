@@ -4,6 +4,7 @@ import com.ansicode.SistemaAdministracionGym.common.PageResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -18,44 +19,37 @@ public class ProductoController {
 
     private final ProductoService productoService;
 
-    @PostMapping("/crear")
+    @PostMapping("/crear-producto")
     public ResponseEntity<ProductoResponse> create(
-            @Valid @RequestBody ProductoRequest request,
-            Authentication authentication
+            @RequestBody @Valid ProductoRequest request
     ) {
-        ProductoResponse response =
-                productoService.create(request, authentication);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(productoService.create(request));
     }
+
 
     @GetMapping("/findAll")
     public ResponseEntity<PageResponse<ProductoResponse>> findAll(
             @RequestParam(name = "page", defaultValue = "0" ,required = false) int page,
             @RequestParam(name = "size", defaultValue = "10" ,required = false) int size,
-            Pageable pageable
+            @ParameterObject Pageable pageable
+
     ) {
-        return ResponseEntity.ok(
-                productoService.findAll(pageable)
-        );
+        return ResponseEntity.ok(productoService.findAll(pageable));
     }
 
-    @GetMapping("/findById/{id}")
+    @GetMapping("findById/{id}")
     public ResponseEntity<ProductoResponse> findById(
             @PathVariable Long id
     ) {
-        return ResponseEntity.ok(
-                productoService.findById(id)
-        );
+        return ResponseEntity.ok(productoService.findById(id));
     }
 
     @PutMapping("/update/{id}")
     public ResponseEntity<ProductoResponse> update(
             @PathVariable Long id,
-            @Valid @RequestBody ProductoRequest request
+            @RequestBody @Valid ProductoRequest request
     ) {
-        return ResponseEntity.ok(
-                productoService.update(id, request)
-        );
+        return ResponseEntity.ok(productoService.update(id, request));
     }
 
     @DeleteMapping("/delete/{id}")
@@ -73,19 +67,18 @@ public class ProductoController {
             @RequestParam Integer cantidad,
             Authentication authentication
     ) {
-        productoService.agregarStock(id, cantidad, authentication);
+        productoService.agregarStock(id, cantidad);
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/ajuste/{id}")
+    @PostMapping("/ajustar-stock/{id}")
     public ResponseEntity<Void> ajustarStock(
             @PathVariable Long id,
             @RequestParam Integer stockReal,
             Authentication authentication
     ) {
-        productoService.ajustarStock(id, stockReal, authentication);
+        productoService.ajustarStock(id, stockReal);
         return ResponseEntity.ok().build();
     }
-
 
 }

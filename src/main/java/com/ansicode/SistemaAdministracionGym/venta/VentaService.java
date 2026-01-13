@@ -45,7 +45,7 @@ public class VentaService {
         User vendedor = (User) connectedUser.getPrincipal();
 
         //  Crear venta con total inicial
-        Venta venta = ventaMapper.toVenta(cliente, vendedor, request.getFechaVenta());
+        Venta venta = ventaMapper.toVenta(cliente, vendedor, request.getFechaVenta() , request.getMetodoPago());
         venta.setTotal(BigDecimal.ZERO);
         venta.setActivo(true);
         venta = ventaRepository.save(venta);
@@ -66,16 +66,14 @@ public class VentaService {
             }
 
             //  MULTIPLICACIÓN
-            BigDecimal subtotal = producto.getPrecio()
+            BigDecimal subtotal = producto.getPrecioVenta()
                     .multiply(BigDecimal.valueOf(item.getCantidad()));
 
             //  SUMA
             total = total.add(subtotal);
 
-            //  DESCONTAR STOCK
-            producto.setStock(producto.getStock() - item.getCantidad());
-            productoRepository.save(producto);
-        //Registrar movimiento
+
+        //Registrar movimiento y descontar stock
             movimientoInventarioService.registrarSalida(
                     producto,
                     item.getCantidad(),
@@ -86,7 +84,7 @@ public class VentaService {
                     venta,
                     producto,
                     item.getCantidad(),
-                    producto.getPrecio(),
+                    producto.getPrecioVenta(),
                     subtotal
             );
 
@@ -100,4 +98,7 @@ public class VentaService {
 
         return ventaMapper.toVentaResponse(venta, detalleResponses);
     }
+
+
+
 }

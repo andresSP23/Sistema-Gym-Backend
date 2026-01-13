@@ -3,6 +3,7 @@ package com.ansicode.SistemaAdministracionGym.venta;
 import com.ansicode.SistemaAdministracionGym.cliente.Cliente;
 import com.ansicode.SistemaAdministracionGym.common.BaseEntity;
 import com.ansicode.SistemaAdministracionGym.enums.EstadoVenta;
+import com.ansicode.SistemaAdministracionGym.enums.MetodoPago;
 import com.ansicode.SistemaAdministracionGym.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -35,6 +36,10 @@ public class Venta extends BaseEntity {
     @ManyToOne(optional = false)
     @JoinColumn(name = "usuario_id")
     private User vendedor;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private MetodoPago metodoPago;
 
     @Column(nullable = false)
     private BigDecimal total;

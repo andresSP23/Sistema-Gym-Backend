@@ -1,34 +1,39 @@
 package com.ansicode.SistemaAdministracionGym.producto;
 
+import com.ansicode.SistemaAdministracionGym.categoriaproducto.CategoriaProducto;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ProductoMapper {
 
-    public Producto toEntity(ProductoRequest request) {
+    public Producto toEntity(
+            ProductoRequest request,
+            CategoriaProducto categoria
+    ) {
         Producto p = new Producto();
         p.setNombre(request.getNombre());
-        p.setPrecio(request.getPrecio());
-        p.setTipoProducto(request.getTipoProducto());
-        p.setStock(0);
+        p.setPrecioCompra(request.getPrecioCompra());
+        p.setPrecioVenta(request.getPrecioVenta());
+        p.setCategoriaProducto(categoria);
+        p.setStock(
+                request.getStockInicial() != null ? request.getStockInicial() : 0
+        );
         return p;
     }
 
-    public ProductoResponse toResponse(Producto p) {
+    public ProductoResponse toProductoResponse(Producto p) {
         ProductoResponse r = new ProductoResponse();
         r.setId(p.getId());
         r.setNombre(p.getNombre());
-        r.setPrecio(p.getPrecio());
+        r.setPrecioCompra(p.getPrecioCompra());
+        r.setPrecioVenta(p.getPrecioVenta());
+        r.setGanancia(p.getGanancia());
         r.setStock(p.getStock());
-        r.setTipoProducto(p.getTipoProducto());
+
+        r.setCategoriaProductoId(p.getCategoriaProducto().getId());
+        r.setCategoriaProductoNombre(p.getCategoriaProducto().getNombre());
+
         r.setActivo(p.getActivo());
         return r;
-    }
-
-    public void updateEntity(Producto producto, ProductoRequest request) {
-        producto.setNombre(request.getNombre());
-        producto.setPrecio(request.getPrecio());
-        producto.setTipoProducto(request.getTipoProducto());
-
     }
 }

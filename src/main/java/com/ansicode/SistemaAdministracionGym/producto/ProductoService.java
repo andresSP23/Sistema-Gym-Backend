@@ -1,5 +1,9 @@
 package com.ansicode.SistemaAdministracionGym.producto;
 
+import com.ansicode.SistemaAdministracionGym.categoriaproducto.CategoriaProducto;
+import com.ansicode.SistemaAdministracionGym.categoriaproducto.CategoriaProductoRepository;
+import com.ansicode.SistemaAdministracionGym.cliente.Cliente;
+import com.ansicode.SistemaAdministracionGym.cliente.ClienteResponse;
 import com.ansicode.SistemaAdministracionGym.common.PageResponse;
 import com.ansicode.SistemaAdministracionGym.movimientoinventario.MovimientoInventarioService;
 import com.ansicode.SistemaAdministracionGym.user.User;
@@ -14,42 +18,53 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class ProductoService {
-    private final ProductoRepository repository;
-    private final ProductoMapper mapper;
+
+
+    private final ProductoRepository productoRepository;
+    private final CategoriaProductoRepository categoriaProductoRepository;
+    private final ProductoMapper productoMapper;
     private final MovimientoInventarioService movimientoService;
 
     @Transactional
-    public ProductoResponse create(
-            ProductoRequest request,
-            Authentication auth
-    ) {
-        User user = (User) auth.getPrincipal();
+    public ProductoResponse create(ProductoRequest request) {
 
-        Producto producto = mapper.toEntity(request);
+        CategoriaProducto categoria = categoriaProductoRepository
+                .findById(request.getCategoriaProductoId())
+                .orElseThrow(() ->
+                        new EntityNotFoundException("Categoría no encontrada")
+                );
+
+        Producto producto = productoMapper.toEntity(request, categoria);
         producto.setActivo(true);
+        producto.setStock(0);
 
-        repository.save(producto);
+        // GUARDAR PRIMERO EL PRODUCTO
+        producto = productoRepository.save(producto);
 
+        //  REGISTRAR MOVIMIENTO DESPUÉS
         if (request.getStockInicial() != null && request.getStockInicial() > 0) {
+
             movimientoService.registrarEntrada(
                     producto,
-                    request.getStockInicial(),
-                    user
+                    request.getStockInicial()
             );
+
+            producto.setStock(request.getStockInicial());
         }
 
-        return mapper.toResponse(producto);
+        return productoMapper.toProductoResponse(producto);
     }
+
 
     public PageResponse<ProductoResponse> findAll(Pageable pageable) {
 
-        Page<Producto> page = repository.findAll(pageable);
+        Page<Producto> page = productoRepository.findAll(pageable);
 
         return PageResponse.<ProductoResponse>builder()
                 .content(
                         page.getContent()
                                 .stream()
-                                .map(mapper::toResponse)
+                                .map(productoMapper::toProductoResponse)
                                 .toList()
                 )
                 .number(page.getNumber())
@@ -62,69 +77,76 @@ public class ProductoService {
     }
 
     public ProductoResponse findById(Long id) {
-        Producto producto = repository.findById(id)
-                .orElseThrow(() ->
-                        new EntityNotFoundException("Producto no encontrado")
-                );
-        return mapper.toResponse(producto);
-    }
 
-    @Transactional
-    public ProductoResponse update(
-            Long id,
-            ProductoRequest request
-    ) {
-        Producto producto = repository.findById(id)
+        Producto producto = productoRepository.findById(id)
                 .orElseThrow(() ->
                         new EntityNotFoundException("Producto no encontrado")
                 );
 
-        mapper.updateEntity(producto, request);
-        repository.save(producto);
-
-        return mapper.toResponse(producto);
+        return productoMapper.toProductoResponse(producto);
     }
 
     @Transactional
+    public ProductoResponse update(Long id, ProductoRequest request) {
+
+        Producto producto = productoRepository.findById(id)
+                .orElseThrow(() ->
+                        new EntityNotFoundException("Producto no encontrado")
+                );
+
+        CategoriaProducto categoria = categoriaProductoRepository
+                .findById(request.getCategoriaProductoId())
+                .orElseThrow(() ->
+                        new EntityNotFoundException("Categoría no encontrada")
+                );
+
+        producto.setNombre(request.getNombre());
+        producto.setPrecioCompra(request.getPrecioCompra());
+        producto.setPrecioVenta(request.getPrecioVenta());
+        producto.setCategoriaProducto(categoria);
+
+        return productoMapper.toProductoResponse(producto);
+    }
+
     public void delete(Long id) {
-        Producto producto = repository.findById(id)
+
+        Producto producto = productoRepository.findById(id)
                 .orElseThrow(() ->
                         new EntityNotFoundException("Producto no encontrado")
                 );
 
-         repository.delete(producto);
+        productoRepository.delete(producto);
     }
+
 
 
     @Transactional
     public void agregarStock(
             Long productoId,
-            Integer cantidad,
-            Authentication auth
-    ) {
-        User user = (User) auth.getPrincipal();
+            Integer cantidad
 
-        Producto producto = repository.findById(productoId)
+    ) {
+
+        Producto producto = productoRepository.findById(productoId)
                 .orElseThrow(() ->
                         new EntityNotFoundException("Producto no encontrado")
                 );
 
-        movimientoService.registrarEntrada(producto, cantidad, user);
+        movimientoService.registrarEntrada(producto, cantidad);
     }
 
     @Transactional
     public void ajustarStock(
             Long productoId,
-            Integer stockReal,
-            Authentication auth
-    ) {
-        User user = (User) auth.getPrincipal();
+            Integer stockReal
 
-        Producto producto = repository.findById(productoId)
+    ) {
+
+        Producto producto = productoRepository.findById(productoId)
                 .orElseThrow(() ->
                         new EntityNotFoundException("Producto no encontrado")
                 );
 
-        movimientoService.registrarAjuste(producto, stockReal, user);
+        movimientoService.registrarAjuste(producto, stockReal);
     }
 }

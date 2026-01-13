@@ -54,7 +54,7 @@ public class PagoController {
     @GetMapping("/membresia/{membresiaClienteId}")
     public ResponseEntity<PageResponse<PagoResponse>> findByMembresiaCliente(
             @PathVariable Long membresiaClienteId,
-            Pageable pageable
+            @ParameterObject Pageable pageable
     ) {
         return ResponseEntity.ok(service.findByMembresiaCliente(membresiaClienteId, pageable));
     }

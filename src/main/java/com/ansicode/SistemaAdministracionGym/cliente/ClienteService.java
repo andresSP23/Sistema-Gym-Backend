@@ -8,6 +8,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+
 @Service
 @RequiredArgsConstructor
 public class ClienteService {
@@ -23,6 +25,8 @@ public class ClienteService {
 
         Cliente cliente = clienteMapper.toCliente(request);
         cliente.setActivo(true);
+        cliente.setCodigoInterno(generarCodigoInterno());
+
 
         clienteRepository.save(cliente);
 
@@ -87,6 +91,14 @@ public class ClienteService {
                 .orElseThrow(() -> new EntityNotFoundException("Cliente no encontrado"));
 
         clienteRepository.delete(cliente);
+    }
+
+
+    private String generarCodigoInterno() {
+        long totalClientes = clienteRepository.count() + 1;
+        int year = LocalDate.now().getYear();
+
+        return String.format("CLI-%d-%06d", year, totalClientes);
     }
 
 }

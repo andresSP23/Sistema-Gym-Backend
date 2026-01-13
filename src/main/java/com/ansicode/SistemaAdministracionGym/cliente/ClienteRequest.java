@@ -41,8 +41,8 @@ public class ClienteRequest {
     @Min(value = 0, message = "La edad no puede ser negativa")
     private Integer edad;
 
-    @Size(max = 50, message = "El código interno no puede exceder 50 caracteres")
-    private String codigoInterno;
+//    @Size(max = 50, message = "El código interno no puede exceder 50 caracteres")
+//    private String codigoInterno;
 
     @NotNull(message = "La fecha de registro es obligatoria")
     private LocalDate fechaRegistro;

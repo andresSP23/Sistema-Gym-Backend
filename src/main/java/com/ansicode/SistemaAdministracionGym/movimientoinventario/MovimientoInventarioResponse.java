@@ -18,5 +18,4 @@ public class MovimientoInventarioResponse {
     private Integer stockAnterior;
     private Integer stockActual;
     private LocalDateTime fecha;
-    private String usuario;
 }

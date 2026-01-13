@@ -1,6 +1,7 @@
 package com.ansicode.SistemaAdministracionGym.venta;
 
 import com.ansicode.SistemaAdministracionGym.enums.EstadoVenta;
+import com.ansicode.SistemaAdministracionGym.enums.MetodoPago;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -20,6 +21,8 @@ public class VentaResponse {
 
     private Long vendedorId;
     private String vendedorNombre;
+
+    private MetodoPago metodoPago;
 
     private BigDecimal total;
     private LocalDateTime fechaVenta;

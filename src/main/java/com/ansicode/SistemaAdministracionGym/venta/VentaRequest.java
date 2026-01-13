@@ -1,6 +1,7 @@
 package com.ansicode.SistemaAdministracionGym.venta;
 
 import com.ansicode.SistemaAdministracionGym.enums.EstadoVenta;
+import com.ansicode.SistemaAdministracionGym.enums.MetodoPago;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -19,6 +20,9 @@ public class VentaRequest {
 
     @NotNull(message = "El cliente es obligatorio")
     private Long clienteId;
+
+    @NotNull(message = "El método de pago es obligatorio")
+    private MetodoPago metodoPago;
 
     @NotNull(message = "La fecha de la venta es obligatoria")
     private LocalDateTime fechaVenta;

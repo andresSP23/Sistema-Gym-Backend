@@ -37,6 +37,17 @@ public class MembresiaCliente extends BaseEntity {
     private EstadoMembresia estado;
 
 
+    @Transient
+    private long diasRestantes;
+
+    public long getDiasRestantes() {
+        return diasRestantes;
+    }
+
+    public void setDiasRestantes(long diasRestantes) {
+        this.diasRestantes = diasRestantes;
+    }
+
 
     public boolean puedeEditarAsignacion() {
         return estado == EstadoMembresia.PENDIENTE_PAGO;

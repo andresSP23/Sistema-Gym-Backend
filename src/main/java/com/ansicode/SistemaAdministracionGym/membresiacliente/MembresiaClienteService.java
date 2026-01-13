@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Service
@@ -158,12 +159,18 @@ public class MembresiaClienteService {
             throw new IllegalStateException("La membresía está vencida");
         }
 
+
+        long diasRestantes = ChronoUnit.DAYS.between(
+                LocalDate.now(),
+                mc.getFechaFin()
+        );
+
+        mc.setDiasRestantes(diasRestantes);
+
         return mc;
     }
 
-    /* =====================
-       VENCIMIENTOS
-       ===================== */
+
     @Transactional
     public void marcarMembresiasVencidas(LocalDate fechaActual) {
 

@@ -8,6 +8,7 @@ import com.ansicode.SistemaAdministracionGym.pago.Pago;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Service
@@ -22,7 +23,9 @@ public class AsistenciaMapper {
     public AsistenciaResponse toAsistenciaResponse(
             Asistencia asistencia,
             MembresiaCliente membresiaCliente,
-            List<Pago> pagos
+            List<Pago> pagos ,
+            long diasRestantes
+
     ) {
         Cliente cliente = asistencia.getCliente();
 
@@ -31,6 +34,8 @@ public class AsistenciaMapper {
         response.setClienteId(cliente.getId());
         response.setClienteNombre(cliente.getNombres() + " " + cliente.getApellidos());
         response.setFechaEntrada(asistencia.getFechaEntrada());
+        response.setDiasRestantes(diasRestantes);
+
 
         // Membresía
         if (membresiaCliente != null) {
@@ -49,6 +54,11 @@ public class AsistenciaMapper {
                 pagos != null &&
                         pagos.stream().anyMatch(p -> p.getEstadoPago() != EstadoPago.PAGADO)
         );
+
+
+
+
+
 
         return response;
     }

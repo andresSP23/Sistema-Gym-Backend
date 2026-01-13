@@ -1,0 +1,14 @@
+package com.ansicode.SistemaAdministracionGym.sucursal;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.Optional;
+
+public interface SucursalRepository extends JpaRepository<Sucursal, Long> {
+
+    // Buscar la sucursal activa (asumiendo que solo habrá una)
+    Optional<Sucursal> findFirstByActivoTrue();
+
+    // Opcional: buscar por código si quieres control extra
+    Optional<Sucursal> findByCodigoSucursal(String codigoSucursal);
+}

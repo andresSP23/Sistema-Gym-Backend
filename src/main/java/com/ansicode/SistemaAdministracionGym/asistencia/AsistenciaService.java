@@ -17,7 +17,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.List;
 
@@ -73,7 +75,28 @@ public class AsistenciaService {
             pagos = Collections.emptyList();
         }
 
-        return asistenciaMapper.toAsistenciaResponse(asistencia, membresiaCliente, pagos);
+        long diasRestantes = 0;
+
+        //CALCULAR DÍAS RESTANTES
+        if (membresiaCliente != null) {
+
+            if (membresiaCliente.getFechaFin().isBefore(LocalDate.now())) {
+                throw new IllegalStateException("La membresía está vencida");
+            }
+
+             diasRestantes = ChronoUnit.DAYS.between(
+                    LocalDate.now(),
+                    membresiaCliente.getFechaFin()
+            );
+
+            membresiaCliente.setDiasRestantes(
+                    Math.max(diasRestantes, 0)
+            );
+        }
+
+
+        return asistenciaMapper.toAsistenciaResponse(asistencia, membresiaCliente, pagos , Math.max(diasRestantes, 0)
+        );
     }
 
     public PageResponse<AsistenciaResponse> listarPorCliente(Long clienteId, Pageable pageable) {
@@ -95,7 +118,16 @@ public class AsistenciaService {
                         pagos = Collections.emptyList();
                     }
 
-                    return asistenciaMapper.toAsistenciaResponse(a, mc, pagos);
+                    long diasRestantes = 0;
+                    if (mc != null) {
+                        diasRestantes = ChronoUnit.DAYS.between(
+                                LocalDate.now(),
+                                mc.getFechaFin()
+                        );
+                        diasRestantes = Math.max(diasRestantes, 0);
+                    }
+
+                    return asistenciaMapper.toAsistenciaResponse(a, mc, pagos , diasRestantes );
                 })
                 .toList();
 

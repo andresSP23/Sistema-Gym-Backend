@@ -19,6 +19,9 @@ public class AsistenciaResponse {
     private boolean membresiaActiva;
     private boolean pagosPendientes;
 
-    private Long membresiaClienteId; // Opcional: info extra
+    private Long diasRestantes;
+
+
+    private Long membresiaClienteId;
     private String membresiaNombre;
 }

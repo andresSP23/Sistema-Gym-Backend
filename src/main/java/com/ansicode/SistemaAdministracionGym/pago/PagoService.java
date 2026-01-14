@@ -1,6 +1,7 @@
 package com.ansicode.SistemaAdministracionGym.pago;
 
 import com.ansicode.SistemaAdministracionGym.common.PageResponse;
+import com.ansicode.SistemaAdministracionGym.comprobantepago.ComprobantePagoService;
 import com.ansicode.SistemaAdministracionGym.enums.EstadoMembresia;
 import com.ansicode.SistemaAdministracionGym.enums.EstadoPago;
 import com.ansicode.SistemaAdministracionGym.membresiacliente.MembresiaCliente;
@@ -23,6 +24,7 @@ public class PagoService {
     private final PagoRepository repository;
     private final PagoMapper mapper;
     private final MembresiaClienteRepository membresiaClienteRepository;
+    private final ComprobantePagoService  comprobantePagoService;
 
     @Transactional
     public PagoResponse create(PagoRequest request) {
@@ -34,7 +36,7 @@ public class PagoService {
                         new EntityNotFoundException("Membresía del cliente no encontrada")
                 );
 
-        // 2️⃣ Validar estado
+        //  Validar estado
         if (!EstadoMembresia.PENDIENTE_PAGO.equals(mc.getEstado())) {
             throw new IllegalStateException(
                     "Solo se puede pagar una membresía pendiente de pago"
@@ -58,6 +60,9 @@ public class PagoService {
         mc.activar();
 
         membresiaClienteRepository.save(mc);
+
+        comprobantePagoService.generarYGuardarComprobante(pago.getId());
+
 
         // Respuesta
         return mapper.toPagoResponse(pago);

@@ -46,4 +46,10 @@ public class Cliente  extends BaseEntity {
     private String codigoInterno;
 
     private LocalDate fechaRegistro;
+
+
+
+    public String getNombreCompleto() {
+        return nombres + " " + apellidos;
+    }
 }

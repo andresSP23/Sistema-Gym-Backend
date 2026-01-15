@@ -16,7 +16,6 @@ public class AsistenciaMapper {
     public Asistencia toAsistencia(AsistenciaRequest request, Cliente cliente) {
         return Asistencia.builder()
                 .cliente(cliente)
-                .fechaEntrada(request.getFechaEntrada())
                 .build();
     }
 

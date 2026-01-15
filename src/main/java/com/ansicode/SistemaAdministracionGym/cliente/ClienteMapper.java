@@ -2,6 +2,8 @@ package com.ansicode.SistemaAdministracionGym.cliente;
 
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+
 @Service
 public class ClienteMapper {
 
@@ -15,7 +17,7 @@ public class ClienteMapper {
                 .telefono(request.getTelefono())
                 .direccion(request.getDireccion())
                 .edad(request.getEdad())
-                .fechaRegistro(request.getFechaRegistro())
+                .fechaRegistro(LocalDate.now())
                 .build();
     }
 
@@ -45,6 +47,6 @@ public class ClienteMapper {
         cliente.setTelefono(request.getTelefono());
         cliente.setDireccion(request.getDireccion());
         cliente.setEdad(request.getEdad());
-        cliente.setFechaRegistro(request.getFechaRegistro());
+        cliente.setFechaRegistro(LocalDate.now());
     }
 }

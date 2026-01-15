@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.List;
@@ -42,8 +43,9 @@ public class AsistenciaService {
                 .orElseThrow(() -> new EntityNotFoundException("Cliente no encontrado"));
 
         // Evitar duplicados en el mismo día
-        LocalDateTime inicioDia = request.getFechaEntrada().toLocalDate().atStartOfDay();
-        LocalDateTime finDia = inicioDia.plusDays(1).minusSeconds(1);
+        LocalDate hoy = LocalDate.now();
+        LocalDateTime inicioDia = hoy.atStartOfDay();
+        LocalDateTime finDia = hoy.atTime(LocalTime.MAX);
 
         if (asistenciaRepository.existsByClienteIdAndFechaEntradaBetween(
                 cliente.getId(),
@@ -54,8 +56,12 @@ public class AsistenciaService {
         }
 
         // Registrar asistencia
-        Asistencia asistencia = asistenciaMapper.toAsistencia(request, cliente);
+
+        Asistencia asistencia = new Asistencia();
+        asistencia.setCliente(cliente);
+        asistencia.setFechaEntrada(LocalDateTime.now());
         asistencia.setActivo(true);
+
         asistenciaRepository.save(asistencia);
 
         // Traer membresía activa si existe

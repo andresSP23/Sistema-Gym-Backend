@@ -18,7 +18,6 @@ public class SucursalMapper {
         sucursal.setEmail(request.getEmail());
         sucursal.setHoraApertura(request.getHoraApertura());
         sucursal.setHoraCierre(request.getHoraCierre());
-        sucursal.setFechaApertura(request.getFechaApertura());
         sucursal.setAforoMaximo(request.getAforoMaximo());
         sucursal.setRuc(request.getRuc());
         sucursal.setRazonSocial(request.getRazonSocial());

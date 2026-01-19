@@ -1,9 +1,16 @@
 package com.ansicode.SistemaAdministracionGym.movimientodinero;
 
 import com.ansicode.SistemaAdministracionGym.common.PageResponse;
+import com.ansicode.SistemaAdministracionGym.pago.Pago;
+import com.ansicode.SistemaAdministracionGym.pago.PagoRepository;
+import com.ansicode.SistemaAdministracionGym.servicio.Servicios;
+import com.ansicode.SistemaAdministracionGym.servicio.ServiciosRepository;
 import com.ansicode.SistemaAdministracionGym.sesioncaja.SesionCaja;
 import com.ansicode.SistemaAdministracionGym.sesioncaja.SesionCajaService;
 import com.ansicode.SistemaAdministracionGym.user.User;
+import com.ansicode.SistemaAdministracionGym.venta.Venta;
+import com.ansicode.SistemaAdministracionGym.venta.VentaRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +30,9 @@ public class MovimientoDineroService {
     private final MovimientoDineroRepository repository;
     private final MovimientoDineroMapper mapper;
     private final SesionCajaService sesionCajaService;
+    private final PagoRepository  pagoRepository;
+    private final ServiciosRepository  serviciosRepository;
+    private final VentaRepository ventaRepository;
 
     @Transactional
     public MovimientoDineroResponse crearMovimiento(MovimientoDineroCreateRequest request , Authentication connectedUser ) {
@@ -47,9 +57,28 @@ public class MovimientoDineroService {
         m.setMonto(request.getMonto());
         m.setDescripcion(request.getDescripcion());
 
-        // trazabilidad opcional
-        // si tus relaciones son entity, aquí tendrías que hacer findById y setearlas
-        // si prefieres simple, guarda solo ids como Long y listo
+
+        // ✅ Trazabilidad (si vienen ids, se enlazan entities)
+        if (request.getVentaId() != null) {
+            Venta venta = ventaRepository.findById(request.getVentaId())
+                    .orElseThrow(() -> new EntityNotFoundException("Venta no encontrada: " + request.getVentaId()));
+            m.setVenta(venta);
+        }
+
+        if (request.getPagoId() != null) {
+            Pago pago = pagoRepository.findById(request.getPagoId())
+                    .orElseThrow(() -> new EntityNotFoundException("Pago no encontrado: " + request.getPagoId()));
+            m.setPago(pago);
+        }
+
+        if (request.getServicioId() != null) {
+            Servicios servicio = serviciosRepository.findById(request.getServicioId())
+                    .orElseThrow(() -> new EntityNotFoundException("Servicio no encontrado: " + request.getServicioId()));
+            m.setServicio(servicio);
+        }
+
+
+
         m.setProductoId(request.getProductoId());
 
 
@@ -77,14 +106,14 @@ public class MovimientoDineroService {
             LocalDateTime hasta,
             Pageable pageable
     ) {
-        Specification<MovimientoDinero> spec = Specification
-                .where(MovimientoDineroSpecifications.tipo(tipo))
-                .and(MovimientoDineroSpecifications.concepto(concepto))
-                .and(MovimientoDineroSpecifications.metodo(metodo))
-                .and(MovimientoDineroSpecifications.moneda(moneda))
-                .and(MovimientoDineroSpecifications.usuarioId(usuarioId))
-                .and(MovimientoDineroSpecifications.fechaDesde(desde))
-                .and(MovimientoDineroSpecifications.fechaHasta(hasta));
+        Specification<MovimientoDinero> spec =
+                MovimientoDineroSpecifications.tipo(tipo)
+                        .and(MovimientoDineroSpecifications.concepto(concepto))
+                        .and(MovimientoDineroSpecifications.metodo(metodo))
+                        .and(MovimientoDineroSpecifications.moneda(moneda))
+                        .and(MovimientoDineroSpecifications.usuarioId(usuarioId))
+                        .and(MovimientoDineroSpecifications.fechaDesde(desde))
+                        .and(MovimientoDineroSpecifications.fechaHasta(hasta));
 
         Page<MovimientoDinero> page = repository.findAll(spec, pageable);
 

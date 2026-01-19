@@ -202,6 +202,18 @@ public class    PagoService {
         movReq.setMoneda(savedPago.getMoneda());
         movReq.setMonto(savedPago.getMonto());
         movReq.setDescripcion("Pago venta " + venta.getNumeroFactura());
+        movReq.setVentaId(venta.getId());
+        movReq.setPagoId(savedPago.getId());
+        if (tieneServicio) {
+            Long servicioId = venta.getDetalles().stream()
+                    .filter(d -> d.getTipoItem() == TipoItemVenta.SERVICIO)
+                    .map(DetalleVenta::getReferenciaId)
+                    .findFirst()
+                    .orElse(null);
+
+            movReq.setServicioId(servicioId);
+        }
+
         movimientoDineroService.crearMovimiento(movReq, connectedUser);
 
         // 2) Comprobante + PDF (evitar duplicado por reintento)

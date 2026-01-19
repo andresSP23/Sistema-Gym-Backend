@@ -1,5 +1,6 @@
 package com.ansicode.SistemaAdministracionGym.sesioncaja;
 
+import com.ansicode.SistemaAdministracionGym.cuadrecaja.CuadreCajaRepository;
 import com.ansicode.SistemaAdministracionGym.enums.EstadoSesionCaja;
 import com.ansicode.SistemaAdministracionGym.user.User;
 import jakarta.persistence.EntityNotFoundException;
@@ -16,6 +17,7 @@ public class SesionCajaService {
 
     private final SesionCajaRepository repository;
     private final SesionCajaMapper mapper;
+    private final CuadreCajaRepository cuadreCajaRepository;
 
 
     @Transactional
@@ -69,6 +71,10 @@ public class SesionCajaService {
 
         if (s.getEstado() == EstadoSesionCaja.CERRADA) {
             throw new IllegalStateException("La sesión ya está CERRADA");
+        }
+
+        if (cuadreCajaRepository.findBySesionCaja_Id(s.getId()).isEmpty()) {
+            throw new IllegalStateException("Debe realizar el cuadre antes de cerrar caja");
         }
 
         User user =  ((User)  connectedUser.getPrincipal());

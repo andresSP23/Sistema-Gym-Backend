@@ -103,7 +103,6 @@ public class VentaService {
 
 
     private String generarNumeroFactura(Sucursal sucursal) {
-        // Prefijo simple: usa algo real tuyo (ej. codigoSucursal). Si no tienes, usa el ID.
         String prefijo = "S" + sucursal.getId();
 
         // Tomar el último numeroFactura registrado para esa sucursal

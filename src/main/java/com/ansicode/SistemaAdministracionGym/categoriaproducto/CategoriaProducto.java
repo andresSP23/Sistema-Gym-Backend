@@ -14,8 +14,8 @@ import org.hibernate.annotations.Where;
 
 @Entity
 @Table(name = "categoria_producto")
-@SQLDelete(sql = "UPDATE categoria_producto SET activo = false WHERE id = ?")
-@Where(clause = "activo = true")
+@SQLDelete(sql = "UPDATE categoria_producto SET is_visible = false WHERE id = ?")
+@Where(clause = "is_visible = true")
 @Getter
 @Setter
 @NoArgsConstructor

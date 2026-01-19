@@ -60,25 +60,21 @@ public class ProductoController {
         return ResponseEntity.noContent().build();
     }
 
-
-    @PostMapping("/agregarStock/{id}")
+    @PostMapping("/{id}/agregar-stock")
     public ResponseEntity<Void> agregarStock(
             @PathVariable Long id,
-            @RequestParam Integer cantidad,
-            Authentication authentication
+            @Valid @RequestBody AgregarStockRequest request , Authentication connectedUser
     ) {
-        productoService.agregarStock(id, cantidad);
+        productoService.agregarStock(id, request ,  connectedUser);
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/ajustar-stock/{id}")
+    @PostMapping("/{id}/ajustar-stock")
     public ResponseEntity<Void> ajustarStock(
             @PathVariable Long id,
-            @RequestParam Integer stockReal,
-            Authentication authentication
+            @Valid @RequestBody AjustarStockRequest request
     ) {
-        productoService.ajustarStock(id, stockReal);
+        productoService.ajustarStock(id, request);
         return ResponseEntity.ok().build();
     }
-
 }

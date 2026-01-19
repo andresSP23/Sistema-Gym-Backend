@@ -18,7 +18,7 @@ public class CategoriaProductoService {
     public CategoriaProductoResponse create(CategoriaProductoRequest request) {
 
         CategoriaProducto categoria = categoriaProductoMapper.toEntity(request);
-        categoria.setActivo(true);
+        categoria.setIsVisible(true);
 
         categoriaProductoRepository.save(categoria);
 

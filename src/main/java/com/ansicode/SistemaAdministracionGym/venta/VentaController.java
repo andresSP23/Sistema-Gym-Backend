@@ -17,14 +17,20 @@ import org.springframework.web.bind.annotation.*;
 public class VentaController {
 
     private final VentaService ventaService;
-
-    @PostMapping("/nueva-venta")
-    public ResponseEntity<VentaResponse> create(
-            @RequestBody @Valid VentaRequest request,
+    @PostMapping("/crear-venta-servicio")
+    public ResponseEntity<VentaResponse> crearVentaServicio(
+            @RequestBody @Valid CrearVentaServicioRequest request,
             Authentication connectedUser
     ) {
-        return ResponseEntity.ok(
-                ventaService.create(request, connectedUser)
-        );
+        return ResponseEntity.ok(ventaService.crearVentaServicio(request, connectedUser));
+    }
+
+
+    @PostMapping("/crear-venta-productos")
+    public ResponseEntity<VentaResponse> crearVentaProductos(
+            @RequestBody @Valid CrearVentaProductoRequest request,
+            Authentication connectedUser
+    ) {
+        return ResponseEntity.ok(ventaService.crearVentaProductos(request, connectedUser));
     }
 }

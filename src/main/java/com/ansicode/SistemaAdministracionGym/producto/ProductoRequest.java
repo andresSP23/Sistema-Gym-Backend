@@ -1,6 +1,5 @@
 package com.ansicode.SistemaAdministracionGym.producto;
 
-import com.ansicode.SistemaAdministracionGym.enums.TipoProducto;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -29,7 +28,6 @@ public class ProductoRequest {
     @NotNull
     private Long categoriaProductoId;
 
-    @Min(0)
-    private Integer stockInicial;
+
 
 }

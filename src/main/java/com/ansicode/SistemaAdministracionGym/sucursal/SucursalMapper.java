@@ -24,7 +24,7 @@ public class SucursalMapper {
         sucursal.setLogoUrl(request.getLogoUrl());
         sucursal.setColorPrimario(request.getColorPrimario());
 
-        sucursal.setActivo(true);
+        sucursal.setIsVisible(true);
 
         return sucursal;
     }
@@ -49,7 +49,7 @@ public class SucursalMapper {
         response.setRazonSocial(sucursal.getRazonSocial());
         response.setLogoUrl(sucursal.getLogoUrl());
         response.setColorPrimario(sucursal.getColorPrimario());
-        response.setActivo(sucursal.getActivo());
+        response.setIs_visible(sucursal.getIsVisible());
 
         return response;
     }

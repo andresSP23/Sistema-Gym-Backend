@@ -1,46 +1,54 @@
 package com.ansicode.SistemaAdministracionGym.venta;
 
 import com.ansicode.SistemaAdministracionGym.cliente.Cliente;
+import com.ansicode.SistemaAdministracionGym.detalleventa.DetalleVenta;
+import com.ansicode.SistemaAdministracionGym.detalleventa.DetalleVentaResponse;
 import com.ansicode.SistemaAdministracionGym.enums.MetodoPago;
 import com.ansicode.SistemaAdministracionGym.user.User;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class VentaMapper {
 
-    public Venta toVenta(Cliente cliente, User vendedor, LocalDateTime fechaVenta , MetodoPago metodoPago
-    ) {
-        Venta venta = new Venta();
-        venta.setCliente(cliente);
-        venta.setVendedor(vendedor);
-        venta.setFechaVenta(fechaVenta);
-        venta.setMetodoPago(metodoPago);
-        venta.setActivo(true);
-        return venta;
+
+    public VentaResponse toResponse(Venta venta) {
+        if (venta == null) return null;
+
+        return VentaResponse.builder()
+                .id(venta.getId())
+                .numeroFactura(venta.getNumeroFactura())
+                .fechaVenta(venta.getFechaVenta())
+                .clienteId(venta.getCliente() != null ? venta.getCliente().getId() : null)
+                .sucursalId(venta.getSucursal() != null ? venta.getSucursal().getId() : null)
+                .cajeroUsuarioId(venta.getCajeroUsuario() != null ? venta.getCajeroUsuario().getId() : null)
+                .estado(venta.getEstado())
+                .subtotal(venta.getSubtotal())
+                .descuentoTotal(venta.getDescuentoTotal())
+                .impuestoTotal(venta.getImpuestoTotal())
+                .total(venta.getTotal())
+                .detalles(venta.getDetalles() == null
+                        ? new ArrayList<>()
+                        : venta.getDetalles().stream().map(this::toDetalleResponse).toList()
+                )
+                .build();
     }
 
-    public VentaResponse toVentaResponse(Venta venta, List<DetalleVentaResponse> detalles) {
-        VentaResponse response = new VentaResponse();
-
-        response.setId(venta.getId());
-        response.setClienteId(venta.getCliente().getId());
-        response.setClienteNombre(
-                venta.getCliente().getNombres() + " " + venta.getCliente().getApellidos()
-        );
-
-        response.setVendedorId(venta.getVendedor().getId());
-        response.setVendedorNombre(venta.getVendedor().fullname());
-
-        response.setTotal(venta.getTotal());
-        response.setMetodoPago(venta.getMetodoPago());
-        response.setFechaVenta(venta.getFechaVenta());
-        response.setDetalles(detalles);
-
-        return response;
+    private DetalleVentaResponse toDetalleResponse(DetalleVenta det) {
+        return DetalleVentaResponse.builder()
+                .id(det.getId())
+                .tipoItem(det.getTipoItem())
+                .referenciaId(det.getReferenciaId())
+                .descripcionSnapshot(det.getDescripcionSnapshot())
+                .precioUnitarioSnapshot(det.getPrecioUnitarioSnapshot())
+                .cantidad(det.getCantidad())
+                .descuento(det.getDescuento())
+                .impuesto(det.getImpuesto())
+                .totalLinea(det.getTotalLinea())
+                .build();
     }
 
 }

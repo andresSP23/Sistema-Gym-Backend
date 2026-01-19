@@ -26,3 +26,6 @@ application:
       secret-key: Qx9L2mR7T4ZCwEJp8DkS5A6HfYVbN0UeXW3M7N4JcRZpUeA2S9H5LkX
       expiration: 8640000
 
+storage:
+  comprobantes-dir: storage/comprobantes
+

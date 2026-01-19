@@ -23,7 +23,5 @@ public class AsistenciaRequest {
     )
     private String cedulaCliente;
 
-//    @NotNull(message = "La fecha de entrada es obligatoria")
-//    @PastOrPresent(message = "La fecha de entrada no puede ser futura")
-//    private LocalDateTime fechaEntrada;
+
 }

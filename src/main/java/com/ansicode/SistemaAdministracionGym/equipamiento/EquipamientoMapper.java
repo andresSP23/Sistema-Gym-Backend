@@ -23,7 +23,7 @@ public class EquipamientoMapper {
                 .ubicacion(equipamiento.getUbicacion())
                 .estadoEquipamiento(equipamiento.getEstadoEquipamiento())
                 .fotoUrl(equipamiento.getFotoUrl())
-                .activo(equipamiento.getActivo())
+                .activo(equipamiento.getIsVisible())
                 .build();
     }
 

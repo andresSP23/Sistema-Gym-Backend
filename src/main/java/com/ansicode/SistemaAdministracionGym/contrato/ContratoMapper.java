@@ -22,7 +22,7 @@ public class ContratoMapper {
                 .clienteNombre(contrato.getCliente().getNombres() + " " + contrato.getCliente().getApellidos())
                 .archivoUrl(contrato.getArchivoUrl())
                 .estadoContrato(contrato.getEstadoContrato())
-                .activo(contrato.getActivo())
+                .activo(contrato.getIsVisible())
                 .build();
     }
 

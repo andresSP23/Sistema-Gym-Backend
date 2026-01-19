@@ -21,8 +21,8 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
-@SQLDelete(sql = "UPDATE asistencias SET activo = false WHERE id = ?")
-@Where(clause = "activo = true")
+@SQLDelete(sql = "UPDATE asistencias SET is_visible = false WHERE id = ?")
+@Where(clause = "is_visible = true")
 @AllArgsConstructor
 @SuperBuilder
 public class Asistencia extends BaseEntity {

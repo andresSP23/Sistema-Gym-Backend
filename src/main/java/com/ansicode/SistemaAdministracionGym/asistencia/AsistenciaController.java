@@ -18,22 +18,33 @@ public class AsistenciaController {
 
     private final AsistenciaService asistenciaService;
 
-    @PostMapping("/registrar")
-    public ResponseEntity<AsistenciaResponse> registrarAsistencia(
+    // 1) Registrar asistencia por cédula
+    @PostMapping("/registrar-por-cedula")
+    public ResponseEntity<AsistenciaResponse> registrarPorCedula(
             @RequestBody @Valid AsistenciaRequest request
     ) {
-        AsistenciaResponse response = asistenciaService.registrarPorCedula(request);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(asistenciaService.registrarPorCedula(request));
     }
 
     @GetMapping("/cliente/{clienteId}")
     public ResponseEntity<PageResponse<AsistenciaResponse>> listarPorCliente(
             @PathVariable Long clienteId,
-            @RequestParam(name = "page", defaultValue = "0" ,required = false) int page,
-            @RequestParam(name = "size", defaultValue = "10" ,required = false) int size
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "fechaEntrada,desc") String sort
     ) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("fechaEntrada").descending());
-        PageResponse<AsistenciaResponse> response = asistenciaService.listarPorCliente(clienteId, pageable);
-        return ResponseEntity.ok(response);
+        Pageable pageable = buildPageable(page, size, sort);
+        return ResponseEntity.ok(asistenciaService.listarPorCliente(clienteId, pageable));
+    }
+
+    private Pageable buildPageable(int page, int size, String sort) {
+        // sort = "campo,asc" o "campo,desc"
+        String[] parts = sort.split(",");
+        String field = parts[0].trim();
+        Sort.Direction direction = (parts.length > 1 && parts[1].equalsIgnoreCase("asc"))
+                ? Sort.Direction.ASC
+                : Sort.Direction.DESC;
+
+        return PageRequest.of(page, size, Sort.by(direction, field));
     }
 }

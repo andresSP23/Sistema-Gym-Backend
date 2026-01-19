@@ -18,7 +18,7 @@ public class CategoriaProductoMapper {
         response.setId(categoria.getId());
         response.setNombre(categoria.getNombre());
         response.setDescripcion(categoria.getDescripcion());
-        response.setActivo(categoria.getActivo());
+        response.setActivo(categoria.getIsVisible());
         return response;
     }
 

@@ -1,5 +1,6 @@
 package com.ansicode.SistemaAdministracionGym.movimientoinventario;
 
+import com.ansicode.SistemaAdministracionGym.common.AuditedEntity;
 import com.ansicode.SistemaAdministracionGym.common.BaseEntity;
 import com.ansicode.SistemaAdministracionGym.enums.TipoMovimientoInventario;
 import com.ansicode.SistemaAdministracionGym.producto.Producto;
@@ -16,34 +17,39 @@ import org.hibernate.annotations.Where;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "movimientos_inventario")
+@Table(name = "movimientos_inventario",
+        indexes = {
+                @Index(name = "ix_mov_inv_producto_fecha", columnList = "producto_id, createdAt "),
+                @Index(name = "ix_mov_inv_tipo", columnList = "tipo_movimiento")
+        })
 @Getter
 @Setter
-@SQLDelete(sql = "UPDATE movimientos_inventario SET activo = false WHERE id = ?")
-@Where(clause = "activo = true")
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class MovimientoInventario extends BaseEntity {
+public class MovimientoInventario extends AuditedEntity {
 
-    @ManyToOne(optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "producto_id", nullable = false)
     private Producto producto;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(name = "tipo_movimiento", nullable = false, length = 20)
     private TipoMovimientoInventario tipoMovimiento;
 
     @Column(nullable = false)
     private Integer cantidad;
 
-    @Column(nullable = false)
+    @Column(length = 255)
+    private String observacion;
+
+    @Column(name = "stock_anterior", nullable = false)
     private Integer stockAnterior;
 
-    @Column(nullable = false)
+    @Column(name = "stock_actual", nullable = false)
     private Integer stockActual;
 
-    @Column(nullable = false)
-    private LocalDateTime fechaMovimiento;
+
 
 
 }

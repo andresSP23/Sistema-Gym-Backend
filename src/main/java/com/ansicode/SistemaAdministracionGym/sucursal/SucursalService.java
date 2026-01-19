@@ -34,7 +34,7 @@ public class SucursalService {
     }
 
     public SucursalResponse obtener() {
-        Sucursal sucursal = sucursalRepository.findFirstByActivoTrue()
+        Sucursal sucursal = sucursalRepository.findFirstByIsVisibleTrue()
                 .orElseThrow(() ->
                         new EntityNotFoundException("Sucursal no registrada")
                 );
@@ -48,7 +48,7 @@ public class SucursalService {
     @Transactional
     public SucursalResponse actualizar(SucursalRequest request) {
         // Obtener la sucursal actual
-        Sucursal sucursal = sucursalRepository.findFirstByActivoTrue()
+        Sucursal sucursal = sucursalRepository.findFirstByIsVisibleTrue()
                 .orElseThrow(() ->
                         new EntityNotFoundException("No hay sucursal registrada para actualizar")
                 );

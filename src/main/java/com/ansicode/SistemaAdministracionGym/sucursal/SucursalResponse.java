@@ -35,5 +35,5 @@ public class SucursalResponse {
     private String logoUrl;
     private String colorPrimario;
 
-    private Boolean activo;
+    private Boolean is_visible;
 }

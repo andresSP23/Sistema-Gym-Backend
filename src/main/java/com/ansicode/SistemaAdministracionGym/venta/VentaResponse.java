@@ -1,5 +1,6 @@
 package com.ansicode.SistemaAdministracionGym.venta;
 
+import com.ansicode.SistemaAdministracionGym.detalleventa.DetalleVentaResponse;
 import com.ansicode.SistemaAdministracionGym.enums.EstadoVenta;
 import com.ansicode.SistemaAdministracionGym.enums.MetodoPago;
 import lombok.*;
@@ -15,19 +16,19 @@ import java.util.List;
 @NoArgsConstructor
 public class VentaResponse {
     private Long id;
-
-    private Long clienteId;
-    private String clienteNombre;
-
-    private Long vendedorId;
-    private String vendedorNombre;
-
-    private MetodoPago metodoPago;
-
-    private BigDecimal total;
+    private String numeroFactura;
     private LocalDateTime fechaVenta;
 
-    private List<DetalleVentaResponse> detalles;
+    private Long clienteId;
+    private Long sucursalId;
+    private Long cajeroUsuarioId;
 
-    private boolean activo;
+    private EstadoVenta estado;
+
+    private BigDecimal subtotal;
+    private BigDecimal descuentoTotal;
+    private BigDecimal impuestoTotal;
+    private BigDecimal total;
+
+    private List<DetalleVentaResponse> detalles;
 }

@@ -7,8 +7,7 @@ import java.util.Optional;
 public interface SucursalRepository extends JpaRepository<Sucursal, Long> {
 
     // Buscar la sucursal activa (asumiendo que solo habrá una)
-    Optional<Sucursal> findFirstByActivoTrue();
-
+    Optional<Sucursal> findFirstByIsVisibleTrue();
     // Opcional: buscar por código si quieres control extra
     Optional<Sucursal> findByCodigoSucursal(String codigoSucursal);
 }

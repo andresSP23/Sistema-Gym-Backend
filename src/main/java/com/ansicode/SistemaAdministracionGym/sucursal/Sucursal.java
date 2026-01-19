@@ -21,8 +21,8 @@ import java.time.LocalTime;
 @Getter
 @Setter
 @NoArgsConstructor
-@SQLDelete(sql = "UPDATE sucursal SET activo = false WHERE id = ?")
-@Where(clause = "activo = true")
+@SQLDelete(sql = "UPDATE sucursal SET is_visible = false WHERE id = ?")
+@Where(clause = "is_visible = true")
 @AllArgsConstructor
 @SuperBuilder
 

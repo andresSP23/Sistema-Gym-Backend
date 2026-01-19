@@ -15,7 +15,8 @@ public class MovimientoInventarioMapper {
             r.setCantidad(m.getCantidad());
             r.setStockAnterior(m.getStockAnterior());
             r.setStockActual(m.getStockActual());
-            r.setFecha(m.getFechaMovimiento());
+            r.setFecha(m.getCreatedAt());
+
             return r;
         }
 }

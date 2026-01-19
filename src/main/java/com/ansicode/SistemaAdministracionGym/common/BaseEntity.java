@@ -42,6 +42,6 @@ public class BaseEntity {
   private Long lastModifiedBy;
 
   /** Borrado lógico */
-  @Column(nullable = false)
-  private Boolean activo = true;
+  @Column(nullable = false , name = "is_visible")
+  private Boolean isVisible = true;
 }

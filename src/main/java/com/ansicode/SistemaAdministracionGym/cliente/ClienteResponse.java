@@ -1,5 +1,6 @@
 package com.ansicode.SistemaAdministracionGym.cliente;
 
+import com.ansicode.SistemaAdministracionGym.enums.EstadoMembresia;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -20,5 +21,5 @@ public class ClienteResponse {
     private Integer edad;
     private String codigoInterno;
     private LocalDate fechaRegistro;
-    private boolean activo;
+    private EstadoMembresia estado;
 }

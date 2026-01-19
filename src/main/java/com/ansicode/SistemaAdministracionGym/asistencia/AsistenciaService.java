@@ -2,10 +2,12 @@ package com.ansicode.SistemaAdministracionGym.asistencia;
 
 import com.ansicode.SistemaAdministracionGym.cliente.Cliente;
 import com.ansicode.SistemaAdministracionGym.cliente.ClienteRepository;
+import com.ansicode.SistemaAdministracionGym.clientesuscripcion.ClienteSuscripcion;
+import com.ansicode.SistemaAdministracionGym.clientesuscripcion.ClienteSuscripcionRepository;
 import com.ansicode.SistemaAdministracionGym.common.PageResponse;
 import com.ansicode.SistemaAdministracionGym.enums.EstadoMembresia;
-import com.ansicode.SistemaAdministracionGym.membresiacliente.MembresiaCliente;
-import com.ansicode.SistemaAdministracionGym.membresiacliente.MembresiaClienteRepository;
+
+import com.ansicode.SistemaAdministracionGym.enums.EstadoSuscripcion;
 import com.ansicode.SistemaAdministracionGym.pago.Pago;
 import com.ansicode.SistemaAdministracionGym.pago.PagoRepository;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -32,13 +34,13 @@ public class AsistenciaService {
 
     private final ClienteRepository clienteRepository;
     private final AsistenciaRepository asistenciaRepository;
-    private final MembresiaClienteRepository membresiaClienteRepository;
-    private final PagoRepository pagoRepository;
     private final AsistenciaMapper asistenciaMapper;
+    private final ClienteSuscripcionRepository  clienteSuscripcionRepository;
+
 
     @Transactional
     public AsistenciaResponse registrarPorCedula(AsistenciaRequest request) {
-        // Buscar cliente por cédula
+
         Cliente cliente = clienteRepository.findByCedula(request.getCedulaCliente())
                 .orElseThrow(() -> new EntityNotFoundException("Cliente no encontrado"));
 
@@ -47,94 +49,74 @@ public class AsistenciaService {
         LocalDateTime inicioDia = hoy.atStartOfDay();
         LocalDateTime finDia = hoy.atTime(LocalTime.MAX);
 
-        if (asistenciaRepository.existsByClienteIdAndFechaEntradaBetween(
-                cliente.getId(),
-                inicioDia,
-                finDia
-        )) {
+        if (asistenciaRepository.existsByClienteIdAndFechaEntradaBetween(cliente.getId(), inicioDia, finDia)) {
             throw new IllegalArgumentException("El cliente ya tiene asistencia registrada para este día");
         }
 
-        // Registrar asistencia
+        // Suscripción vigente
+        LocalDateTime ahora = LocalDateTime.now();
 
+        ClienteSuscripcion suscripcion = clienteSuscripcionRepository
+                .findTopByClienteIdAndEstadoAndFechaFinAfterOrderByFechaFinDesc(
+                        cliente.getId(),
+                        EstadoSuscripcion.ACTIVA,
+                        ahora
+                )
+                .orElseThrow(() -> new IllegalStateException("El cliente no tiene una suscripción activa o está vencida"));
+
+        // Registrar asistencia
         Asistencia asistencia = new Asistencia();
         asistencia.setCliente(cliente);
-        asistencia.setFechaEntrada(LocalDateTime.now());
-        asistencia.setActivo(true);
+        asistencia.setFechaEntrada(ahora);
 
         asistenciaRepository.save(asistencia);
 
-        // Traer membresía activa si existe
-        MembresiaCliente membresiaCliente = membresiaClienteRepository.findByClienteIdAndEstado(
-                cliente.getId(),
-                EstadoMembresia.ACTIVA
-        ).orElse(null);
-
-        // Traer pagos asociados a esa membresía usando pageable (aunque traigamos todos, size grande)
-        List<Pago> pagos;
-        if (membresiaCliente != null) {
-            pagos = pagoRepository.findByMembresiaClienteId(
-                    membresiaCliente.getId(),
-                    Pageable.ofSize(1000) // límite alto para traer todos
-            ).getContent();
-        } else {
-            pagos = Collections.emptyList();
-        }
-
-        long diasRestantes = 0;
-
-        //CALCULAR DÍAS RESTANTES
-        if (membresiaCliente != null) {
-
-            if (membresiaCliente.getFechaFin().isBefore(LocalDate.now())) {
-                throw new IllegalStateException("La membresía está vencida");
-            }
-
-             diasRestantes = ChronoUnit.DAYS.between(
-                    LocalDate.now(),
-                    membresiaCliente.getFechaFin()
-            );
-
-            membresiaCliente.setDiasRestantes(
-                    Math.max(diasRestantes, 0)
-            );
-        }
+        long diasRestantes = ChronoUnit.DAYS.between(ahora.toLocalDate(), suscripcion.getFechaFin().toLocalDate());
+        diasRestantes = Math.max(diasRestantes, 0);
 
 
-        return asistenciaMapper.toAsistenciaResponse(asistencia, membresiaCliente, pagos , Math.max(diasRestantes, 0)
-        );
+        List<Pago> pagos = Collections.emptyList();
+
+        return asistenciaMapper.toAsistenciaResponse(asistencia, suscripcion, pagos, diasRestantes);
     }
 
+
+
     public PageResponse<AsistenciaResponse> listarPorCliente(Long clienteId, Pageable pageable) {
+
         Page<Asistencia> page = asistenciaRepository.findByClienteId(clienteId, pageable);
+
+        LocalDateTime ahora = LocalDateTime.now();
+
+        // Traemos 1 vez la suscripción vigente (si existe)
+        ClienteSuscripcion suscripcionVigente = clienteSuscripcionRepository
+                .findTopByClienteIdAndEstadoAndFechaFinAfterOrderByFechaFinDesc(
+                        clienteId,
+                        EstadoSuscripcion.ACTIVA,
+                        ahora
+                )
+                .orElse(null);
+
+        long dias = 0;
+
+        if (suscripcionVigente != null) {
+            dias = ChronoUnit.DAYS.between(
+                    ahora.toLocalDate(),
+                    suscripcionVigente.getFechaFin().toLocalDate()
+            );
+            dias = Math.max(dias, 0);
+        }
+
+        final long diasFinal = dias;
 
         List<AsistenciaResponse> content = page.getContent()
                 .stream()
-                .map(a -> {
-                    MembresiaCliente mc = membresiaClienteRepository.findByClienteIdAndEstado(
-                            a.getCliente().getId(), EstadoMembresia.ACTIVA).orElse(null);
-
-                    List<Pago> pagos;
-                    if (mc != null) {
-                        pagos = pagoRepository.findByMembresiaClienteId(
-                                mc.getId(),
-                                Pageable.ofSize(1000)
-                        ).getContent();
-                    } else {
-                        pagos = Collections.emptyList();
-                    }
-
-                    long diasRestantes = 0;
-                    if (mc != null) {
-                        diasRestantes = ChronoUnit.DAYS.between(
-                                LocalDate.now(),
-                                mc.getFechaFin()
-                        );
-                        diasRestantes = Math.max(diasRestantes, 0);
-                    }
-
-                    return asistenciaMapper.toAsistenciaResponse(a, mc, pagos , diasRestantes );
-                })
+                .map(a -> asistenciaMapper.toAsistenciaResponse(
+                        a,
+                        suscripcionVigente,
+                        Collections.emptyList(),
+                        diasFinal   // usar la final
+                ))
                 .toList();
 
         return PageResponse.<AsistenciaResponse>builder()

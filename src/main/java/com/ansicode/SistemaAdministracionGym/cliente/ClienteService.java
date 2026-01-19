@@ -1,6 +1,7 @@
 package com.ansicode.SistemaAdministracionGym.cliente;
 
 import com.ansicode.SistemaAdministracionGym.common.PageResponse;
+import com.ansicode.SistemaAdministracionGym.enums.EstadoMembresia;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +25,8 @@ public class ClienteService {
         }
 
         Cliente cliente = clienteMapper.toCliente(request);
-        cliente.setActivo(true);
+        cliente.setIsVisible(true);
+        cliente.setEstado(EstadoMembresia.NUEVO);
         cliente.setCodigoInterno(generarCodigoInterno());
 
 
@@ -99,6 +101,19 @@ public class ClienteService {
         int year = LocalDate.now().getYear();
 
         return String.format("CLI-%d-%06d", year, totalClientes);
+    }
+
+    public void activarCliente (Long clienteId){
+
+
+        Cliente cliente = clienteRepository.findById(clienteId)
+                .orElseThrow(() -> new EntityNotFoundException("Cliente no encontrado"));
+
+         if(cliente.getEstado() == EstadoMembresia.ACTIVO){
+             return;
+         }
+         cliente.setEstado(EstadoMembresia.ACTIVO);
+         clienteRepository.save(cliente);
     }
 
 }

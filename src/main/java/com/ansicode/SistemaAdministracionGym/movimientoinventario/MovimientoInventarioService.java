@@ -24,80 +24,95 @@ public class MovimientoInventarioService {
     private final ProductoRepository productoRepository;
     private final MovimientoInventarioMapper mapper;
 
+
     @Transactional
-    public void registrarEntrada(
-            Producto producto,
-            Integer cantidad
-    ) {
-        registrar(producto, cantidad, TipoMovimientoInventario.ENTRADA);
+    public void registrarEntrada(Producto producto, Integer cantidad) {
+        registrarEntrada(producto, cantidad, null);
     }
 
     @Transactional
-    public void registrarSalida(
-            Producto producto,
-            Integer cantidad,
-            User usuario
-    ) {
-        if (producto.getStock() < cantidad) {
+    public void registrarEntrada(Producto producto, Integer cantidad, String observacion) {
+        registrar(producto, cantidad, TipoMovimientoInventario.ENTRADA, observacion);
+    }
+
+    @Transactional
+    public void registrarSalida(Producto producto, Integer cantidad) {
+        registrarSalida(producto, cantidad, null);
+    }
+
+    @Transactional
+    public void registrarSalida(Producto producto, Integer cantidad, String observacion) {
+        registrar(producto, cantidad, TipoMovimientoInventario.SALIDA, observacion);
+    }
+
+    @Transactional
+    public void registrarAjuste(Producto producto, Integer stockReal) {
+        registrarAjuste(producto, stockReal, null);
+    }
+
+    @Transactional
+    public void registrarAjuste(Producto producto, Integer stockReal, String observacion) {
+        registrar(producto, stockReal, TipoMovimientoInventario.AJUSTE, observacion);
+    }
+
+    private void registrar(Producto producto, Integer valor, TipoMovimientoInventario tipo , String observacion) {
+
+        if (producto == null) throw new IllegalArgumentException("Producto requerido");
+        if (valor == null) throw new IllegalArgumentException("Valor requerido");
+
+        int stockAnterior = producto.getStock();
+
+        // Validaciones
+        if (tipo != TipoMovimientoInventario.AJUSTE && valor <= 0) {
+            throw new IllegalArgumentException("Cantidad debe ser mayor a 0");
+        }
+        if (tipo == TipoMovimientoInventario.AJUSTE && valor < 0) {
+            throw new IllegalArgumentException("Stock real no puede ser negativo");
+        }
+        if (tipo == TipoMovimientoInventario.SALIDA && stockAnterior < valor) {
             throw new IllegalStateException("Stock insuficiente");
         }
 
-        registrar(producto, cantidad, TipoMovimientoInventario.SALIDA);
-    }
-
-    @Transactional
-    public void registrarAjuste(
-            Producto producto,
-            Integer stockReal
-    ) {
-        registrar(producto, stockReal, TipoMovimientoInventario.AJUSTE);
-    }
-
-    private void registrar(
-            Producto producto,
-            Integer cantidad,
-            TipoMovimientoInventario tipo
-    ) {
-        MovimientoInventario m = new MovimientoInventario();
-
-        m.setProducto(producto);
-        m.setCantidad(cantidad);
-        m.setTipoMovimiento(tipo);
-        m.setFechaMovimiento(LocalDateTime.now());
-
-        // Guardar stock anterior
-        m.setStockAnterior(producto.getStock());
-
-        // Actualizar stock según tipo
         int stockNuevo = switch (tipo) {
-            case ENTRADA -> producto.getStock() + cantidad;
-            case SALIDA -> producto.getStock() - cantidad;
-            case AJUSTE -> cantidad;
+            case ENTRADA -> stockAnterior + valor;
+            case SALIDA  -> stockAnterior - valor;
+            case AJUSTE  -> valor; // valor = stockReal
         };
 
-        // Guardar stock actual
+        MovimientoInventario m = new MovimientoInventario();
+        m.setProducto(producto);
+        m.setTipoMovimiento(tipo);
+
+        // ENTRADA/SALIDA: cantidad = unidades
+        // AJUSTE: cantidad = delta (diferencia real)
+        int cantidadRegistrada = (tipo == TipoMovimientoInventario.AJUSTE)
+                ? (stockNuevo - stockAnterior)
+                : valor;
+
+        m.setCantidad(cantidadRegistrada);
+        m.setStockAnterior(stockAnterior);
         m.setStockActual(stockNuevo);
 
-        // Actualizar producto
+        if (observacion != null && !observacion.isBlank()) {
+            //  recortar por si el front manda cosas largas
+            m.setObservacion(observacion.length() > 250 ? observacion.substring(0, 250) : observacion);
+        }
+
         producto.setStock(stockNuevo);
 
         repository.save(m);
-        productoRepository.save(producto);
     }
 
-    public PageResponse<MovimientoInventarioResponse> listarPorProducto(
-            Long productoId, Pageable pageable
-    ) {
-        // Obtener la página de movimientos desde el repositorio
+    @Transactional
+    public PageResponse<MovimientoInventarioResponse> listarPorProducto(Long productoId, Pageable pageable) {
+
         Page<MovimientoInventario> page = repository.findByProductoId(productoId, pageable);
 
-        // Mapear los movimientos a responses
         List<MovimientoInventarioResponse> content = page.getContent()
                 .stream()
                 .map(mapper::toResponse)
                 .toList();
 
-        // Construir y devolver el PageResponse
         return PageResponse.<MovimientoInventarioResponse>builder()
                 .content(content)
                 .number(page.getNumber())

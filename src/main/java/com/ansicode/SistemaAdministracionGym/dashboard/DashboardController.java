@@ -16,19 +16,19 @@ import java.time.LocalDate;
 @Tag(name ="DashBoard")
 public class DashboardController {
 
-
-    private final DashboardService dashboardService;
-
-    @GetMapping("/obtenerDashboard")
-    public DashBoardResumenResponse obtenerDashboard(
-            @RequestParam(required = false)
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-            LocalDate fechaInicio,
-
-            @RequestParam(required = false)
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-            LocalDate fechaFin
-    ) {
-        return dashboardService.obtenerResumen(fechaInicio, fechaFin);
-    }
+//
+//    private final DashboardService dashboardService;
+//
+//    @GetMapping("/obtenerDashboard")
+//    public DashBoardResumenResponse obtenerDashboard(
+//            @RequestParam(required = false)
+//            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+//            LocalDate fechaInicio,
+//
+//            @RequestParam(required = false)
+//            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+//            LocalDate fechaFin
+//    ) {
+//        return dashboardService.obtenerResumen(fechaInicio, fechaFin);
+//    }
 }

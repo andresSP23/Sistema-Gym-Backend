@@ -1,8 +1,11 @@
 package com.ansicode.SistemaAdministracionGym.cliente;
 
 import com.ansicode.SistemaAdministracionGym.common.BaseEntity;
+import com.ansicode.SistemaAdministracionGym.enums.EstadoMembresia;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,8 +20,8 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @SuperBuilder
-@SQLDelete(sql = "UPDATE Cliente SET activo = false WHERE id = ?")
-@Where(clause = "activo = true")
+@SQLDelete(sql = "UPDATE Cliente SET is_visible = false WHERE id = ?")
+@Where(clause = "is_visible = true")
 @AllArgsConstructor
 @NoArgsConstructor
 public class Cliente  extends BaseEntity {
@@ -46,6 +49,9 @@ public class Cliente  extends BaseEntity {
     private String codigoInterno;
 
     private LocalDate fechaRegistro;
+
+    @Enumerated(EnumType.STRING)
+    private EstadoMembresia estado;
 
 
 

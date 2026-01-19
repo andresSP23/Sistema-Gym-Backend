@@ -34,7 +34,7 @@ public class ClienteMapper {
                 .edad(cliente.getEdad())
                 .codigoInterno(cliente.getCodigoInterno())
                 .fechaRegistro(cliente.getFechaRegistro())
-                .activo(cliente.getActivo()) // activo del borrado lógico
+                .estado(cliente.getEstado())
                 .build();
     }
 

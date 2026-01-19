@@ -1,6 +1,5 @@
 package com.ansicode.SistemaAdministracionGym.producto;
 
-import com.ansicode.SistemaAdministracionGym.enums.TipoProducto;
 import lombok.*;
 
 import java.math.BigDecimal;

@@ -46,9 +46,6 @@ public class PagoMapper {
                 .comprobanteId(
                         pago.getComprobante() != null ? pago.getComprobante().getId() : null
                 )
-                .pdfRef(
-                        pago.getComprobante() != null ? pago.getComprobante().getPdfRef() : null
-                )
 
                 .build();
     }

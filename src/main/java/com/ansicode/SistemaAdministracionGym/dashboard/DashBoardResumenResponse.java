@@ -5,30 +5,18 @@ import lombok.Data;
 import java.math.BigDecimal;
 import java.util.List;
 
-@Data
-public class DashBoardResumenResponse {
+public record DashBoardResumenResponse(
 
-    // Clientes
-    private long totalClientes;
-    private long clientesEnRango;
+        BigDecimal ingresosTotales,
+        BigDecimal egresosTotales,
+        BigDecimal gananciaTotal,
 
-    // Asistencias
-    private long asistenciasEnRango;
-    private AsistenciaUltimaDto ultimaAsistencia;
+        BigDecimal ingresosHoy,
+        BigDecimal egresosHoy,
+        BigDecimal gananciaHoy,
 
-    // Productos
-    private long totalProductos;
-    private long totalCategorias;
-    private long productosStockBajo;
-
-    // Ventas
-    private long totalVentasEnRango;
-    private BigDecimal gananciaVentasEnRango;
-
-    // Membresías
-    private BigDecimal gananciaMembresiasEnRango;
-    private List<MembresiaPagoDto> pagosMembresiaEnRango;
-
-    // Inventario
-    private long movimientosInventarioEnRango;
+        Long numeroClientes,
+        BigDecimal productosVendidosCantidad,
+        BigDecimal serviciosVendidosCantidad
+) {
 }

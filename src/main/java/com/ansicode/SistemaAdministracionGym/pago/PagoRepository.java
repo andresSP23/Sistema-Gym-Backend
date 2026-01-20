@@ -1,6 +1,8 @@
 package com.ansicode.SistemaAdministracionGym.pago;
 
 import com.ansicode.SistemaAdministracionGym.enums.EstadoPago;
+import com.ansicode.SistemaAdministracionGym.enums.MetodoPago;
+import com.ansicode.SistemaAdministracionGym.enums.TipoOperacionPago;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -9,6 +11,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.List;
 
 public interface PagoRepository extends JpaRepository<Pago, Long> {
 
@@ -24,4 +28,41 @@ public interface PagoRepository extends JpaRepository<Pago, Long> {
     BigDecimal sumMontoByVentaAndEstado(@Param("ventaId") Long ventaId,
                                         @Param("estado") EstadoPago estado);
 
+
+    @Query("""
+        SELECT p FROM Pago p
+        WHERE p.fechaPago >= COALESCE(:desde, p.fechaPago)
+          AND p.fechaPago <= COALESCE(:hasta, p.fechaPago)
+          AND p.tipoOperacion = COALESCE(:tipoOperacion, p.tipoOperacion)
+          AND p.metodo = COALESCE(:metodo, p.metodo)
+        ORDER BY p.fechaPago DESC
+    """)
+    Page<Pago> buscarPagos(
+            @Param("desde") LocalDateTime desde,
+            @Param("hasta") LocalDateTime hasta,
+            @Param("tipoOperacion") TipoOperacionPago tipoOperacion,
+            @Param("metodo") MetodoPago metodo,
+            Pageable pageable
+    );
+
+
+
+
+
+    @Query("""
+        SELECT p FROM Pago p
+        WHERE p.fechaPago >= COALESCE(:desde, p.fechaPago)
+          AND p.fechaPago <= COALESCE(:hasta, p.fechaPago)
+          AND p.tipoOperacion = COALESCE(:tipoOperacion, p.tipoOperacion)
+          AND p.metodo = COALESCE(:metodo, p.metodo)
+          AND p.estado = COALESCE(:estado, p.estado)
+        ORDER BY p.fechaPago DESC
+    """)
+    List<Pago> buscarPagosReporte(
+            @Param("desde") LocalDateTime desde,
+            @Param("hasta") LocalDateTime hasta,
+            @Param("tipoOperacion") TipoOperacionPago tipoOperacion,
+            @Param("metodo") MetodoPago metodo,
+            @Param("estado") EstadoPago estado
+    );
 }

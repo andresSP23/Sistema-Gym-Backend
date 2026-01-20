@@ -291,4 +291,42 @@ public class    PagoService {
 
 
 
+    public PageResponse<PagoResponse> findAll(
+            LocalDateTime desde,
+            LocalDateTime hasta,
+            TipoOperacionPago tipoOperacion,
+            MetodoPago metodo,
+            Pageable pageable
+    ) {
+
+        if (desde != null && hasta != null && desde.isAfter(hasta)) {
+            throw new IllegalArgumentException("La fecha desde no puede ser mayor que hasta");
+        }
+
+        Page<Pago> page = pagoRepository.buscarPagos(
+                desde,
+                hasta,
+                tipoOperacion,
+                metodo,
+                pageable
+        );
+
+        return PageResponse.<PagoResponse>builder()
+                .content(
+                        page.getContent()
+                                .stream()
+                                .map(pagoMapper::toResponse)
+                                .toList()
+                )
+                .number(page.getNumber())
+                .size(page.getSize())
+                .totalElements(page.getTotalElements())
+                .totalPages(page.getTotalPages())
+                .first(page.isFirst())
+                .last(page.isLast())
+                .build();
+    }
+
+
+
 }

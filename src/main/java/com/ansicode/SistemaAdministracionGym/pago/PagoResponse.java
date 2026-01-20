@@ -42,5 +42,4 @@ public class PagoResponse {
 
     // Comprobante / PDF
     private Long comprobanteId;
-    private String pdfRef;
 }

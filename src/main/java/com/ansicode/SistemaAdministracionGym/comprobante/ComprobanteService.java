@@ -13,8 +13,14 @@ import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.properties.TextAlignment;
 import com.itextpdf.layout.properties.UnitValue;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.nio.file.Path;
@@ -139,4 +145,42 @@ public class ComprobanteService {
         return v.setScale(2, java.math.RoundingMode.HALF_UP).toPlainString();
     }
     private static String ns(String s) { return s == null ? "" : s; }
+
+
+
+
+    @Transactional(readOnly = true)
+    public ResponseEntity<Resource> descargarPdf(Long comprobanteId) {
+
+        Comprobante c = comprobanteRepository.findById(comprobanteId)
+                .orElseThrow(() -> new EntityNotFoundException("Comprobante no encontrado"));
+
+        if (c.getPdfRef() == null || c.getPdfRef().isBlank()) {
+            throw new IllegalArgumentException("Este comprobante no tiene PDF generado");
+        }
+
+        try {
+            Path path = Paths.get(c.getPdfRef()).normalize();
+            Resource resource = new UrlResource(path.toUri());
+
+            if (!resource.exists() || !resource.isReadable()) {
+                throw new IllegalArgumentException("El archivo PDF no existe o no se puede leer");
+            }
+
+            String safeName = (c.getNumero() != null && !c.getNumero().isBlank())
+                    ? c.getNumero().replaceAll("[^a-zA-Z0-9-_\\.]", "_")
+                    : "comprobante-" + comprobanteId;
+
+            String fileName = safeName + ".pdf";
+
+            return ResponseEntity.ok()
+                    .contentType(MediaType.APPLICATION_PDF)
+                    // inline = abre en el navegador, attachment = descarga
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
+                    .body(resource);
+
+        } catch (Exception e) {
+            throw new RuntimeException("No se pudo descargar el PDF", e);
+        }
+    }
 }

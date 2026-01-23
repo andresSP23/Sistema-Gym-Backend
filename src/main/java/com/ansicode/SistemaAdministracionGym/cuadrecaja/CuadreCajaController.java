@@ -1,7 +1,10 @@
 package com.ansicode.SistemaAdministracionGym.cuadrecaja;
 
+import com.ansicode.SistemaAdministracionGym.common.PageResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,16 +14,26 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Cuadre Caja")
 public class CuadreCajaController {
 
-    private final  CuadreCajaService cuadreCajaService;
+    private final CuadreCajaService cuadreCajaService;
 
     @PostMapping("/generar/{sesionCajaId}")
-    public ResponseEntity<CuadreCaja> generar(
+    public ResponseEntity<CuadreCajaResponse> generar(
             @PathVariable Long sesionCajaId,
             @RequestBody(required = false) GenerarCuadreRequest body
     ) {
-        String moneda = (body != null) ? body.getMoneda() : "USD";
-        String obs = (body != null) ? body.getObservacion() : null;
-
-        return ResponseEntity.ok(cuadreCajaService.generarCuadre(sesionCajaId, moneda, obs));
+        return ResponseEntity.ok(cuadreCajaService.generarCuadre(sesionCajaId, body));
     }
+
+
+
+    @GetMapping("/findAll")
+    public ResponseEntity<PageResponse<CuadreCajaResponse>> findAll(
+            @RequestParam(name = "page", defaultValue = "0", required = false) int page,
+            @RequestParam(name = "size", defaultValue = "10", required = false) int size,
+            @ParameterObject Pageable pageable
+    ) {
+        return ResponseEntity.ok(cuadreCajaService.findAll(pageable));
+    }
+
+
 }

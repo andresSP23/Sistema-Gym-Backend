@@ -42,8 +42,8 @@ public class UserService {
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .fechaNacimiento(request.getFechaNacimiento())
-                .cuentaBloqueada(request.getCuentaBloqueada())
-                .activa(request.getActiva())
+                .cuentaBloqueada(false)
+                .activa(true)
                 .roles(roles)
                 .build();
 
@@ -96,8 +96,6 @@ public class UserService {
         user.setTelefono(request.getTelefono());
         user.setEmail(request.getEmail());
         user.setFechaNacimiento(request.getFechaNacimiento());
-        user.setCuentaBloqueada(request.getCuentaBloqueada());
-        user.setActiva(request.getActiva());
         user.setRoles(roles);
 
         if (request.getPassword() != null && !request.getPassword().isBlank()) {

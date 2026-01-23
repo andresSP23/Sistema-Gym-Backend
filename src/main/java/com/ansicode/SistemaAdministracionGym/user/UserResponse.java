@@ -30,6 +30,5 @@ public class UserResponse {
     private LocalDateTime fechaCreacion;
     private LocalDateTime fechaModificacion;
 
-    private boolean activo;
 
 }

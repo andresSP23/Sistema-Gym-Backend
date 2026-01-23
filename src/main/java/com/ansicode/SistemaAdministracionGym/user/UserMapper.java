@@ -25,7 +25,6 @@ public class UserMapper {
                 )
                 .fechaCreacion(user.getFechaCreacion())
                 .fechaModificacion(user.getFechaModificacion())
-                .activo(user.isActiva())
                 .build();
     }
 }

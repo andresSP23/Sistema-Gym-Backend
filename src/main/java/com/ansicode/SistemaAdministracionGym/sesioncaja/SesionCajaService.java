@@ -1,10 +1,13 @@
 package com.ansicode.SistemaAdministracionGym.sesioncaja;
 
+import com.ansicode.SistemaAdministracionGym.common.PageResponse;
 import com.ansicode.SistemaAdministracionGym.cuadrecaja.CuadreCajaRepository;
 import com.ansicode.SistemaAdministracionGym.enums.EstadoSesionCaja;
 import com.ansicode.SistemaAdministracionGym.user.User;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -88,5 +91,23 @@ public class SesionCajaService {
         }
 
         return mapper.toResponse(repository.save(s));
+    }
+
+
+    @Transactional(readOnly = true)
+    public PageResponse<SesionCajaResponse> findAll(Pageable pageable) {
+
+        Page<SesionCajaResponse> page =
+                repository.findAllWithSaldoFinal(pageable);
+
+        return PageResponse.<SesionCajaResponse>builder()
+                .content(page.getContent())
+                .number(page.getNumber())
+                .size(page.getSize())
+                .totalElements(page.getTotalElements())
+                .totalPages(page.getTotalPages())
+                .first(page.isFirst())
+                .last(page.isLast())
+                .build();
     }
 }

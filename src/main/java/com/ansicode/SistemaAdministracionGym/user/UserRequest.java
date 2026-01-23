@@ -36,11 +36,7 @@ public class UserRequest {
     @Past(message = "La fecha de nacimiento debe ser pasada")
     private LocalDate fechaNacimiento;
 
-    @NotNull(message = "El estado de cuenta bloqueada es obligatorio")
-    private Boolean cuentaBloqueada;
 
-    @NotNull(message = "El estado activo de la cuenta es obligatorio")
-    private Boolean activa;
 
     @NotNull(message = "Los roles son obligatorios")
     private List<Integer> rolesIds;

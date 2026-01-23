@@ -1,5 +1,6 @@
 package com.ansicode.SistemaAdministracionGym.cuadrecaja;
 
+import com.ansicode.SistemaAdministracionGym.common.PageResponse;
 import com.ansicode.SistemaAdministracionGym.conteocaja.ConteoCajaRepository;
 import com.ansicode.SistemaAdministracionGym.enums.EstadoCuadreCaja;
 import com.ansicode.SistemaAdministracionGym.movimientodinero.MovimientoDineroRepository;
@@ -8,6 +9,8 @@ import com.ansicode.SistemaAdministracionGym.sesioncaja.SesionCajaRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.convert.ReadingConverter;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,42 +26,92 @@ public class CuadreCajaService {
     private final ConteoCajaRepository conteoCajaRepository;
     private final CuadreCajaRepository cuadreCajaRepository;
     private final MovimientoDineroRepository movimientoDineroRepository;
+    private final CuadreCajaMapper  cuadreCajaMapper;
 
     @Transactional
-    public CuadreCaja generarCuadre(Long sesionCajaId, String moneda, String observacion) {
+    public CuadreCajaResponse generarCuadre(Long sesionCajaId, GenerarCuadreRequest body) {
+
+        String moneda = resolveMoneda(body);
+        String observacion = (body != null) ? body.getObservacion() : null;
 
         SesionCaja sesion = sesionCajaRepository.findById(sesionCajaId)
                 .orElseThrow(() -> new EntityNotFoundException("Sesión de caja no encontrada"));
 
-        String mon = (moneda == null || moneda.isBlank()) ? "USD" : moneda.trim().toUpperCase();
+        BigDecimal base = money(sesion.getBaseInicialEfectivo());
 
-        BigDecimal base = (sesion.getBaseInicialEfectivo() == null ? BigDecimal.ZERO : sesion.getBaseInicialEfectivo())
-                .setScale(2, RoundingMode.HALF_UP);
+        BigDecimal netoEfectivo = money(
+                movimientoDineroRepository.netoEfectivoPorSesion(sesionCajaId, moneda)
+        );
 
-        BigDecimal netoEfectivo = movimientoDineroRepository.netoEfectivoPorSesion(sesionCajaId, mon);
-        if (netoEfectivo == null) netoEfectivo = BigDecimal.ZERO;
-        netoEfectivo = netoEfectivo.setScale(2, RoundingMode.HALF_UP);
+        BigDecimal esperado = money(base.add(netoEfectivo));
 
-        BigDecimal esperado = base.add(netoEfectivo).setScale(2, RoundingMode.HALF_UP);
+        BigDecimal contado = money(
+                conteoCajaRepository.totalContado(sesionCajaId, moneda)
+        );
 
-        BigDecimal contado = conteoCajaRepository.totalContado(sesionCajaId, mon);
-        if (contado == null) contado = BigDecimal.ZERO;
-        contado = contado.setScale(2, RoundingMode.HALF_UP);
-
-        BigDecimal diferencia = contado.subtract(esperado).setScale(2, RoundingMode.HALF_UP);
+        BigDecimal diferencia = money(contado.subtract(esperado));
 
         CuadreCaja cuadre = cuadreCajaRepository.findBySesionCaja_Id(sesionCajaId)
-                .orElseGet(() -> CuadreCaja.builder().sesionCaja(sesion).build());
+                .orElseGet(() -> CuadreCaja.builder()
+                        .sesionCaja(sesion)
+                        .build());
 
         cuadre.setEfectivoEsperado(esperado);
         cuadre.setEfectivoContado(contado);
         cuadre.setDiferencia(diferencia);
-        cuadre.setEstado(diferencia.compareTo(BigDecimal.ZERO) == 0 ? EstadoCuadreCaja.COMPLETO : EstadoCuadreCaja.PARCIAL);
+        cuadre.setEstado(
+                diferencia.compareTo(BigDecimal.ZERO) == 0
+                        ? EstadoCuadreCaja.COMPLETO
+                        : EstadoCuadreCaja.PARCIAL
+        );
 
-        if (observacion != null && !observacion.isBlank()) {
-            cuadre.setObservacion(observacion.length() > 300 ? observacion.substring(0, 300) : observacion);
+        // observación
+        if (observacion == null || observacion.isBlank()) {
+            cuadre.setObservacion(null);
+        } else {
+            cuadre.setObservacion(observacion.length() > 300
+                    ? observacion.substring(0, 300)
+                    : observacion);
         }
 
-        return cuadreCajaRepository.save(cuadre);
+        CuadreCaja saved = cuadreCajaRepository.save(cuadre);
+
+        return cuadreCajaMapper.toResponse(saved);
     }
+
+    private String resolveMoneda(GenerarCuadreRequest body) {
+        if (body == null) return "USD";
+        if (body.getMoneda() == null) return "USD";
+        if (body.getMoneda().isBlank()) return "USD";
+        return body.getMoneda().trim().toUpperCase();
+    }
+
+    private BigDecimal money(BigDecimal v) {
+        return (v == null ? BigDecimal.ZERO : v).setScale(2, RoundingMode.HALF_UP);
+    }
+
+
+    @Transactional(readOnly = true)
+    public PageResponse<CuadreCajaResponse> findAll(Pageable pageable) {
+
+        Page<CuadreCaja> page = cuadreCajaRepository.findAll(pageable);
+
+        return PageResponse.<CuadreCajaResponse>builder()
+                .content(
+                        page.getContent()
+                                .stream()
+                                .map(cuadreCajaMapper::toResponse)
+                                .toList()
+                )
+                .number(page.getNumber())
+                .size(page.getSize())
+                .totalElements(page.getTotalElements())
+                .totalPages(page.getTotalPages())
+                .first(page.isFirst())
+                .last(page.isLast())
+                .build();
+    }
+
 }
+
+

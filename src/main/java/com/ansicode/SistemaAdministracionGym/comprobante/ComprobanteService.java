@@ -88,6 +88,7 @@ public class ComprobanteService {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
             doc.add(new Paragraph("Número: " + c.getNumero()).setBold());
             doc.add(new Paragraph("Fecha: " + (venta.getFechaVenta() != null ? venta.getFechaVenta().format(dtf) : "-")));
+
             doc.add(new Paragraph(" "));
 
             Table table = new Table(UnitValue.createPercentArray(new float[]{45, 15, 15, 12.5f, 12.5f}))

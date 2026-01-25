@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AsistenciaRequest {
+public class    AsistenciaRequest {
 
 
     @NotBlank(message = "La cédula del cliente es obligatoria")

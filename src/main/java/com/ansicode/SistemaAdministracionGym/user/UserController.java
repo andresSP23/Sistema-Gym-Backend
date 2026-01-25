@@ -40,17 +40,28 @@ public class UserController {
         return userService.findById(id);
     }
 
-    @PutMapping("/update/{id}")
-    public UserResponse update(
+
+
+    @PatchMapping("/update/{id}")
+    public ResponseEntity<UserResponse> updateUser(
             @PathVariable Long id,
-            @RequestBody @Valid UserRequest request
+            @Valid @RequestBody UserUpdateRequest request,
+            Authentication authentication
     ) {
-        return userService.update(id, request);
+        UserResponse response = userService.update(id, request, authentication);
+        return ResponseEntity.ok(response);
     }
+
 
     @DeleteMapping("/delete/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
         userService.delete(id);
+    }
+
+
+    @GetMapping("/me")
+    public UserResponse me(Authentication authentication) {
+        return userService.getCurrentUser(authentication);
     }
 }

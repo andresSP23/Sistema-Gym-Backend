@@ -29,7 +29,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class VentaService {
+public class    VentaService {
 
 
 

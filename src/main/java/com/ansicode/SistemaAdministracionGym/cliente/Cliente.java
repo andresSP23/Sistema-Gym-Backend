@@ -43,15 +43,13 @@ public class Cliente  extends BaseEntity {
     @Column(nullable = false, length = 255)
     private String direccion;
     @Column(nullable = false)
-    private Integer edad;
+    private LocalDate fechaNacimiento;
 
     @Column(unique = true)
     private String codigoInterno;
 
-    private LocalDate fechaRegistro;
 
-    @Enumerated(EnumType.STRING)
-    private EstadoMembresia estado;
+
 
 
 

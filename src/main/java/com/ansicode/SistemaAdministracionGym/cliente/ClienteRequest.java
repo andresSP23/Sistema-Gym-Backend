@@ -50,8 +50,6 @@ public class ClienteRequest {
     @Size(max = 255, message = "La dirección no puede exceder 255 caracteres")
     private String direccion;
 
-    @NotNull(message = "La edad es obligatoria")
-    @Min(value = 0, message = "La edad no puede ser negativa")
-    @Max(value = 120, message = "La edad no puede ser mayor a 120 años")
-    private Integer edad;
+    @NotNull(message = "La fecha de nacimiento es obligatoria")
+    private LocalDate fechaNacimiento;
 }

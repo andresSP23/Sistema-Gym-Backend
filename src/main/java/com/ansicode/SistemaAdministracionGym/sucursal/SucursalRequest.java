@@ -57,7 +57,6 @@ public class SucursalRequest {
     private Integer aforoMaximo;
 
     @NotBlank(message = "El RUC es obligatorio")
-    @RucEcuatoriano
     private String ruc;
 
     @NotBlank(message = "La razón social es obligatoria")

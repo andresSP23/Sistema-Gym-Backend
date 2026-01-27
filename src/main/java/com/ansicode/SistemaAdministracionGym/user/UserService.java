@@ -1,6 +1,8 @@
 package com.ansicode.SistemaAdministracionGym.user;
 
 import com.ansicode.SistemaAdministracionGym.common.PageResponse;
+import com.ansicode.SistemaAdministracionGym.handler.BusinessErrorCodes;
+import com.ansicode.SistemaAdministracionGym.handler.BussinessException;
 import com.ansicode.SistemaAdministracionGym.role.Role;
 import com.ansicode.SistemaAdministracionGym.role.RoleRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -13,7 +15,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Period;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -24,9 +30,19 @@ public class UserService {
     private final UserMapper userMapper;
     public UserResponse create(UserRequest request, Authentication connectedUser) {
 
+        // 1) Validaciones únicas
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
-            throw new IllegalStateException("El email ya está registrado");
+            throw new BussinessException(BusinessErrorCodes.USER_ALREADY_EXISTS);
         }
+
+        if (userRepository.findByTelefono(request.getTelefono()).isPresent()) {
+            throw new BussinessException(BusinessErrorCodes.USER_PHONE_ALREADY_EXISTS);
+        }
+
+        // 2) Fecha nacimiento (>=18 y no hoy/no futuro)
+        validateBirthDate(request.getFechaNacimiento());
+
+
 
         List<Role> roles = roleRepository.findAllById(request.getRolesIds());
         if (roles.isEmpty()) {
@@ -76,6 +92,17 @@ public class UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
 
+
+        if (request.getTelefono() != null && !request.getTelefono().isBlank()
+                && !request.getTelefono().equals(user.getTelefono())) {
+
+            Optional<User> existing = userRepository.findByTelefono(request.getTelefono());
+            if (existing.isPresent() && !existing.get().getId().equals(user.getId())) {
+                throw new BussinessException(BusinessErrorCodes.USER_PHONE_ALREADY_EXISTS);
+            }
+        }
+
+
         // -------------------------
         // 1) Normalizar request para update parcial:
         // si viene null, conserva el valor actual
@@ -92,6 +119,8 @@ public class UserService {
         if (request.getFechaNacimiento() == null) {
             request.setFechaNacimiento(user.getFechaNacimiento());
         }
+
+        validateBirthDate(request.getFechaNacimiento());
 
         // -------------------------
         // 2) Mapper (solo perfil)
@@ -156,4 +185,25 @@ public class UserService {
 
         return userMapper.toResponse(user);
     }
+
+
+
+    private void validateBirthDate(LocalDate birthDate) {
+
+        if (birthDate == null) return;
+
+        LocalDate today = LocalDate.now();
+
+        // no hoy, no futuro
+        if (!birthDate.isBefore(today)) {
+            throw new BussinessException(BusinessErrorCodes.USER_BIRTHDATE_INVALID);
+        }
+
+        int age = Period.between(birthDate, today).getYears();
+        if (age < 18) {
+            throw new BussinessException(BusinessErrorCodes.USER_UNDERAGE);
+        }
+    }
+
+
 }

@@ -2,6 +2,7 @@ package com.ansicode.SistemaAdministracionGym.cliente;
 
 import com.ansicode.SistemaAdministracionGym.enums.EstadoMembresia;
 import lombok.*;
+import org.springframework.cglib.core.Local;
 
 import java.time.LocalDate;
 
@@ -18,8 +19,6 @@ public class ClienteResponse {
     private String email;
     private String telefono;
     private String direccion;
-    private Integer edad;
+    private LocalDate fechaNacimiento;
     private String codigoInterno;
-    private LocalDate fechaRegistro;
-    private EstadoMembresia estado;
 }

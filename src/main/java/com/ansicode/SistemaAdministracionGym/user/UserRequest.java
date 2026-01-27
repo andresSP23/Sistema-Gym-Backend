@@ -38,7 +38,6 @@ public class UserRequest {
 
 
     @NotNull(message = "La fecha de nacimiento es obligatoria")
-    @Past(message = "La fecha de nacimiento debe ser pasada")
     private LocalDate fechaNacimiento;
 
 

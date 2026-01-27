@@ -32,7 +32,7 @@ public class AuthenticationService {
     public void register(RegistrationRequest request) throws MessagingException {
 
         //se puede modificar el valor del rol para que por defecto agarre un rol al momento de registrar un usuario
-        var userRole = roleRepository.findByName("USER").orElseThrow(()-> new IllegalStateException("El rol no a sido inicializado"));
+        var userRole = roleRepository.findByName("EMPLEADO").orElseThrow(()-> new IllegalStateException("El rol no a sido inicializado"));
 
 
         var user = User.builder()

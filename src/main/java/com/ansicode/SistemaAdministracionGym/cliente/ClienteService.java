@@ -7,6 +7,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -18,19 +19,24 @@ public class ClienteService {
     private final ClienteRepository clienteRepository;
     private final ClienteMapper clienteMapper;
 
+    @Transactional
     public ClienteResponse create(ClienteRequest request) {
 
-        if (clienteRepository.existsByCedula(request.getCedula())) {
-            throw new IllegalStateException("La cédula ya está registrada");
-        }
-
+        // 1) mapear
         Cliente cliente = clienteMapper.toCliente(request);
+
+        // 2) guardar 1 vez para obtener ID (codigoInterno temporalmente null)
+        cliente.setCodigoInterno(null);
         cliente.setIsVisible(true);
-        cliente.setEstado(EstadoMembresia.NUEVO);
-        cliente.setCodigoInterno(generarCodigoInterno());
+        cliente = clienteRepository.save(cliente);
 
+        // 3) generar codigo interno con ID (único)
+        int year = LocalDate.now().getYear();
+        String correlativo = String.format("%06d", cliente.getId());
+        cliente.setCodigoInterno("CLI-" + year + "-" + correlativo);
 
-        clienteRepository.save(cliente);
+        // 4) guardar 2da vez ya con el código
+        cliente = clienteRepository.save(cliente);
 
         return clienteMapper.toClienteResponse(cliente);
     }
@@ -103,17 +109,17 @@ public class ClienteService {
         return String.format("CLI-%d-%06d", year, totalClientes);
     }
 
-    public void activarCliente (Long clienteId){
-
-
-        Cliente cliente = clienteRepository.findById(clienteId)
-                .orElseThrow(() -> new EntityNotFoundException("Cliente no encontrado"));
-
-         if(cliente.getEstado() == EstadoMembresia.ACTIVO){
-             return;
-         }
-         cliente.setEstado(EstadoMembresia.ACTIVO);
-         clienteRepository.save(cliente);
-    }
+//    public void activarCliente (Long clienteId){
+//
+//
+//        Cliente cliente = clienteRepository.findById(clienteId)
+//                .orElseThrow(() -> new EntityNotFoundException("Cliente no encontrado"));
+//
+//         if(cliente.getEstado() == EstadoMembresia.ACTIVO){
+//             return;
+//         }
+//         cliente.setEstado(EstadoMembresia.ACTIVO);
+//         clienteRepository.save(cliente);
+//    }
 
 }

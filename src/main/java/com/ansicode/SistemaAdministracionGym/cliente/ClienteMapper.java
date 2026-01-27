@@ -16,8 +16,7 @@ public class ClienteMapper {
                 .email(request.getEmail())
                 .telefono(request.getTelefono())
                 .direccion(request.getDireccion())
-                .edad(request.getEdad())
-                .fechaRegistro(LocalDate.now())
+                .fechaNacimiento(request.getFechaNacimiento())
                 .build();
     }
 
@@ -31,10 +30,8 @@ public class ClienteMapper {
                 .email(cliente.getEmail())
                 .telefono(cliente.getTelefono())
                 .direccion(cliente.getDireccion())
-                .edad(cliente.getEdad())
+                .fechaNacimiento(cliente.getFechaNacimiento())
                 .codigoInterno(cliente.getCodigoInterno())
-                .fechaRegistro(cliente.getFechaRegistro())
-                .estado(cliente.getEstado())
                 .build();
     }
 
@@ -46,7 +43,6 @@ public class ClienteMapper {
         cliente.setEmail(request.getEmail());
         cliente.setTelefono(request.getTelefono());
         cliente.setDireccion(request.getDireccion());
-        cliente.setEdad(request.getEdad());
-        cliente.setFechaRegistro(LocalDate.now());
+        cliente.setFechaNacimiento(request.getFechaNacimiento());
     }
 }

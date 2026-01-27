@@ -1,6 +1,7 @@
 package com.ansicode.SistemaAdministracionGym.user;
 
 import com.ansicode.SistemaAdministracionGym.common.PageResponse;
+import com.ansicode.SistemaAdministracionGym.handler.ApiErrorResponses;
 import com.ansicode.SistemaAdministracionGym.pago.PagoResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -18,6 +19,8 @@ import org.springframework.data.domain.Pageable;
 @RequestMapping("users")
 @Tag(name = "User")
 @RequiredArgsConstructor
+@ApiErrorResponses
+@RestControllerAdvice
 public class UserController {
     private final UserService userService;
 

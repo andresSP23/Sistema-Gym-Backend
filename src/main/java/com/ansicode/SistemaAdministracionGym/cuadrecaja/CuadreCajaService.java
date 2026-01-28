@@ -3,6 +3,8 @@ package com.ansicode.SistemaAdministracionGym.cuadrecaja;
 import com.ansicode.SistemaAdministracionGym.common.PageResponse;
 import com.ansicode.SistemaAdministracionGym.conteocaja.ConteoCajaRepository;
 import com.ansicode.SistemaAdministracionGym.enums.EstadoCuadreCaja;
+import com.ansicode.SistemaAdministracionGym.handler.BusinessErrorCodes;
+import com.ansicode.SistemaAdministracionGym.handler.BussinessException;
 import com.ansicode.SistemaAdministracionGym.movimientodinero.MovimientoDineroRepository;
 import com.ansicode.SistemaAdministracionGym.sesioncaja.SesionCaja;
 import com.ansicode.SistemaAdministracionGym.sesioncaja.SesionCajaRepository;
@@ -17,25 +19,29 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+
 @Service
 @RequiredArgsConstructor
 public class CuadreCajaService {
-
 
     private final SesionCajaRepository sesionCajaRepository;
     private final ConteoCajaRepository conteoCajaRepository;
     private final CuadreCajaRepository cuadreCajaRepository;
     private final MovimientoDineroRepository movimientoDineroRepository;
-    private final CuadreCajaMapper  cuadreCajaMapper;
+    private final CuadreCajaMapper cuadreCajaMapper;
 
     @Transactional
     public CuadreCajaResponse generarCuadre(Long sesionCajaId, GenerarCuadreRequest body) {
+
+        if (sesionCajaId == null) {
+            throw new BussinessException(BusinessErrorCodes.CUADRE_SESION_CAJA_ID_REQUIRED);
+        }
 
         String moneda = resolveMoneda(body);
         String observacion = (body != null) ? body.getObservacion() : null;
 
         SesionCaja sesion = sesionCajaRepository.findById(sesionCajaId)
-                .orElseThrow(() -> new EntityNotFoundException("Sesión de caja no encontrada"));
+                .orElseThrow(() -> new BussinessException(BusinessErrorCodes.CUADRE_SESION_CAJA_NOT_FOUND));
 
         BigDecimal base = money(sesion.getBaseInicialEfectivo());
 
@@ -59,13 +65,16 @@ public class CuadreCajaService {
         cuadre.setEfectivoEsperado(esperado);
         cuadre.setEfectivoContado(contado);
         cuadre.setDiferencia(diferencia);
-        cuadre.setEstado(
-                diferencia.compareTo(BigDecimal.ZERO) == 0
-                        ? EstadoCuadreCaja.COMPLETO
-                        : EstadoCuadreCaja.PARCIAL
-        );
 
-        // observación
+        if (diferencia.compareTo(BigDecimal.ZERO) == 0) {
+            cuadre.setEstado(EstadoCuadreCaja.CUADRA);
+        } else if (diferencia.compareTo(BigDecimal.ZERO) > 0) {
+            cuadre.setEstado(EstadoCuadreCaja.SOBRANTE);
+        } else {
+            cuadre.setEstado(EstadoCuadreCaja.FALTANTE);
+        }
+
+        // observación máx 300
         if (observacion == null || observacion.isBlank()) {
             cuadre.setObservacion(null);
         } else {
@@ -78,18 +87,6 @@ public class CuadreCajaService {
 
         return cuadreCajaMapper.toResponse(saved);
     }
-
-    private String resolveMoneda(GenerarCuadreRequest body) {
-        if (body == null) return "USD";
-        if (body.getMoneda() == null) return "USD";
-        if (body.getMoneda().isBlank()) return "USD";
-        return body.getMoneda().trim().toUpperCase();
-    }
-
-    private BigDecimal money(BigDecimal v) {
-        return (v == null ? BigDecimal.ZERO : v).setScale(2, RoundingMode.HALF_UP);
-    }
-
 
     @Transactional(readOnly = true)
     public PageResponse<CuadreCajaResponse> findAll(Pageable pageable) {
@@ -112,6 +109,12 @@ public class CuadreCajaService {
                 .build();
     }
 
+    private String resolveMoneda(GenerarCuadreRequest body) {
+        if (body == null || body.getMoneda() == null || body.getMoneda().isBlank()) return "USD";
+        return body.getMoneda().trim().toUpperCase();
+    }
+
+    private BigDecimal money(BigDecimal v) {
+        return (v == null ? BigDecimal.ZERO : v).setScale(2, RoundingMode.HALF_UP);
+    }
 }
-
-

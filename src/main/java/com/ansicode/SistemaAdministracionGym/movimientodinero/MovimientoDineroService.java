@@ -1,6 +1,8 @@
 package com.ansicode.SistemaAdministracionGym.movimientodinero;
 
 import com.ansicode.SistemaAdministracionGym.common.PageResponse;
+import com.ansicode.SistemaAdministracionGym.handler.BusinessErrorCodes;
+import com.ansicode.SistemaAdministracionGym.handler.BussinessException;
 import com.ansicode.SistemaAdministracionGym.pago.Pago;
 import com.ansicode.SistemaAdministracionGym.pago.PagoRepository;
 import com.ansicode.SistemaAdministracionGym.servicio.Servicios;
@@ -23,6 +25,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+
 @Service
 @RequiredArgsConstructor
 public class MovimientoDineroService {
@@ -30,22 +33,39 @@ public class MovimientoDineroService {
     private final MovimientoDineroRepository repository;
     private final MovimientoDineroMapper mapper;
     private final SesionCajaService sesionCajaService;
-    private final PagoRepository  pagoRepository;
-    private final ServiciosRepository  serviciosRepository;
+    private final PagoRepository pagoRepository;
+    private final ServiciosRepository serviciosRepository;
     private final VentaRepository ventaRepository;
 
     @Transactional
-    public MovimientoDineroResponse crearMovimiento(MovimientoDineroCreateRequest request , Authentication connectedUser ) {
+    public MovimientoDineroResponse crearMovimiento(MovimientoDineroCreateRequest request, Authentication connectedUser) {
+
+        // ✅ Seguridad extra (evitar NPE)
+        if (request == null) {
+            throw new BussinessException(BusinessErrorCodes.VALIDATION_ERROR);
+        }
 
         if (request.getMonto() == null || request.getMonto().compareTo(BigDecimal.ZERO) <= 0) {
-            throw new IllegalArgumentException("monto debe ser mayor a 0");
+            throw new BussinessException(BusinessErrorCodes.MOVIMIENTO_DINERO_MONTO_INVALIDO);
         }
-        if (request.getTipo() == null) throw new IllegalArgumentException("tipo es obligatorio");
-        if (request.getConcepto() == null) throw new IllegalArgumentException("concepto es obligatorio");
-        if (request.getMetodo() == null) throw new IllegalArgumentException("metodo es obligatorio");
+        if (request.getTipo() == null) {
+            throw new BussinessException(BusinessErrorCodes.MOVIMIENTO_DINERO_TIPO_REQUIRED);
+        }
+        if (request.getConcepto() == null) {
+            throw new BussinessException(BusinessErrorCodes.MOVIMIENTO_DINERO_CONCEPTO_REQUIRED);
+        }
+        if (request.getMetodo() == null) {
+            throw new BussinessException(BusinessErrorCodes.MOVIMIENTO_DINERO_METODO_REQUIRED);
+        }
+        if (request.getSucursalId() == null) {
+            throw new BussinessException(BusinessErrorCodes.MOVIMIENTO_DINERO_SUCURSAL_REQUIRED);
+        }
+        if (connectedUser == null || connectedUser.getPrincipal() == null) {
+            throw new BussinessException(BusinessErrorCodes.BAD_CREDENTIALS);
+        }
 
-        // 1) Sesión abierta
-        SesionCaja sesion = sesionCajaService.obtenerSesionAbiertaPorSucursal(request.getSucursalId()); // por sucursal/usuario según tu lógica
+        // 1) Sesión abierta (si no existe, que tu SesionCajaService lance BussinessException)
+        SesionCaja sesion = sesionCajaService.obtenerSesionAbiertaPorSucursal(request.getSucursalId());
 
         // 2) Crear entity
         MovimientoDinero m = new MovimientoDinero();
@@ -53,47 +73,39 @@ public class MovimientoDineroService {
         m.setTipo(request.getTipo());
         m.setConcepto(request.getConcepto());
         m.setMetodo(request.getMetodo());
-        m.setMoneda(request.getMoneda() == null ? "USD" : request.getMoneda());
+        m.setMoneda(normalizeMoneda(request.getMoneda()));
         m.setMonto(request.getMonto());
         m.setDescripcion(request.getDescripcion());
 
-
-        // ✅ Trazabilidad (si vienen ids, se enlazan entities)
+        // ✅ Trazabilidad
         if (request.getVentaId() != null) {
             Venta venta = ventaRepository.findById(request.getVentaId())
-                    .orElseThrow(() -> new EntityNotFoundException("Venta no encontrada: " + request.getVentaId()));
+                    .orElseThrow(() -> new BussinessException(BusinessErrorCodes.MOVIMIENTO_DINERO_VENTA_NOT_FOUND));
             m.setVenta(venta);
         }
 
         if (request.getPagoId() != null) {
             Pago pago = pagoRepository.findById(request.getPagoId())
-                    .orElseThrow(() -> new EntityNotFoundException("Pago no encontrado: " + request.getPagoId()));
+                    .orElseThrow(() -> new BussinessException(BusinessErrorCodes.MOVIMIENTO_DINERO_PAGO_NOT_FOUND));
             m.setPago(pago);
         }
 
         if (request.getServicioId() != null) {
             Servicios servicio = serviciosRepository.findById(request.getServicioId())
-                    .orElseThrow(() -> new EntityNotFoundException("Servicio no encontrado: " + request.getServicioId()));
+                    .orElseThrow(() -> new BussinessException(BusinessErrorCodes.MOVIMIENTO_DINERO_SERVICIO_NOT_FOUND));
             m.setServicio(servicio);
         }
 
-
-
         m.setProductoId(request.getProductoId());
 
-
-        User user = ((User) connectedUser.getPrincipal());
-        // usuario que registra (si no usas createdBy)
+        User user = (User) connectedUser.getPrincipal();
         m.setUsuarioId(user.getId());
-
-
 
         // 3) Guardar
         MovimientoDinero saved = repository.save(m);
 
         return mapper.toResponse(saved);
     }
-
 
     @Transactional(readOnly = true)
     public PageResponse<MovimientoDineroResponse> listarTodos(
@@ -106,6 +118,11 @@ public class MovimientoDineroService {
             LocalDateTime hasta,
             Pageable pageable
     ) {
+        // ✅ Validación rango fechas (evita filtros raros)
+        if (desde != null && hasta != null && desde.isAfter(hasta)) {
+            throw new BussinessException(BusinessErrorCodes.MOVIMIENTO_DINERO_RANGO_FECHAS_INVALIDO);
+        }
+
         Specification<MovimientoDinero> spec =
                 MovimientoDineroSpecifications.tipo(tipo)
                         .and(MovimientoDineroSpecifications.concepto(concepto))
@@ -133,6 +150,7 @@ public class MovimientoDineroService {
                 .build();
     }
 
-
-
+    private String normalizeMoneda(String moneda) {
+        return (moneda == null || moneda.isBlank()) ? "USD" : moneda.trim().toUpperCase();
+    }
 }

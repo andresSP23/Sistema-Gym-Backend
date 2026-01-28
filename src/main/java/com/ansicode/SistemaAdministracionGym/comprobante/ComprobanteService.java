@@ -2,6 +2,8 @@ package com.ansicode.SistemaAdministracionGym.comprobante;
 
 import com.ansicode.SistemaAdministracionGym.enums.EstadoComprobante;
 import com.ansicode.SistemaAdministracionGym.enums.TipoComprobante;
+import com.ansicode.SistemaAdministracionGym.handler.BusinessErrorCodes;
+import com.ansicode.SistemaAdministracionGym.handler.BussinessException;
 import com.ansicode.SistemaAdministracionGym.venta.Venta;
 import com.itextpdf.io.source.ByteArrayOutputStream;
 import com.itextpdf.kernel.geom.PageSize;
@@ -30,7 +32,6 @@ import java.nio.file.Files;
 import java.math.BigDecimal;
 
 import java.time.format.DateTimeFormatter;
-
 @Service
 @RequiredArgsConstructor
 public class ComprobanteService {
@@ -43,12 +44,16 @@ public class ComprobanteService {
     @Transactional
     public Comprobante generarFacturaPdf(Venta venta) {
 
-        if (venta == null) throw new IllegalArgumentException("venta es obligatoria");
-        if (venta.getNumeroFactura() == null || venta.getNumeroFactura().isBlank()) {
-            throw new IllegalArgumentException("La venta no tiene numeroFactura");
+        if (venta == null) {
+            throw new BussinessException(BusinessErrorCodes.COMPROBANTE_VENTA_REQUIRED);
         }
+
+        if (venta.getNumeroFactura() == null || venta.getNumeroFactura().isBlank()) {
+            throw new BussinessException(BusinessErrorCodes.COMPROBANTE_NUMERO_FACTURA_REQUIRED);
+        }
+
         if (venta.getDetalles() == null || venta.getDetalles().isEmpty()) {
-            throw new IllegalArgumentException("No se puede generar comprobante: la venta no tiene detalles");
+            throw new BussinessException(BusinessErrorCodes.COMPROBANTE_VENTA_SIN_DETALLES);
         }
 
         Comprobante c = new Comprobante();
@@ -120,7 +125,7 @@ public class ComprobanteService {
             return baos.toByteArray();
 
         } catch (Exception e) {
-            throw new RuntimeException("No se pudo generar el PDF", e);
+            throw new BussinessException(BusinessErrorCodes.COMPROBANTE_PDF_GENERATION_FAILED);
         }
     }
 
@@ -134,10 +139,9 @@ public class ComprobanteService {
 
             Files.write(path, pdfBytes);
 
-            // pdfRef queda como ruta relativa/real (tu decides)
             return path.toString();
         } catch (Exception e) {
-            throw new RuntimeException("No se pudo guardar el PDF en disco", e);
+            throw new BussinessException(BusinessErrorCodes.COMPROBANTE_PDF_SAVE_FAILED);
         }
     }
 
@@ -145,19 +149,19 @@ public class ComprobanteService {
         if (v == null) return "0.00";
         return v.setScale(2, java.math.RoundingMode.HALF_UP).toPlainString();
     }
-    private static String ns(String s) { return s == null ? "" : s; }
 
-
-
+    private static String ns(String s) {
+        return s == null ? "" : s;
+    }
 
     @Transactional(readOnly = true)
     public ResponseEntity<Resource> descargarPdf(Long comprobanteId) {
 
         Comprobante c = comprobanteRepository.findById(comprobanteId)
-                .orElseThrow(() -> new EntityNotFoundException("Comprobante no encontrado"));
+                .orElseThrow(() -> new BussinessException(BusinessErrorCodes.COMPROBANTE_NOT_FOUND));
 
         if (c.getPdfRef() == null || c.getPdfRef().isBlank()) {
-            throw new IllegalArgumentException("Este comprobante no tiene PDF generado");
+            throw new BussinessException(BusinessErrorCodes.COMPROBANTE_PDF_NOT_GENERATED);
         }
 
         try {
@@ -165,7 +169,7 @@ public class ComprobanteService {
             Resource resource = new UrlResource(path.toUri());
 
             if (!resource.exists() || !resource.isReadable()) {
-                throw new IllegalArgumentException("El archivo PDF no existe o no se puede leer");
+                throw new BussinessException(BusinessErrorCodes.COMPROBANTE_PDF_NOT_FOUND_OR_UNREADABLE);
             }
 
             String safeName = (c.getNumero() != null && !c.getNumero().isBlank())
@@ -176,12 +180,13 @@ public class ComprobanteService {
 
             return ResponseEntity.ok()
                     .contentType(MediaType.APPLICATION_PDF)
-                    // inline = abre en el navegador, attachment = descarga
                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
                     .body(resource);
 
+        } catch (BussinessException be) {
+            throw be;
         } catch (Exception e) {
-            throw new RuntimeException("No se pudo descargar el PDF", e);
+            throw new BussinessException(BusinessErrorCodes.COMPROBANTE_PDF_DOWNLOAD_FAILED);
         }
     }
 }

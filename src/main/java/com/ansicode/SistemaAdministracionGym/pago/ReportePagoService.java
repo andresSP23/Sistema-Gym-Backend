@@ -3,6 +3,8 @@ package com.ansicode.SistemaAdministracionGym.pago;
 import com.ansicode.SistemaAdministracionGym.enums.EstadoPago;
 import com.ansicode.SistemaAdministracionGym.enums.MetodoPago;
 import com.ansicode.SistemaAdministracionGym.enums.TipoOperacionPago;
+import com.ansicode.SistemaAdministracionGym.handler.BusinessErrorCodes;
+import com.ansicode.SistemaAdministracionGym.handler.BussinessException;
 import com.itextpdf.io.source.ByteArrayOutputStream;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.*;
@@ -24,6 +26,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+
+
 @Service
 @RequiredArgsConstructor
 public class ReportePagoService {
@@ -42,18 +46,21 @@ public class ReportePagoService {
     ) {
 
         if (desde != null && hasta != null && desde.isAfter(hasta)) {
-            throw new IllegalArgumentException("La fecha desde no puede ser mayor que hasta");
+            throw new BussinessException(BusinessErrorCodes.REPORTE_PAGOS_RANGO_FECHAS_INVALIDO);
         }
 
         List<Pago> pagos = pagoRepository.buscarPagosReporte(desde, hasta, tipoOperacion, metodo, estado);
 
         byte[] bytes = generarExcel(pagos, desde, hasta, tipoOperacion, metodo, estado);
 
-        String fileName = "reporte_pagos_" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmm")) + ".xlsx";
+        String fileName = "reporte_pagos_" + LocalDateTime.now()
+                .format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmm")) + ".xlsx";
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
-                .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+                .contentType(MediaType.parseMediaType(
+                        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                ))
                 .body(new ByteArrayResource(bytes));
     }
 
@@ -94,7 +101,8 @@ public class ReportePagoService {
             return out.toByteArray();
 
         } catch (Exception e) {
-            throw new RuntimeException("Error generando Excel de pagos", e);
+            // ✅ ahora sí va por BusinessErrorCodes
+            throw new BussinessException(BusinessErrorCodes.REPORTE_PAGOS_EXCEL_ERROR);
         }
     }
 
@@ -186,7 +194,7 @@ public class ReportePagoService {
         Map<MetodoPago, Summary> porMetodo = new LinkedHashMap<>();
         for (Pago p : pagos) {
             MetodoPago mp = p.getMetodo();
-            if (mp == null) mp = MetodoPago.valueOf("EFECTIVO"); // si tu enum no permite null, puedes borrar esto
+            if (mp == null) continue;
             porMetodo.computeIfAbsent(mp, k -> new Summary()).add(p.getMonto());
         }
 
@@ -203,7 +211,6 @@ public class ReportePagoService {
             ct.setCellStyle(moneyStyle);
         }
 
-        // Totales por tipo operación
         rowIdx += 2;
         createSectionTitle(sheet, rowIdx++, "Totales por Tipo de Operación", subtitleStyle, 0, 3);
 
@@ -234,15 +241,15 @@ public class ReportePagoService {
 
         rowIdx += 2;
 
-        // Total final
         Row totalRow = sheet.createRow(rowIdx++);
         createCell(totalRow, 0, "TOTAL FINAL", totalStyle);
         Cell tf = totalRow.createCell(1);
         tf.setCellValue(totalMonto.doubleValue());
         tf.setCellStyle(totalStyle);
-        sheet.addMergedRegion(new org.apache.poi.ss.util.CellRangeAddress(totalRow.getRowNum(), totalRow.getRowNum(), 1, 2));
+        sheet.addMergedRegion(new org.apache.poi.ss.util.CellRangeAddress(
+                totalRow.getRowNum(), totalRow.getRowNum(), 1, 2
+        ));
 
-        // Autosize
         for (int i = 0; i <= 5; i++) sheet.autoSizeColumn(i);
     }
 
@@ -300,77 +307,54 @@ public class ReportePagoService {
         for (Pago p : pagos) {
             Row r = sheet.createRow(rowIdx++);
 
-            // ID
             createCell(r, 0, p.getId() != null ? p.getId().toString() : "", textStyle);
 
-            // Fecha Pago
             Cell fechaCell = r.createCell(1);
-            if (p.getFechaPago() != null) {
-                fechaCell.setCellValue(p.getFechaPago().format(DTF));
-            } else {
-                fechaCell.setCellValue("");
-            }
+            fechaCell.setCellValue(p.getFechaPago() != null ? p.getFechaPago().format(DTF) : "");
             fechaCell.setCellStyle(dateStyle);
 
-            // Estado
             createCell(r, 2, p.getEstado() != null ? p.getEstado().name() : "", textStyle);
-
-
             createCell(r, 3, p.getMetodo() != null ? p.getMetodo().name() : "", textStyle);
-
-            // Moneda
             createCell(r, 4, p.getMoneda() != null ? p.getMoneda() : "", textStyle);
 
-            // Monto
             BigDecimal monto = p.getMonto() != null ? p.getMonto() : BigDecimal.ZERO;
             Cell montoCell = r.createCell(5);
             montoCell.setCellValue(monto.doubleValue());
             montoCell.setCellStyle(moneyStyle);
             totalMonto = totalMonto.add(monto);
 
-            // Efectivo recibido
             BigDecimal ef = p.getEfectivoRecibido() != null ? p.getEfectivoRecibido() : BigDecimal.ZERO;
             Cell efCell = r.createCell(6);
             efCell.setCellValue(ef.doubleValue());
             efCell.setCellStyle(moneyStyle);
 
-            // Cambio
             BigDecimal cambio = p.getCambio() != null ? p.getCambio() : BigDecimal.ZERO;
             Cell cambioCell = r.createCell(7);
             cambioCell.setCellValue(cambio.doubleValue());
             cambioCell.setCellStyle(moneyStyle);
 
-            // Ref
             createCell(r, 8, p.getReferenciaTransaccion() != null ? p.getReferenciaTransaccion() : "", textStyle);
-
-            // Tipo operación
             createCell(r, 9, p.getTipoOperacion() != null ? p.getTipoOperacion().name() : "", textStyle);
-
-            // Tipo comprobante
             createCell(r, 10, p.getTipoComprobante() != null ? p.getTipoComprobante().name() : "", textStyle);
 
-            // Cliente
             String nombreCliente = p.getCliente() != null
                     ? ((p.getCliente().getNombres() != null ? p.getCliente().getNombres() : "") + " " +
                     (p.getCliente().getApellidos() != null ? p.getCliente().getApellidos() : "")).trim()
                     : "";
             createCell(r, 11, nombreCliente, textStyle);
 
-            // Factura
             String factura = (p.getVenta() != null && p.getVenta().getNumeroFactura() != null)
                     ? p.getVenta().getNumeroFactura()
                     : "";
             createCell(r, 12, factura, textStyle);
         }
 
-        // Total al final
         Row totalRow = sheet.createRow(rowIdx++);
         createCell(totalRow, 4, "TOTAL", createBoldStyle(sheet.getWorkbook()));
         Cell totalCell = totalRow.createCell(5);
         totalCell.setCellValue(totalMonto.doubleValue());
         totalCell.setCellStyle(createTotalMoneyStyle(sheet.getWorkbook()));
 
-        // Autosize
         for (int i = 0; i < cols.length; i++) sheet.autoSizeColumn(i);
     }
 
@@ -416,8 +400,6 @@ public class ReportePagoService {
     }
 
     private CellStyle createDateStyle(Workbook wb) {
-        // Para que se vea “como fecha” en Excel podrías usar DataFormat real,
-        // pero tú ya manejas LocalDateTime; lo dejamos como string formateado.
         return createTextStyle(wb);
     }
 
@@ -473,7 +455,6 @@ public class ReportePagoService {
         c.setCellStyle(style);
     }
 
-    // helper interno
     private static class Summary {
         long count = 0;
         BigDecimal total = BigDecimal.ZERO;

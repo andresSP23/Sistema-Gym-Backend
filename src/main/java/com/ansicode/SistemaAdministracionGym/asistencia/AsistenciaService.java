@@ -8,6 +8,8 @@ import com.ansicode.SistemaAdministracionGym.common.PageResponse;
 import com.ansicode.SistemaAdministracionGym.enums.EstadoMembresia;
 
 import com.ansicode.SistemaAdministracionGym.enums.EstadoSuscripcion;
+import com.ansicode.SistemaAdministracionGym.handler.BusinessErrorCodes;
+import com.ansicode.SistemaAdministracionGym.handler.BussinessException;
 import com.ansicode.SistemaAdministracionGym.pago.Pago;
 import com.ansicode.SistemaAdministracionGym.pago.PagoRepository;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -37,23 +39,24 @@ public class AsistenciaService {
     private final AsistenciaMapper asistenciaMapper;
     private final ClienteSuscripcionRepository  clienteSuscripcionRepository;
 
-
     @Transactional
     public AsistenciaResponse registrarPorCedula(AsistenciaRequest request) {
 
         Cliente cliente = clienteRepository.findByCedula(request.getCedulaCliente())
-                .orElseThrow(() -> new EntityNotFoundException("Cliente no encontrado"));
+                .orElseThrow(() -> new BussinessException(
+                        BusinessErrorCodes.ASISTENCIA_CLIENTE_NOT_FOUND));
 
-        // Evitar duplicados en el mismo día
         LocalDate hoy = LocalDate.now();
         LocalDateTime inicioDia = hoy.atStartOfDay();
         LocalDateTime finDia = hoy.atTime(LocalTime.MAX);
 
-        if (asistenciaRepository.existsByClienteIdAndFechaEntradaBetween(cliente.getId(), inicioDia, finDia)) {
-            throw new IllegalArgumentException("El cliente ya tiene asistencia registrada para este día");
+        if (asistenciaRepository.existsByClienteIdAndFechaEntradaBetween(
+                cliente.getId(), inicioDia, finDia)) {
+
+            throw new BussinessException(
+                    BusinessErrorCodes.ASISTENCIA_DUPLICADA_HOY);
         }
 
-        // Suscripción vigente
         LocalDateTime ahora = LocalDateTime.now();
 
         ClienteSuscripcion suscripcion = clienteSuscripcionRepository
@@ -62,24 +65,27 @@ public class AsistenciaService {
                         EstadoSuscripcion.ACTIVA,
                         ahora
                 )
-                .orElseThrow(() -> new IllegalStateException("El cliente no tiene una suscripción activa o está vencida"));
+                .orElseThrow(() -> new BussinessException(
+                        BusinessErrorCodes.ASISTENCIA_SUSCRIPCION_NO_ACTIVA));
 
-        // Registrar asistencia
         Asistencia asistencia = new Asistencia();
         asistencia.setCliente(cliente);
         asistencia.setFechaEntrada(ahora);
 
         asistenciaRepository.save(asistencia);
 
-        long diasRestantes = ChronoUnit.DAYS.between(ahora.toLocalDate(), suscripcion.getFechaFin().toLocalDate());
+        long diasRestantes = ChronoUnit.DAYS.between(
+                ahora.toLocalDate(),
+                suscripcion.getFechaFin().toLocalDate());
         diasRestantes = Math.max(diasRestantes, 0);
 
-
-        List<Pago> pagos = Collections.emptyList();
-
-        return asistenciaMapper.toAsistenciaResponse(asistencia, suscripcion, pagos, diasRestantes);
+        return asistenciaMapper.toAsistenciaResponse(
+                asistencia,
+                suscripcion,
+                Collections.emptyList(),
+                diasRestantes
+        );
     }
-
 
 
     public PageResponse<AsistenciaResponse> listarPorCliente(Long clienteId, Pageable pageable) {

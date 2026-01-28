@@ -4,6 +4,8 @@ import com.ansicode.SistemaAdministracionGym.cliente.Cliente;
 import com.ansicode.SistemaAdministracionGym.detalleventa.DetalleVenta;
 import com.ansicode.SistemaAdministracionGym.enums.EstadoSuscripcion;
 import com.ansicode.SistemaAdministracionGym.enums.TipoItemVenta;
+import com.ansicode.SistemaAdministracionGym.handler.BusinessErrorCodes;
+import com.ansicode.SistemaAdministracionGym.handler.BussinessException;
 import com.ansicode.SistemaAdministracionGym.servicio.Servicios;
 import com.ansicode.SistemaAdministracionGym.servicio.ServiciosRepository;
 import com.ansicode.SistemaAdministracionGym.venta.Venta;
@@ -15,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 public class ClienteSuscripcionService {
@@ -26,11 +27,13 @@ public class ClienteSuscripcionService {
     @Transactional
     public void registrarSuscripcionDesdeVenta(Venta venta, LocalDateTime fechaPago) {
 
-        if (venta == null) throw new IllegalArgumentException("Venta requerida");
+        if (venta == null) {
+            throw new BussinessException(BusinessErrorCodes.SUSCRIPCION_VENTA_REQUIRED);
+        }
 
         Cliente cliente = venta.getCliente();
         if (cliente == null) {
-            throw new IllegalArgumentException("Para suscripciones el cliente es obligatorio");
+            throw new BussinessException(BusinessErrorCodes.SUSCRIPCION_CLIENTE_REQUIRED);
         }
 
         // Anti-duplicado por reintento
@@ -41,23 +44,27 @@ public class ClienteSuscripcionService {
         DetalleVenta detServicio = venta.getDetalles().stream()
                 .filter(d -> d.getTipoItem() == TipoItemVenta.SERVICIO)
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Venta sin detalle de servicio"));
+                .orElseThrow(() -> new BussinessException(
+                        BusinessErrorCodes.SUSCRIPCION_VENTA_SIN_DETALLE_SERVICIO
+                ));
 
         Servicios servicio = serviciosRepository.findById(detServicio.getReferenciaId())
-                .orElseThrow(() -> new EntityNotFoundException("Servicio no encontrado"));
+                .orElseThrow(() -> new BussinessException(
+                        BusinessErrorCodes.SUSCRIPCION_SERVICIO_NOT_FOUND
+                ));
 
-        // Si no es suscripción, aquí NO hacemos nada (o puedes marcar cliente ACTIVO si quieres)
+        // Si no es suscripción, aquí NO hacemos nada
         if (!servicio.isEsSuscripcion()) {
             return;
         }
 
         if (servicio.getDuracionDias() == null || servicio.getDuracionDias() < 1) {
-            throw new IllegalStateException("Servicio de suscripción debe tener duracionDias válida");
+            throw new BussinessException(BusinessErrorCodes.SUSCRIPCION_DURACION_INVALIDA);
         }
 
         LocalDateTime inicioPago = (fechaPago != null) ? fechaPago : LocalDateTime.now();
 
-        // Renovación inteligente: si aún tiene una ACTIVA vigente, sumar desde su fechaFin
+        // Renovación inteligente
         LocalDateTime base = inicioPago;
 
         Optional<ClienteSuscripcion> ultimaActivaOpt =
@@ -65,7 +72,6 @@ public class ClienteSuscripcionService {
                         cliente.getId(),
                         EstadoSuscripcion.ACTIVA,
                         LocalDateTime.now()
-
                 );
 
         if (ultimaActivaOpt.isPresent()) {

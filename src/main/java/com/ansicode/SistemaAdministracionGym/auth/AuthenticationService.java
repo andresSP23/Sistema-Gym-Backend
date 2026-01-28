@@ -1,6 +1,8 @@
 package com.ansicode.SistemaAdministracionGym.auth;
 
 
+import com.ansicode.SistemaAdministracionGym.handler.BusinessErrorCodes;
+import com.ansicode.SistemaAdministracionGym.handler.BussinessException;
 import com.ansicode.SistemaAdministracionGym.role.RoleRepository;
 import com.ansicode.SistemaAdministracionGym.security.JwtService;
 import com.ansicode.SistemaAdministracionGym.user.User;
@@ -8,10 +10,11 @@ import com.ansicode.SistemaAdministracionGym.user.UserRepository;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.*;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
@@ -50,22 +53,43 @@ public class AuthenticationService {
     }
 
 
-
-
+    @Transactional
     public AuthenticationResponse authenticate(@Valid AuthenticationRequest request) {
-        var auth = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getEmail(),
-                        request.getPassword()
-                )
-        );
-        var claims = new HashMap<String,Object>();
-        var user = ((User) auth.getPrincipal());
-        claims.put("fullname", user.fullname());
-        var jwtToken  = jwtService.generateToken(claims , user);
-        return AuthenticationResponse.builder().token(jwtToken).build();
+        try {
+            var auth = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            request.getEmail(),
+                            request.getPassword()
+                    )
+            );
+
+            var user = (User) auth.getPrincipal();
+
+            var claims = new HashMap<String, Object>();
+            claims.put("fullname", user.fullname());
+
+            var jwtToken = jwtService.generateToken(claims, user);
+
+            return AuthenticationResponse.builder()
+                    .token(jwtToken)
+                    .build();
+
+        } catch (LockedException e) {
+            // cuenta bloqueada
+            throw new BussinessException(BusinessErrorCodes.ACCOUNT_LOCKED);
+
+        } catch (DisabledException e) {
+            // cuenta deshabilitada
+            throw new BussinessException(BusinessErrorCodes.ACCOUNT_DISABLED);
+
+        } catch (BadCredentialsException e) {
+            // usuario o contraseña incorrectos
+            throw new BussinessException(BusinessErrorCodes.BAD_CREDENTIALS);
+
+        } catch (AuthenticationException e) {
+            // cualquier otro error de auth
+            throw new BussinessException(BusinessErrorCodes.BAD_CREDENTIALS);
+        }
     }
-
-
 
 }

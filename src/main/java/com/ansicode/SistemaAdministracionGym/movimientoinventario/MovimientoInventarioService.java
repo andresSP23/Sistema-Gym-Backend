@@ -2,6 +2,8 @@ package com.ansicode.SistemaAdministracionGym.movimientoinventario;
 
 import com.ansicode.SistemaAdministracionGym.common.PageResponse;
 import com.ansicode.SistemaAdministracionGym.enums.TipoMovimientoInventario;
+import com.ansicode.SistemaAdministracionGym.handler.BusinessErrorCodes;
+import com.ansicode.SistemaAdministracionGym.handler.BussinessException;
 import com.ansicode.SistemaAdministracionGym.producto.Producto;
 import com.ansicode.SistemaAdministracionGym.producto.ProductoRepository;
 import com.ansicode.SistemaAdministracionGym.user.User;
@@ -17,14 +19,14 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
+
 @Service
 @RequiredArgsConstructor
 public class MovimientoInventarioService {
 
     private final MovimientoInventarioRepository repository;
-    private final ProductoRepository productoRepository;
+    private final ProductoRepository productoRepository; // (lo mantengo aunque aquí no lo uses)
     private final MovimientoInventarioMapper mapper;
-
 
     @Transactional
     public void registrarEntrada(Producto producto, Integer cantidad) {
@@ -56,28 +58,35 @@ public class MovimientoInventarioService {
         registrar(producto, stockReal, TipoMovimientoInventario.AJUSTE, observacion);
     }
 
-    private void registrar(Producto producto, Integer valor, TipoMovimientoInventario tipo , String observacion) {
+    private void registrar(Producto producto, Integer valor, TipoMovimientoInventario tipo, String observacion) {
 
-        if (producto == null) throw new IllegalArgumentException("Producto requerido");
-        if (valor == null) throw new IllegalArgumentException("Valor requerido");
+        if (producto == null) {
+            throw new BussinessException(BusinessErrorCodes.INVENTARIO_PRODUCTO_REQUIRED);
+        }
+        if (tipo == null) {
+            throw new BussinessException(BusinessErrorCodes.INVENTARIO_TIPO_REQUIRED);
+        }
+        if (valor == null) {
+            throw new BussinessException(BusinessErrorCodes.INVENTARIO_VALOR_REQUIRED);
+        }
 
-        int stockAnterior = producto.getStock();
+        int stockAnterior = producto.getStock() == null ? 0 : producto.getStock();
 
         // Validaciones
         if (tipo != TipoMovimientoInventario.AJUSTE && valor <= 0) {
-            throw new IllegalArgumentException("Cantidad debe ser mayor a 0");
+            throw new BussinessException(BusinessErrorCodes.INVENTARIO_CANTIDAD_INVALIDA);
         }
         if (tipo == TipoMovimientoInventario.AJUSTE && valor < 0) {
-            throw new IllegalArgumentException("Stock real no puede ser negativo");
+            throw new BussinessException(BusinessErrorCodes.INVENTARIO_STOCK_REAL_INVALIDO);
         }
         if (tipo == TipoMovimientoInventario.SALIDA && stockAnterior < valor) {
-            throw new IllegalStateException("Stock insuficiente");
+            throw new BussinessException(BusinessErrorCodes.INVENTARIO_STOCK_INSUFICIENTE);
         }
 
         int stockNuevo = switch (tipo) {
             case ENTRADA -> stockAnterior + valor;
-            case SALIDA  -> stockAnterior - valor;
-            case AJUSTE  -> valor; // valor = stockReal
+            case SALIDA -> stockAnterior - valor;
+            case AJUSTE -> valor; // valor = stockReal
         };
 
         MovimientoInventario m = new MovimientoInventario();
@@ -95,26 +104,34 @@ public class MovimientoInventarioService {
         m.setStockActual(stockNuevo);
 
         if (observacion != null && !observacion.isBlank()) {
-            //  recortar por si el front manda cosas largas
             m.setObservacion(observacion.length() > 250 ? observacion.substring(0, 250) : observacion);
+        } else {
+            m.setObservacion(null);
         }
 
         producto.setStock(stockNuevo);
 
         repository.save(m);
     }
+
     @Transactional(readOnly = true)
-    public PageResponse<MovimientoInventarioResponse> listar(Pageable pageable,
-                                                             Long productoId,
-                                                             String tipoMovimiento,
-                                                             LocalDateTime desde,
-                                                             LocalDateTime hasta,
-                                                             Long createdBy,
-                                                             Integer cantidadMin,
-                                                             Integer cantidadMax,
-                                                             Integer stockActualMin,
-                                                             Integer stockActualMax,
-                                                             String q) {
+    public PageResponse<MovimientoInventarioResponse> listar(
+            Pageable pageable,
+            Long productoId,
+            String tipoMovimiento,
+            LocalDateTime desde,
+            LocalDateTime hasta,
+            Long createdBy,
+            Integer cantidadMin,
+            Integer cantidadMax,
+            Integer stockActualMin,
+            Integer stockActualMax,
+            String q
+    ) {
+
+        if (desde != null && hasta != null && desde.isAfter(hasta)) {
+            throw new BussinessException(BusinessErrorCodes.INVENTARIO_RANGO_FECHAS_INVALIDO);
+        }
 
         Specification<MovimientoInventario> spec = (root, query, cb) -> cb.conjunction();
 
@@ -146,5 +163,4 @@ public class MovimientoInventarioService {
                 .last(page.isLast())
                 .build();
     }
-
 }

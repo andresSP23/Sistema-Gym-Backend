@@ -1,6 +1,8 @@
 package com.ansicode.SistemaAdministracionGym.conteocaja;
 
 import com.ansicode.SistemaAdministracionGym.enums.EstadoSesionCaja;
+import com.ansicode.SistemaAdministracionGym.handler.BusinessErrorCodes;
+import com.ansicode.SistemaAdministracionGym.handler.BussinessException;
 import com.ansicode.SistemaAdministracionGym.sesioncaja.SesionCaja;
 import com.ansicode.SistemaAdministracionGym.sesioncaja.SesionCajaRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -11,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 public class ConteoCajaService {
@@ -24,10 +25,14 @@ public class ConteoCajaService {
     public ConteoCajaResponse guardarConteo(GuardarConteoCajaRequest request) {
 
         SesionCaja sesion = sesionCajaRepository.findById(request.getSesionCajaId())
-                .orElseThrow(() -> new EntityNotFoundException("Sesión de caja no encontrada"));
+                .orElseThrow(() -> new BussinessException(BusinessErrorCodes.SESION_CAJA_NOT_FOUND));
 
         if (sesion.getEstado() == EstadoSesionCaja.CERRADA) {
-            throw new IllegalStateException("No puedes registrar conteo en una sesión CERRADA");
+            throw new BussinessException(BusinessErrorCodes.SESION_CAJA_CERRADA);
+        }
+
+        if (request.getItems() == null || request.getItems().isEmpty()) {
+            throw new BussinessException(BusinessErrorCodes.CONTEO_CAJA_ITEMS_REQUIRED);
         }
 
         // Reemplaza conteo completo (sin duplicados)
@@ -35,9 +40,21 @@ public class ConteoCajaService {
 
         for (ConteoCajaItemRequest item : request.getItems()) {
 
+            if (item == null) {
+                throw new BussinessException(BusinessErrorCodes.CONTEO_CAJA_ITEM_INVALIDO);
+            }
+
             String moneda = normalizeMoneda(item.getMoneda());
             BigDecimal denom = money(item.getDenominacion());
-            int cant = item.getCantidad();
+
+            if (denom.compareTo(BigDecimal.ZERO) <= 0) {
+                throw new BussinessException(BusinessErrorCodes.CONTEO_CAJA_DENOMINACION_INVALIDA);
+            }
+
+            int cant = item.getCantidad() == null ? 0 : item.getCantidad();
+            if (cant < 0) {
+                throw new BussinessException(BusinessErrorCodes.CONTEO_CAJA_CANTIDAD_INVALIDA);
+            }
 
             BigDecimal subtotal = money(denom.multiply(BigDecimal.valueOf(cant)));
 
@@ -52,26 +69,36 @@ public class ConteoCajaService {
             conteoCajaRepository.save(c);
         }
 
-        // devolver el conteo guardado
-        List<ConteoCaja> items = conteoCajaRepository.findBySesionCaja_IdOrderByDenominacionDesc(sesion.getId());
+        List<ConteoCaja> items = conteoCajaRepository
+                .findBySesionCaja_IdOrderByDenominacionDesc(sesion.getId());
+
         return conteoCajaMapper.toResponse(sesion.getId(), items);
     }
 
     @Transactional(readOnly = true)
     public ConteoCajaResponse obtenerPorSesion(Long sesionCajaId) {
 
-        // valida que exista (opcional, pero útil para error claro)
         if (!sesionCajaRepository.existsById(sesionCajaId)) {
-            throw new EntityNotFoundException("Sesión de caja no encontrada");
+            throw new BussinessException(BusinessErrorCodes.SESION_CAJA_NOT_FOUND);
         }
 
-        List<ConteoCaja> items = conteoCajaRepository.findBySesionCaja_IdOrderByDenominacionDesc(sesionCajaId);
+        List<ConteoCaja> items = conteoCajaRepository
+                .findBySesionCaja_IdOrderByDenominacionDesc(sesionCajaId);
+
         return conteoCajaMapper.toResponse(sesionCajaId, items);
     }
 
     @Transactional(readOnly = true)
     public BigDecimal totalContado(Long sesionCajaId, String moneda) {
-        return money(conteoCajaRepository.totalContado(sesionCajaId, normalizeMonedaNullable(moneda)));
+
+        if (!sesionCajaRepository.existsById(sesionCajaId)) {
+            throw new BussinessException(BusinessErrorCodes.SESION_CAJA_NOT_FOUND);
+        }
+
+        return money(conteoCajaRepository.totalContado(
+                sesionCajaId,
+                normalizeMonedaNullable(moneda)
+        ));
     }
 
     private String normalizeMoneda(String moneda) {
@@ -87,3 +114,4 @@ public class ConteoCajaService {
         return (v == null ? BigDecimal.ZERO : v).setScale(2, RoundingMode.HALF_UP);
     }
 }
+

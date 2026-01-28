@@ -36,3 +36,6 @@ public interface ClienteSuscripcionRepository extends JpaRepository<ClienteSuscr
 }
 
 ;
+
+
+

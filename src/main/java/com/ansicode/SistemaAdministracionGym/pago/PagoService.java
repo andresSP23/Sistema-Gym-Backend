@@ -11,6 +11,8 @@ import com.ansicode.SistemaAdministracionGym.comprobante.ComprobanteService;
 import com.ansicode.SistemaAdministracionGym.detalleventa.DetalleVenta;
 import com.ansicode.SistemaAdministracionGym.enums.*;
 
+import com.ansicode.SistemaAdministracionGym.handler.BusinessErrorCodes;
+import com.ansicode.SistemaAdministracionGym.handler.BussinessException;
 import com.ansicode.SistemaAdministracionGym.movimientodinero.MovimientoDineroCreateRequest;
 import com.ansicode.SistemaAdministracionGym.movimientodinero.MovimientoDineroService;
 import com.ansicode.SistemaAdministracionGym.movimientoinventario.MovimientoInventarioService;
@@ -20,65 +22,77 @@ import com.ansicode.SistemaAdministracionGym.venta.Venta;
 import com.ansicode.SistemaAdministracionGym.venta.VentaRepository;
 import io.swagger.v3.oas.annotations.servers.Server;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+
+
 @Service
 @RequiredArgsConstructor
-public class    PagoService {
+public class PagoService {
 
     private final PagoRepository pagoRepository;
     private final VentaRepository ventaRepository;
     private final ClienteRepository clienteRepository;
     private final MovimientoDineroService movimientoDineroService;
     private final ComprobanteService comprobanteService;
-    private final ComprobanteRepository  comprobanteRepository;
+    private final ComprobanteRepository comprobanteRepository;
     private final PagoMapper pagoMapper;
-    private final ClienteService clienteService;
-    private final MovimientoInventarioService  movimientoInventarioService;
-    private final ProductoRepository  productoRepository;
+    private final ClienteService clienteService; // (no lo uso aquí, lo dejo por si lo usas luego)
+    private final MovimientoInventarioService movimientoInventarioService;
+    private final ProductoRepository productoRepository;
     private final ClienteSuscripcionService clienteSuscripcionService;
-
 
     @Transactional
     public PagoResponse registrarPago(PagoRequest request, Authentication connectedUser) {
 
+        // =========================
+        // VALIDACIONES BÁSICAS
+        // =========================
+        if (request == null) {
+            throw new BussinessException(BusinessErrorCodes.VALIDATION_ERROR);
+        }
         if (request.getVentaId() == null) {
-            throw new IllegalArgumentException("ventaId es obligatorio");
+            throw new BussinessException(BusinessErrorCodes.PAGO_VENTA_ID_REQUIRED);
         }
         if (request.getMetodo() == null) {
-            throw new IllegalArgumentException("metodo es obligatorio");
+            throw new BussinessException(BusinessErrorCodes.PAGO_METODO_REQUIRED);
         }
         if (request.getTipoComprobante() == null) {
-            throw new IllegalArgumentException("tipoComprobante es obligatorio");
+            throw new BussinessException(BusinessErrorCodes.PAGO_TIPO_COMPROBANTE_REQUIRED);
+        }
+        if (connectedUser == null || connectedUser.getPrincipal() == null) {
+            throw new BussinessException(BusinessErrorCodes.BAD_CREDENTIALS);
         }
 
+        // =========================
+        // OBTENER VENTA
+        // =========================
         Venta venta = ventaRepository.findById(request.getVentaId())
-                .orElseThrow(() -> new EntityNotFoundException("Venta no encontrada"));
+                .orElseThrow(() -> new BussinessException(BusinessErrorCodes.PAGO_VENTA_NOT_FOUND));
 
         // Bloqueos por estado
         if (venta.getEstado() == EstadoVenta.ANULADA) {
-            throw new IllegalArgumentException("No se puede pagar una venta ANULADA");
+            throw new BussinessException(BusinessErrorCodes.PAGO_VENTA_ANULADA);
         }
         if (venta.getEstado() == EstadoVenta.REEMBOLSADA) {
-            throw new IllegalArgumentException("No se puede pagar una venta REEMBOLSADA");
+            throw new BussinessException(BusinessErrorCodes.PAGO_VENTA_REEMBOLSADA);
         }
         if (venta.getEstado() == EstadoVenta.CONFIRMADA) {
-            throw new IllegalArgumentException("La venta ya está confirmada/pagada");
+            throw new BussinessException(BusinessErrorCodes.PAGO_VENTA_YA_PAGADA);
         }
 
-        // Validar detalles
         if (venta.getDetalles() == null || venta.getDetalles().isEmpty()) {
-            throw new IllegalArgumentException("No se puede pagar una venta sin detalles");
+            throw new BussinessException(BusinessErrorCodes.PAGO_VENTA_SIN_DETALLES);
         }
 
         boolean tieneServicio = venta.getDetalles().stream()
@@ -87,84 +101,73 @@ public class    PagoService {
         boolean tieneProducto = venta.getDetalles().stream()
                 .anyMatch(d -> d.getTipoItem() == TipoItemVenta.PRODUCTO);
 
-        // (Opcional recomendado) si no vas a soportar MIXTO aquí, bloquéalo
         if (tieneServicio && tieneProducto) {
-            throw new IllegalArgumentException("Esta venta es MIXTA. Usa el flujo mixto.");
+            throw new BussinessException(BusinessErrorCodes.PAGO_VENTA_MIXTA_NO_SOPORTADA);
         }
 
-        // Resolver cliente:
-        // - SERVICIO: obligatorio
-        // - PRODUCTO: puede ser null
-        Cliente cliente = null;
+        // =========================
+        // RESOLVER CLIENTE
+        // =========================
+        Cliente cliente;
 
         if (request.getClienteId() != null) {
             cliente = clienteRepository.findById(request.getClienteId())
-                    .orElseThrow(() -> new EntityNotFoundException("Cliente no encontrado"));
+                    .orElseThrow(() -> new BussinessException(BusinessErrorCodes.PAGO_CLIENTE_NOT_FOUND));
 
-            // coherencia: si venta ya tiene cliente, debe coincidir
             if (venta.getCliente() != null && !venta.getCliente().getId().equals(cliente.getId())) {
-                throw new IllegalArgumentException("El cliente del pago no coincide con el cliente de la venta");
+                throw new BussinessException(BusinessErrorCodes.PAGO_CLIENTE_NO_COINCIDE_CON_VENTA);
             }
         } else {
-            // usar el de la venta (puede ser null y está bien si es PRODUCTO)
-            cliente = venta.getCliente();
+            cliente = venta.getCliente(); // puede ser null si es PRODUCTO mostrador
         }
 
         if (tieneServicio && cliente == null) {
-            throw new IllegalArgumentException("Para servicios el cliente es obligatorio");
+            throw new BussinessException(BusinessErrorCodes.PAGO_CLIENTE_REQUIRED_PARA_SERVICIOS);
         }
 
-        // Validar total venta
+        // =========================
+        // VALIDAR TOTAL / SALDO
+        // =========================
         if (venta.getTotal() == null || venta.getTotal().compareTo(BigDecimal.ZERO) <= 0) {
-            throw new IllegalArgumentException("La venta no tiene un total válido");
+            throw new BussinessException(BusinessErrorCodes.PAGO_VENTA_TOTAL_INVALIDO);
         }
 
         BigDecimal totalVenta = venta.getTotal().setScale(2, RoundingMode.HALF_UP);
 
-        // Evitar null en sum
         BigDecimal pagado = pagoRepository.sumMontoByVentaAndEstado(venta.getId(), EstadoPago.COMPLETADO);
-        if (pagado == null) pagado = BigDecimal.ZERO;
-        pagado = pagado.setScale(2, RoundingMode.HALF_UP);
+        pagado = (pagado == null ? BigDecimal.ZERO : pagado).setScale(2, RoundingMode.HALF_UP);
 
         BigDecimal restante = totalVenta.subtract(pagado).setScale(2, RoundingMode.HALF_UP);
 
         if (restante.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new IllegalArgumentException("La venta no tiene saldo pendiente");
+            throw new BussinessException(BusinessErrorCodes.PAGO_VENTA_SIN_SALDO_PENDIENTE);
         }
 
-        // Validar monto
         if (request.getMonto() == null || request.getMonto().compareTo(BigDecimal.ZERO) <= 0) {
-            throw new IllegalArgumentException("monto debe ser mayor a 0");
+            throw new BussinessException(BusinessErrorCodes.PAGO_MONTO_INVALIDO);
         }
 
         BigDecimal monto = request.getMonto().setScale(2, RoundingMode.HALF_UP);
 
-        // Reglas de monto:
-        // - SERVICIO (Opción A): pago exacto
-        // - PRODUCTO: aquí te lo dejo también exacto (si quieres permitir parcial, hay que meter estado PARCIAL)
-        if (tieneServicio) {
-            if (monto.compareTo(restante) != 0) {
-                throw new IllegalArgumentException("Para servicios debes pagar el monto exacto pendiente: " + restante);
-            }
-        } else {
-            // PRODUCTO: por ahora exacto (cambia esto si luego permites parcial)
-            if (monto.compareTo(restante) != 0) {
-                throw new IllegalArgumentException("Debes pagar el monto exacto pendiente: " + restante);
-            }
+        // Por ahora: pago exacto
+        if (monto.compareTo(restante) != 0) {
+            throw new BussinessException(BusinessErrorCodes.PAGO_MONTO_DEBE_SER_EXACTO);
         }
 
+        // =========================
         // EFECTIVO
+        // =========================
         BigDecimal cambio = null;
         BigDecimal efectivoRecibido = null;
 
         if (request.getMetodo() == MetodoPago.EFECTIVO) {
             if (request.getEfectivoRecibido() == null) {
-                throw new IllegalArgumentException("efectivoRecibido es obligatorio para EFECTIVO");
+                throw new BussinessException(BusinessErrorCodes.PAGO_EFECTIVO_RECIBIDO_REQUIRED);
             }
             efectivoRecibido = request.getEfectivoRecibido().setScale(2, RoundingMode.HALF_UP);
 
             if (efectivoRecibido.compareTo(monto) < 0) {
-                throw new IllegalArgumentException("El efectivo recibido no puede ser menor al monto");
+                throw new BussinessException(BusinessErrorCodes.PAGO_EFECTIVO_INSUFICIENTE);
             }
 
             cambio = efectivoRecibido.subtract(monto).setScale(2, RoundingMode.HALF_UP);
@@ -175,13 +178,15 @@ public class    PagoService {
                 ? TipoOperacionPago.SERVICIO
                 : TipoOperacionPago.PRODUCTO;
 
-        // Crear Pago
+        // =========================
+        // CREAR PAGO
+        // =========================
         Pago pago = Pago.builder()
                 .venta(venta)
-                .cliente(cliente) // puede ser null si PRODUCTO mostrador
+                .cliente(cliente) // puede ser null si producto mostrador
                 .fechaPago(LocalDateTime.now())
                 .metodo(request.getMetodo())
-                .moneda(request.getMoneda() == null ? "USD" : request.getMoneda())
+                .moneda(normalizeMoneda(request.getMoneda()))
                 .monto(monto)
                 .efectivoRecibido(efectivoRecibido)
                 .cambio(cambio)
@@ -193,7 +198,13 @@ public class    PagoService {
 
         Pago savedPago = pagoRepository.save(pago);
 
-        // 1) MovimientoDinero (INGRESO)
+        // =========================
+        // 1) MOVIMIENTO DINERO (INGRESO)
+        // =========================
+        if (venta.getSucursal() == null || venta.getSucursal().getId() == null) {
+            throw new BussinessException(BusinessErrorCodes.PAGO_SUCURSAL_REQUIRED);
+        }
+
         MovimientoDineroCreateRequest movReq = new MovimientoDineroCreateRequest();
         movReq.setSucursalId(venta.getSucursal().getId());
         movReq.setTipo(TipoMovimientoDinero.INGRESO);
@@ -204,20 +215,21 @@ public class    PagoService {
         movReq.setDescripcion("Pago venta " + venta.getNumeroFactura());
         movReq.setVentaId(venta.getId());
         movReq.setPagoId(savedPago.getId());
+
         if (tieneServicio) {
             Long servicioId = venta.getDetalles().stream()
                     .filter(d -> d.getTipoItem() == TipoItemVenta.SERVICIO)
                     .map(DetalleVenta::getReferenciaId)
                     .findFirst()
                     .orElse(null);
-
             movReq.setServicioId(servicioId);
         }
 
         movimientoDineroService.crearMovimiento(movReq, connectedUser);
 
-        // 2) Comprobante + PDF (evitar duplicado por reintento)
-        // Si tienes repo para comprobantes:
+        // =========================
+        // 2) COMPROBANTE + PDF
+        // =========================
         Optional<Comprobante> comprobanteOpt =
                 comprobanteRepository.findTopByVentaIdAndTipoAndEstadoOrderByCreatedAtDesc(
                         venta.getId(),
@@ -226,10 +238,9 @@ public class    PagoService {
                 );
 
         Comprobante comprobante;
-        if (comprobanteOpt.isPresent() && comprobanteOpt.get().getPdfRef() != null) {
+        if (comprobanteOpt.isPresent() && comprobanteOpt.get().getPdfRef() != null && !comprobanteOpt.get().getPdfRef().isBlank()) {
             comprobante = comprobanteOpt.get();
         } else {
-            // tu service debe crear Comprobante y setear pdfRef
             comprobante = comprobanteService.generarFacturaPdf(venta);
         }
 
@@ -237,60 +248,60 @@ public class    PagoService {
         savedPago.setTipoComprobante(comprobante.getTipo());
         savedPago = pagoRepository.save(savedPago);
 
-
-
+        // =========================
+        // 3) INVENTARIO (si producto)
+        // =========================
         if (tieneProducto) {
             for (DetalleVenta d : venta.getDetalles()) {
 
                 if (d.getTipoItem() != TipoItemVenta.PRODUCTO) continue;
 
                 if (d.getCantidad() == null) {
-                    throw new IllegalArgumentException("Detalle de producto sin cantidad");
+                    throw new BussinessException(BusinessErrorCodes.PAGO_DETALLE_PRODUCTO_SIN_CANTIDAD);
                 }
 
                 final int unidades;
                 try {
                     unidades = d.getCantidad().intValueExact();
                 } catch (ArithmeticException ex) {
-                    throw new IllegalArgumentException("La cantidad de producto debe ser entera. Valor: " + d.getCantidad());
+                    throw new BussinessException(BusinessErrorCodes.PAGO_DETALLE_PRODUCTO_CANTIDAD_NO_ENTERA);
                 }
 
                 if (unidades <= 0) {
-                    throw new IllegalArgumentException("Cantidad de producto inválida: " + unidades);
+                    throw new BussinessException(BusinessErrorCodes.PAGO_DETALLE_PRODUCTO_CANTIDAD_INVALIDA);
                 }
 
                 Producto producto = productoRepository.findById(d.getReferenciaId())
-                        .orElseThrow(() -> new EntityNotFoundException("Producto no encontrado: " + d.getReferenciaId()));
+                        .orElseThrow(() -> new BussinessException(BusinessErrorCodes.PAGO_PRODUCTO_NOT_FOUND));
 
-                movimientoInventarioService.registrarSalida(producto, unidades, "Salida por venta " + venta.getNumeroFactura());
+                movimientoInventarioService.registrarSalida(
+                        producto,
+                        unidades,
+                        "Salida por venta " + venta.getNumeroFactura()
+                );
 
-                // Por si tu registrar() no guarda producto (en tu código solo hace producto.setStock y repository.save(m))
-                // esto asegura persistencia del stock nuevo:
+                // asegura persistencia de stock
                 productoRepository.save(producto);
             }
         }
 
-
-        // 3) Confirmar venta
+        // =========================
+        // 4) CONFIRMAR VENTA
+        // =========================
         venta.setEstado(EstadoVenta.CONFIRMADA);
         ventaRepository.save(venta);
 
-        // 4) Activar cliente SOLO si hay servicios
-//        if (tieneServicio) {
-//            clienteService.activarCliente(cliente.getId());
-//        }
-
+        // =========================
+        // 5) SUSCRIPCIÓN (si servicio)
+        // =========================
         if (tieneServicio) {
             clienteSuscripcionService.registrarSuscripcionDesdeVenta(venta, savedPago.getFechaPago());
         }
 
-
-
         return pagoMapper.toResponse(savedPago);
     }
 
-
-
+    @Transactional(readOnly = true)
     public PageResponse<PagoResponse> findAll(
             LocalDateTime desde,
             LocalDateTime hasta,
@@ -298,9 +309,8 @@ public class    PagoService {
             MetodoPago metodo,
             Pageable pageable
     ) {
-
         if (desde != null && hasta != null && desde.isAfter(hasta)) {
-            throw new IllegalArgumentException("La fecha desde no puede ser mayor que hasta");
+            throw new BussinessException(BusinessErrorCodes.PAGO_RANGO_FECHAS_INVALIDO);
         }
 
         Page<Pago> page = pagoRepository.buscarPagos(
@@ -327,6 +337,7 @@ public class    PagoService {
                 .build();
     }
 
-
-
+    private String normalizeMoneda(String moneda) {
+        return (moneda == null || moneda.isBlank()) ? "USD" : moneda.trim().toUpperCase();
+    }
 }

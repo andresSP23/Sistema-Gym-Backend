@@ -1,6 +1,8 @@
 package com.ansicode.SistemaAdministracionGym.enums;
 
 public enum EstadoCuadreCaja {
-    PARCIAL, COMPLETO
+    CUADRA,      // contado == esperado
+    SOBRANTE,    // contado > esperado
+    FALTANTE
 
 }

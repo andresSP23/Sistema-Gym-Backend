@@ -18,6 +18,7 @@ import com.ansicode.SistemaAdministracionGym.user.User;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.math3.analysis.interpolation.BicubicInterpolatingFunction;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
@@ -136,6 +137,12 @@ public class ProductoService {
         Producto producto = productoRepository.findByIdForUpdate(productoId)
                 .orElseThrow(() -> new EntityNotFoundException("Producto no encontrado"));
 
+        if (producto.getPrecioCompra() == null) {
+            throw new IllegalStateException("Producto sin precio de compra");
+        }
+
+        BigDecimal montoTotal = producto.getPrecioCompra()
+                .multiply(BigDecimal.valueOf(request.getCantidad()));
         // 2) Inventario: entrada
         movimientoService.registrarEntrada(producto, request.getCantidad(), request.getObservacion());
 
@@ -145,9 +152,7 @@ public class ProductoService {
             if (request.getSucursalId() == null) {
                 throw new IllegalArgumentException("sucursalId es obligatorio cuando registrarEgreso = true");
             }
-            if (request.getCostoTotal() == null || request.getCostoTotal().compareTo(BigDecimal.ZERO) <= 0) {
-                throw new IllegalArgumentException("costoTotal es requerido y debe ser > 0 cuando registrarEgreso = true");
-            }
+
             if (request.getMetodoPago() == null) {
                 throw new IllegalArgumentException("metodoPago es requerido cuando registrarEgreso = true");
             }
@@ -159,7 +164,7 @@ public class ProductoService {
             mdRequest.setConcepto(ConceptoMovimientoDinero.COMPRA_STOCK);
             mdRequest.setMetodo(request.getMetodoPago());
             mdRequest.setMoneda(request.getMoneda() == null ? "USD" : request.getMoneda());
-            mdRequest.setMonto(request.getCostoTotal());
+            mdRequest.setMonto(montoTotal);
             mdRequest.setDescripcion(request.getObservacion());
             mdRequest.setProductoId(productoId);
 

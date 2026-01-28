@@ -7,11 +7,12 @@ import com.ansicode.SistemaAdministracionGym.producto.ProductoRepository;
 import com.ansicode.SistemaAdministracionGym.user.User;
 import com.ansicode.SistemaAdministracionGym.user.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -102,11 +103,33 @@ public class MovimientoInventarioService {
 
         repository.save(m);
     }
+    @Transactional(readOnly = true)
+    public PageResponse<MovimientoInventarioResponse> listar(Pageable pageable,
+                                                             Long productoId,
+                                                             String tipoMovimiento,
+                                                             LocalDateTime desde,
+                                                             LocalDateTime hasta,
+                                                             Long createdBy,
+                                                             Integer cantidadMin,
+                                                             Integer cantidadMax,
+                                                             Integer stockActualMin,
+                                                             Integer stockActualMax,
+                                                             String q) {
 
-    @Transactional
-    public PageResponse<MovimientoInventarioResponse> listarPorProducto(Long productoId, Pageable pageable) {
+        Specification<MovimientoInventario> spec = (root, query, cb) -> cb.conjunction();
 
-        Page<MovimientoInventario> page = repository.findByProductoId(productoId, pageable);
+        spec = spec.and(MovimientoInventarioSpecifications.productoId(productoId));
+        spec = spec.and(MovimientoInventarioSpecifications.tipoMovimiento(tipoMovimiento));
+        spec = spec.and(MovimientoInventarioSpecifications.fechaDesde(desde));
+        spec = spec.and(MovimientoInventarioSpecifications.fechaHasta(hasta));
+        spec = spec.and(MovimientoInventarioSpecifications.createdBy(createdBy));
+        spec = spec.and(MovimientoInventarioSpecifications.cantidadMin(cantidadMin));
+        spec = spec.and(MovimientoInventarioSpecifications.cantidadMax(cantidadMax));
+        spec = spec.and(MovimientoInventarioSpecifications.stockActualMin(stockActualMin));
+        spec = spec.and(MovimientoInventarioSpecifications.stockActualMax(stockActualMax));
+        spec = spec.and(MovimientoInventarioSpecifications.search(q));
+
+        Page<MovimientoInventario> page = repository.findAll(spec, pageable);
 
         List<MovimientoInventarioResponse> content = page.getContent()
                 .stream()
@@ -123,4 +146,5 @@ public class MovimientoInventarioService {
                 .last(page.isLast())
                 .build();
     }
+
 }

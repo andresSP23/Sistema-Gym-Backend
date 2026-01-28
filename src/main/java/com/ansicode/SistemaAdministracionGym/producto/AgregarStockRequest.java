@@ -19,7 +19,6 @@ public class AgregarStockRequest {
 
     private Boolean registrarEgreso = false;  // <- ESTE
 
-    private BigDecimal costoTotal;
     private MetodoPago metodoPago;
     private String moneda = "USD";
 }

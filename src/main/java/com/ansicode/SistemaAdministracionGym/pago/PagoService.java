@@ -183,7 +183,11 @@ public class PagoService {
         // =========================
         Pago pago = Pago.builder()
                 .venta(venta)
-                .cliente(cliente) // puede ser null si producto mostrador
+                .cliente(cliente)
+                .clienteIdSnapshot(cliente != null ? cliente.getId() : null)
+                .nombreClienteSnapshot(cliente != null
+                        ? (cliente.getNombres() + " " + cliente.getApellidos())
+                        : null)
                 .fechaPago(LocalDateTime.now())
                 .metodo(request.getMetodo())
                 .moneda(normalizeMoneda(request.getMoneda()))

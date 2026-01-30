@@ -7,7 +7,10 @@ import java.time.LocalDateTime;
 
 public class ClienteSuscripcionSpecifications {
 
-
+    public static Specification<ClienteSuscripcion> clienteVisible() {
+        return (root, query, cb) ->
+                cb.isTrue(root.get("cliente").get("isVisible"));
+    }
     public static Specification<ClienteSuscripcion> clienteId(Long clienteId) {
         return (root, query, cb) ->
                 (clienteId == null)

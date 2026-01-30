@@ -119,6 +119,7 @@ public class ClienteSuscripcionService {
             ClienteSuscripcionMapper mapper
     ) {
         Specification<ClienteSuscripcion> spec = Specification.allOf(
+                ClienteSuscripcionSpecifications.clienteVisible(),
                 ClienteSuscripcionSpecifications.clienteId(clienteId),
                 ClienteSuscripcionSpecifications.servicioId(servicioId),
                 ClienteSuscripcionSpecifications.estado(estado),

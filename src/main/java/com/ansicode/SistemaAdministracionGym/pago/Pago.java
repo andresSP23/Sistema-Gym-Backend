@@ -45,6 +45,13 @@ public class Pago extends AuditedEntity {
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;
 
+
+    @Column(name = "cliente_id_snapshot")
+    private Long clienteIdSnapshot;
+
+    @Column(name = "nombre_cliente_snapshot", length = 200)
+    private String nombreClienteSnapshot;
+
     @Column(name = "fecha_pago", nullable = false)
     private LocalDateTime fechaPago = LocalDateTime.now();
 

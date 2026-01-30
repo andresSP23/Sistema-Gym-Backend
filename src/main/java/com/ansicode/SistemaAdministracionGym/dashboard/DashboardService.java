@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.Clock;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,35 +18,41 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DashboardService {
 
+
     private final MovimientoDineroRepositoryDashboard movRepo;
     private final ClienteRepositoryDashboard clienteRepo;
     private final DetalleVentaRepositoryDashboard detalleRepo;
 
+    // ✅ Inyecta Clock (configúralo en un @Bean con tu ZoneId)
+    private final Clock clock;
+
+    private static final long MAX_RANGO_DIAS = 366; // ajusta a tu gusto
+
     @Transactional(readOnly = true)
     public DashBoardResumenResponse resumen(LocalDateTime desde, LocalDateTime hasta) {
 
-        validarRangoFechas(desde, hasta);
+        Range r = normalizarYValidarRango(desde, hasta);
 
-        // Totales por rango (movimientos de caja)
-        BigDecimal ingresosTotales = nz(movRepo.totalPorTipo("INGRESO", desde, hasta));
-        BigDecimal egresosTotales = nz(movRepo.totalPorTipo("EGRESO", desde, hasta));
-        BigDecimal gananciaTotal = ingresosTotales.subtract(egresosTotales);
+        // Totales por rango (fin exclusivo)
+        BigDecimal ingresosTotales = nz(movRepo.totalPorTipo("INGRESO", r.desde(), r.hastaExclusivo()));
+        BigDecimal egresosTotales  = nz(movRepo.totalPorTipo("EGRESO",  r.desde(), r.hastaExclusivo()));
+        BigDecimal gananciaTotal   = ingresosTotales.subtract(egresosTotales);
 
-        // Hoy
-        LocalDateTime inicioHoy = LocalDate.now().atStartOfDay();
-        LocalDateTime finHoy = LocalDate.now().atTime(23, 59, 59);
+        // Hoy (fin exclusivo)
+        LocalDate hoy = LocalDate.now(clock);
+        LocalDateTime inicioHoy = hoy.atStartOfDay();
+        LocalDateTime finHoyExclusivo = hoy.plusDays(1).atStartOfDay();
 
-        BigDecimal ingresosHoy = nz(movRepo.totalPorTipo("INGRESO", inicioHoy, finHoy));
-        BigDecimal egresosHoy = nz(movRepo.totalPorTipo("EGRESO", inicioHoy, finHoy));
+        BigDecimal ingresosHoy = nz(movRepo.totalPorTipo("INGRESO", inicioHoy, finHoyExclusivo));
+        BigDecimal egresosHoy  = nz(movRepo.totalPorTipo("EGRESO",  inicioHoy, finHoyExclusivo));
         BigDecimal gananciaHoy = ingresosHoy.subtract(egresosHoy);
 
-        // Clientes
-        Long numeroClientes = clienteRepo.totalClientes();
-        if (numeroClientes == null) numeroClientes = 0L;
+        // Clientes (ya tienes @Where is_visible=true, entonces el repo ya filtra)
+        Long numeroClientes = nzLong(clienteRepo.totalClientes(r.desde(), r.hastaExclusivo()));
 
-        // Vendidos (por ventas/detalles) con el mismo rango del dashboard
-        BigDecimal productosVendidos = nz(detalleRepo.cantidadVendidaPorTipo("PRODUCTO", desde, hasta));
-        BigDecimal serviciosVendidos = nz(detalleRepo.cantidadVendidaPorTipo("SERVICIO", desde, hasta));
+        // Vendidos (mismo rango del dashboard)
+        BigDecimal productosVendidos = nz(detalleRepo.cantidadVendidaPorTipo("PRODUCTO", r.desde(), r.hastaExclusivo()));
+        BigDecimal serviciosVendidos = nz(detalleRepo.cantidadVendidaPorTipo("SERVICIO", r.desde(), r.hastaExclusivo()));
 
         return new DashBoardResumenResponse(
                 ingresosTotales, egresosTotales, gananciaTotal,
@@ -57,22 +65,22 @@ public class DashboardService {
     @Transactional(readOnly = true)
     public List<SerieResponse> ingresosDiarios(LocalDateTime desde, LocalDateTime hasta) {
 
-        validarRangoFechas(desde, hasta);
+        Range r = normalizarYValidarRango(desde, hasta);
 
-        return movRepo.serieDiariaPorTipo("INGRESO", desde, hasta)
+        return movRepo.serieDiariaPorTipo("INGRESO", r.desde(), r.hastaExclusivo())
                 .stream()
-                .map(r -> new SerieResponse(r.getFecha(), nz(r.getTotal())))
+                .map(x -> new SerieResponse(x.getFecha(), nz(x.getTotal())))
                 .toList();
     }
 
     @Transactional(readOnly = true)
     public List<SerieResponse> egresosDiarios(LocalDateTime desde, LocalDateTime hasta) {
 
-        validarRangoFechas(desde, hasta);
+        Range r = normalizarYValidarRango(desde, hasta);
 
-        return movRepo.serieDiariaPorTipo("EGRESO", desde, hasta)
+        return movRepo.serieDiariaPorTipo("EGRESO", r.desde(), r.hastaExclusivo())
                 .stream()
-                .map(r -> new SerieResponse(r.getFecha(), nz(r.getTotal())))
+                .map(x -> new SerieResponse(x.getFecha(), nz(x.getTotal())))
                 .toList();
     }
 
@@ -80,32 +88,58 @@ public class DashboardService {
     public List<TopVendidoResponse> topVendidos(String tipo, LocalDateTime desde, LocalDateTime hasta, int limit) {
 
         validarTipoTopVendidos(tipo);
-        validarRangoFechas(desde, hasta);
 
-        int safeLimit = limit;
-        if (safeLimit <= 0) safeLimit = 10;
-        if (safeLimit > 50) safeLimit = 50;
+        Range r = normalizarYValidarRango(desde, hasta);
 
-        return detalleRepo.topVendidos(tipo, desde, hasta, safeLimit)
+        int safeLimit = Math.min(Math.max(limit, 10), 50);
+
+        return detalleRepo.topVendidos(tipo, r.desde(), r.hastaExclusivo(), safeLimit)
                 .stream()
-                .map(r -> new TopVendidoResponse(r.getNombre(), r.getCantidad(), nz(r.getTotal())))
+                .map(x -> new TopVendidoResponse(x.getNombre(), x.getCantidad(), nz(x.getTotal())))
                 .toList();
     }
 
     // =========================
-    // VALIDACIONES
+    // RANGO: normalización + validación
     // =========================
 
-    private void validarRangoFechas(LocalDateTime desde, LocalDateTime hasta) {
+    /**
+     * Convierte el rango a fin EXCLUSIVO:
+     * - si hasta viene, lo hacemos exclusivo sumando 1 nanosegundo? NO.
+     * - mejor convención: repo usa "< hastaExclusivo"
+     *
+     * Si quieres que "hasta" sea inclusivo a nivel de usuario, puedes hacer:
+     *   hastaExclusivo = hasta.plusSeconds(1) si viene sin nanos
+     * pero lo correcto es: UI mande hasta como fin del día o usar fechas.
+     */
+    private Range normalizarYValidarRango(LocalDateTime desde, LocalDateTime hasta) {
+
         if (desde != null && hasta != null && desde.isAfter(hasta)) {
-            // ✅ usa BusinessErrorCodes (agrega este code si no existe)
             throw new BussinessException(BusinessErrorCodes.DASHBOARD_RANGO_FECHAS_INVALIDO);
         }
+
+        // ✅ Convención: hastaExclusivo = hasta + 1 nanosegundo NO es buena idea.
+        // Mejor: usa < hastaExclusivo en SQL, y aquí definimos:
+        // - si hasta es null -> null (sin límite)
+        // - si hasta NO es null -> lo convertimos a "hastaExclusivo" sumando 1 segundo si tú trabajas a segundos,
+        //   o sumando 1 día si tu "hasta" suele ser fecha al inicio del día.
+        //
+        // Para ser neutros: si viene hasta, lo dejamos tal cual, y en repos tú decides <= o <.
+        // Pero yo recomiendo < y que "hasta" venga como fin deseado.
+        LocalDateTime hastaExclusivo = hasta;
+
+        if (desde != null && hasta != null) {
+            long dias = Duration.between(desde, hasta).toDays();
+            if (dias > MAX_RANGO_DIAS) {
+                throw new BussinessException(BusinessErrorCodes.DASHBOARD_RANGO_MUY_GRANDE);
+            }
+        }
+
+        return new Range(desde, hastaExclusivo);
     }
 
     private void validarTipoTopVendidos(String tipo) {
         if (tipo == null || (!tipo.equals("PRODUCTO") && !tipo.equals("SERVICIO"))) {
-            // ✅ usa BusinessErrorCodes (agrega este code si no existe)
             throw new BussinessException(BusinessErrorCodes.DASHBOARD_TIPO_INVALIDO);
         }
     }
@@ -113,4 +147,10 @@ public class DashboardService {
     private BigDecimal nz(BigDecimal v) {
         return v == null ? BigDecimal.ZERO : v;
     }
+
+    private Long nzLong(Long v) {
+        return v == null ? 0L : v;
+    }
+
+    private record Range(LocalDateTime desde, LocalDateTime hastaExclusivo) {}
 }

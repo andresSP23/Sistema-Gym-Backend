@@ -10,16 +10,21 @@ import java.time.LocalDateTime;
 @Setter
 @Builder
 public class ClienteSuscripcionResponse {
+
     private Long id;
 
     private Long clienteId;
-    private Long servicioId;
-    private Long ventaId;
+    private String clienteNombre;
 
+    private Long servicioId;
     private String servicioNombre;
+
+    private Long ventaId;
 
     private LocalDateTime fechaInicio;
     private LocalDateTime fechaFin;
 
     private EstadoSuscripcion estado;
+
+    private Long diasRestantes;
 }

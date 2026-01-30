@@ -83,6 +83,8 @@ public enum BusinessErrorCodes {
  // DASHBOARD (2900–2999)
  DASHBOARD_RANGO_FECHAS_INVALIDO(2900, HttpStatus.BAD_REQUEST, "La fecha desde no puede ser mayor que hasta"),
  DASHBOARD_TIPO_INVALIDO(2901, HttpStatus.BAD_REQUEST, "tipo debe ser PRODUCTO o SERVICIO"),
+ DASHBOARD_RANGO_MUY_GRANDE(702, HttpStatus.BAD_REQUEST, "El rango de fechas es demasiado grande"),
+
 
 
  // MOVIMIENTO DINERO (3000–3099)

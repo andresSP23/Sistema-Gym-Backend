@@ -16,6 +16,8 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+import java.time.Clock;
+import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -41,6 +43,11 @@ public class BeansConfig {
 
     }
 
+
+    @Bean
+    public Clock clock() {
+        return Clock.system(ZoneId.of("America/Guayaquil"));
+    }
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
 

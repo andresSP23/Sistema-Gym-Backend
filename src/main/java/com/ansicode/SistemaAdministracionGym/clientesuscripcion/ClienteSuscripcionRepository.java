@@ -2,6 +2,7 @@ package com.ansicode.SistemaAdministracionGym.clientesuscripcion;
 
 import com.ansicode.SistemaAdministracionGym.enums.EstadoSuscripcion;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -9,7 +10,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-public interface ClienteSuscripcionRepository extends JpaRepository<ClienteSuscripcion, Long> {
+public interface ClienteSuscripcionRepository extends JpaRepository<ClienteSuscripcion, Long>  , JpaSpecificationExecutor<ClienteSuscripcion> {
 
     Optional<ClienteSuscripcion> findTopByClienteIdAndEstadoAndFechaFinAfterOrderByFechaFinDesc(
             Long clienteId,
@@ -36,6 +37,12 @@ public interface ClienteSuscripcionRepository extends JpaRepository<ClienteSuscr
 }
 
 ;
+
+
+
+
+
+
 
 
 

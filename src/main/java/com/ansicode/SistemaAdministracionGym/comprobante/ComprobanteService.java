@@ -85,23 +85,96 @@ public class ComprobanteService {
             Document doc = new Document(pdf, PageSize.A4);
             doc.setMargins(30, 30, 30, 30);
 
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
+            // ==========
+            // HEADER: EMPRESA / SUCURSAL
+            // ==========
+            String sucursalNombre = venta.getSucursal() != null ? ns(venta.getSucursal().getNombre()) : "-";
+            // Ajusta estos getters a tu modelo Sucursal (los nombres pueden variar)
+            String sucursalDireccion = venta.getSucursal() != null ? ns(venta.getSucursal().getDireccion()) : "-";
+            String sucursalTelefono  = venta.getSucursal() != null ? ns(venta.getSucursal().getTelefono()) : "-";
+            String sucursalEmail     = venta.getSucursal() != null ? ns(venta.getSucursal().getEmail()) : "-";
+            String sucursalRuc       = venta.getSucursal() != null ? ns(venta.getSucursal().getRuc()) : "-";
+            String razonSocial       = venta.getSucursal() != null ? ns(venta.getSucursal().getRazonSocial()) : sucursalNombre;
+
+            // Título
             doc.add(new Paragraph("FACTURA")
                     .setTextAlignment(TextAlignment.CENTER)
                     .setBold()
                     .setFontSize(16));
 
-            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-            doc.add(new Paragraph("Número: " + c.getNumero()).setBold());
-            doc.add(new Paragraph("Fecha: " + (venta.getFechaVenta() != null ? venta.getFechaVenta().format(dtf) : "-")));
+            // Bloque emisor
+            Table emisor = new Table(UnitValue.createPercentArray(new float[]{70, 30}))
+                    .useAllAvailableWidth();
 
+            emisor.addCell(new Cell().setBorder(null).add(new Paragraph(ns(razonSocial)).setBold()));
+            emisor.addCell(new Cell().setBorder(null).add(new Paragraph("N°: " + ns(c.getNumero())).setBold())
+                    .setTextAlignment(TextAlignment.RIGHT));
+
+            emisor.addCell(new Cell().setBorder(null).add(new Paragraph("RUC: " + ns(sucursalRuc))));
+            emisor.addCell(new Cell().setBorder(null).add(new Paragraph("Fecha: " +
+                            (venta.getFechaVenta() != null ? venta.getFechaVenta().format(dtf) : "-")))
+                    .setTextAlignment(TextAlignment.RIGHT));
+
+            emisor.addCell(new Cell().setBorder(null).add(new Paragraph("Sucursal: " + ns(sucursalNombre))));
+            String cajero = (venta.getCajeroUsuario() != null)
+                    ? ns(venta.getCajeroUsuario().getNombre()) + " " + ns(venta.getCajeroUsuario().getApellido())
+                    : "-";
+            emisor.addCell(new Cell().setBorder(null).add(new Paragraph("Cajero: " + cajero))
+                    .setTextAlignment(TextAlignment.RIGHT));
+
+            emisor.addCell(new Cell().setBorder(null).add(new Paragraph("Dirección: " + ns(sucursalDireccion))));
+            emisor.addCell(new Cell().setBorder(null).add(new Paragraph("Estado: " +
+                            (venta.getEstado() != null ? venta.getEstado().name() : "-")))
+                    .setTextAlignment(TextAlignment.RIGHT));
+
+            emisor.addCell(new Cell().setBorder(null).add(new Paragraph("Tel: " + ns(sucursalTelefono) + " | Email: " + ns(sucursalEmail))));
+            emisor.addCell(new Cell().setBorder(null).add(new Paragraph(" ")));
+
+            doc.add(emisor);
             doc.add(new Paragraph(" "));
 
-            Table table = new Table(UnitValue.createPercentArray(new float[]{45, 15, 15, 12.5f, 12.5f}))
+            // ==========
+            // CLIENTE
+            // ==========
+            String clienteNombre = venta.getCliente() != null
+                    ? (ns(venta.getCliente().getNombres()) + " " + ns(venta.getCliente().getApellidos())).trim()
+                    : "-";
+
+            // Ajusta estos getters a tu Cliente si existen
+            String clienteIdentificacion = venta.getCliente() != null ? ns(venta.getCliente().getCedula()) : "-";
+            String clienteTelefono = venta.getCliente() != null ? ns(venta.getCliente().getTelefono()) : "-";
+            String clienteEmail = venta.getCliente() != null ? ns(venta.getCliente().getEmail()) : "-";
+            String clienteDireccion = venta.getCliente() != null ? ns(venta.getCliente().getDireccion()) : "-";
+
+            Table clienteTbl = new Table(UnitValue.createPercentArray(new float[]{50, 50}))
+                    .useAllAvailableWidth();
+
+            clienteTbl.addCell(new Cell().setBorder(null).add(new Paragraph("Cliente: " + ns(clienteNombre)).setBold()));
+            clienteTbl.addCell(new Cell().setBorder(null).add(new Paragraph("Identificación: " + ns(clienteIdentificacion))));
+
+            clienteTbl.addCell(new Cell().setBorder(null).add(new Paragraph("Teléfono: " + ns(clienteTelefono))));
+            clienteTbl.addCell(new Cell().setBorder(null).add(new Paragraph("Email: " + ns(clienteEmail))));
+
+            clienteTbl.addCell(
+                    new Cell(1, 2)
+                            .setBorder(null)
+                            .add(new Paragraph("Dirección: " + ns(clienteDireccion)))
+            );
+
+            doc.add(clienteTbl);
+            doc.add(new Paragraph(" "));
+
+            // ==========
+            // DETALLE
+            // ==========
+            Table table = new Table(UnitValue.createPercentArray(new float[]{45, 15, 10, 15, 15}))
                     .useAllAvailableWidth();
 
             table.addHeaderCell(new Cell().add(new Paragraph("Descripción").setBold()));
             table.addHeaderCell(new Cell().add(new Paragraph("Tipo").setBold()));
-            table.addHeaderCell(new Cell().add(new Paragraph("Cantidad").setBold()));
+            table.addHeaderCell(new Cell().add(new Paragraph("Cant.").setBold()));
             table.addHeaderCell(new Cell().add(new Paragraph("P.Unit").setBold()));
             table.addHeaderCell(new Cell().add(new Paragraph("Total").setBold()));
 
@@ -116,10 +189,35 @@ public class ComprobanteService {
             doc.add(table);
             doc.add(new Paragraph(" "));
 
-            doc.add(new Paragraph("Subtotal: " + money(venta.getSubtotal())));
-            doc.add(new Paragraph("Descuento: " + money(venta.getDescuentoTotal())));
-            doc.add(new Paragraph("Impuesto: " + money(venta.getImpuestoTotal())));
-            doc.add(new Paragraph("TOTAL: " + money(venta.getTotal())).setBold().setFontSize(12));
+            // ==========
+            // TOTALES
+            // ==========
+            Table totales = new Table(UnitValue.createPercentArray(new float[]{70, 30}))
+                    .useAllAvailableWidth();
+
+            totales.addCell(new Cell().setBorder(null).add(new Paragraph(" ")));
+            totales.addCell(new Cell().setBorder(null).add(new Paragraph("Subtotal: " + money(venta.getSubtotal())))
+                    .setTextAlignment(TextAlignment.RIGHT));
+
+            totales.addCell(new Cell().setBorder(null).add(new Paragraph(" ")));
+            totales.addCell(new Cell().setBorder(null).add(new Paragraph("Descuento: " + money(venta.getDescuentoTotal())))
+                    .setTextAlignment(TextAlignment.RIGHT));
+
+            totales.addCell(new Cell().setBorder(null).add(new Paragraph(" ")));
+            totales.addCell(new Cell().setBorder(null).add(new Paragraph("Impuesto: " + money(venta.getImpuestoTotal())))
+                    .setTextAlignment(TextAlignment.RIGHT));
+
+            totales.addCell(new Cell().setBorder(null).add(new Paragraph(" ")));
+            totales.addCell(new Cell().setBorder(null).add(new Paragraph("TOTAL: " + money(venta.getTotal()))
+                            .setBold().setFontSize(12))
+                    .setTextAlignment(TextAlignment.RIGHT));
+
+            doc.add(totales);
+
+            // Footer
+            doc.add(new Paragraph(" "));
+            doc.add(new Paragraph("Gracias por su compra.")
+                    .setTextAlignment(TextAlignment.CENTER));
 
             doc.close();
             return baos.toByteArray();

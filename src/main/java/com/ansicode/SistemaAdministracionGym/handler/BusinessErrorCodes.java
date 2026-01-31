@@ -240,7 +240,13 @@ public enum BusinessErrorCodes {
         VENTA_PRODUCTO_PRECIO_INVALIDO(3811, HttpStatus.BAD_REQUEST, "El producto no tiene un precio de venta válido"),
 
         VENTA_CANTIDAD_INVALIDA(3812, HttpStatus.BAD_REQUEST, "cantidad debe ser mayor a 0"),
-        VENTA_NUMERO_FACTURA_NO_UNICO(3813, HttpStatus.CONFLICT, "No se pudo generar un número de factura único");
+        VENTA_NUMERO_FACTURA_NO_UNICO(3813, HttpStatus.CONFLICT, "No se pudo generar un número de factura único"),
+
+        // EQUIPAMIENTO (3900-3999)
+        EQUIPAMIENTO_NOT_FOUND(3900, HttpStatus.NOT_FOUND, "Equipamiento no encontrado"),
+
+        // CONTRATO (4000-4099)
+        CONTRATO_NOT_FOUND(4000, HttpStatus.NOT_FOUND, "Contrato no encontrado");
 
         @Getter
         private final int code;

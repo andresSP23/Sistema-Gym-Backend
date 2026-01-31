@@ -1,6 +1,6 @@
 package com.ansicode.SistemaAdministracionGym.equipamiento;
 
-import com.ansicode.SistemaAdministracionGym.common.BaseEntity;
+import com.ansicode.SistemaAdministracionGym.common.AuditedEntity;
 import com.ansicode.SistemaAdministracionGym.enums.EstadoEquipamiento;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -20,7 +20,7 @@ import org.hibernate.annotations.Where;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class Equipamiento  extends BaseEntity {
+public class Equipamiento extends AuditedEntity {
     private String nombre;
     private String ubicacion;
 
@@ -28,6 +28,5 @@ public class Equipamiento  extends BaseEntity {
     private EstadoEquipamiento estadoEquipamiento;
 
     private String fotoUrl;
-
 
 }

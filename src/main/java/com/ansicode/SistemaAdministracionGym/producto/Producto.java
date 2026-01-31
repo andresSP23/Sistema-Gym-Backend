@@ -1,7 +1,7 @@
 package com.ansicode.SistemaAdministracionGym.producto;
 
 import com.ansicode.SistemaAdministracionGym.categoriaproducto.CategoriaProducto;
-import com.ansicode.SistemaAdministracionGym.common.BaseEntity;
+import com.ansicode.SistemaAdministracionGym.common.AuditedEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,7 +23,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @SuperBuilder
 
-public class Producto extends BaseEntity {
+public class Producto extends AuditedEntity {
 
     @Column(nullable = false)
     private String nombre;

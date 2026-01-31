@@ -1,6 +1,6 @@
 package com.ansicode.SistemaAdministracionGym.sucursal;
 
-import com.ansicode.SistemaAdministracionGym.common.BaseEntity;
+import com.ansicode.SistemaAdministracionGym.common.AuditedEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -26,8 +26,7 @@ import java.time.LocalTime;
 @AllArgsConstructor
 @SuperBuilder
 
-public class Sucursal  extends BaseEntity {
-
+public class Sucursal extends AuditedEntity {
 
     @Column(nullable = false, unique = true, length = 100)
     private String nombre;

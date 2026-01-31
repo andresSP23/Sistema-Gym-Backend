@@ -1,6 +1,6 @@
 package com.ansicode.SistemaAdministracionGym.categoriaproducto;
 
-import com.ansicode.SistemaAdministracionGym.common.BaseEntity;
+import com.ansicode.SistemaAdministracionGym.common.AuditedEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -21,12 +21,12 @@ import org.hibernate.annotations.Where;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class CategoriaProducto  extends BaseEntity {
+public class CategoriaProducto extends AuditedEntity {
 
     @Column(nullable = false, unique = true, length = 100)
     private String nombre;
 
-    @Column( length = 255)
+    @Column(length = 255)
     private String descripcion;
 
 }

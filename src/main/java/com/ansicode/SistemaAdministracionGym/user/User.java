@@ -1,4 +1,5 @@
 package com.ansicode.SistemaAdministracionGym.user;
+
 import com.ansicode.SistemaAdministracionGym.role.Role;
 import jakarta.persistence.*;
 import lombok.*;
@@ -24,12 +25,12 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name= "_user")
+@Table(name = "_user")
 @SQLDelete(sql = "UPDATE _user SET activa = false WHERE id = ?")
 @Where(clause = "activa = true")
 @EntityListeners(AuditingEntityListener.class)
 
-public class User implements UserDetails , Principal {
+public class User implements UserDetails, Principal {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -55,9 +56,6 @@ public class User implements UserDetails , Principal {
     @ManyToMany(fetch = FetchType.EAGER)
     private List<Role> roles;
 
-
-
-
     @CreatedDate
     @Column(nullable = false, updatable = false)
     private LocalDateTime fechaCreacion;
@@ -65,10 +63,6 @@ public class User implements UserDetails , Principal {
     @LastModifiedDate
     @Column(insertable = false)
     private LocalDateTime fechaModificacion;
-
-
-
-
 
     @Override
     public String getName() {
@@ -79,7 +73,7 @@ public class User implements UserDetails , Principal {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return this.roles
                 .stream()
-                .map(r-> new SimpleGrantedAuthority(r.getName()))
+                .map(r -> new SimpleGrantedAuthority("ROLE_" + r.getName()))
                 .collect(Collectors.toList());
     }
 
@@ -100,7 +94,7 @@ public class User implements UserDetails , Principal {
 
     @Override
     public boolean isAccountNonLocked() {
-        return  !cuentaBloqueada;
+        return !cuentaBloqueada;
     }
 
     @Override
@@ -113,8 +107,7 @@ public class User implements UserDetails , Principal {
         return activa;
     }
 
-
-    public String fullname(){
+    public String fullname() {
         return nombre + " " + apellido;
     }
 }

@@ -27,9 +27,6 @@ public class ClienteSuscripcionController {
         return ResponseEntity.ok(res);
     }
 
-
-
-
     @GetMapping("/cliente-suscripcion/findAll")
     public ResponseEntity<PageResponse<ClienteSuscripcionResponse>> listar(
             @RequestParam(required = false) Long clienteId,
@@ -38,10 +35,30 @@ public class ClienteSuscripcionController {
             @RequestParam(required = false) Boolean vigente,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime desde,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime hasta,
-            @ParameterObject Pageable pageable
-    ) {
+            @ParameterObject Pageable pageable) {
         return ResponseEntity.ok(
-                clienteSuscripcionService.listarConFiltros(clienteId, servicioId, estado, vigente, desde, hasta, pageable, mapper)
-        );
+                clienteSuscripcionService.listarConFiltros(clienteId, servicioId, estado, vigente, desde, hasta,
+                        pageable, mapper));
+    }
+
+    @PostMapping("/{id}/cancelar")
+    public ResponseEntity<Void> cancelar(@PathVariable Long id,
+            @RequestBody(required = false) CancelarSuscripcionRequest request,
+            org.springframework.security.core.Authentication connectedUser) {
+        clienteSuscripcionService.cancelarSuscripcion(id, request, connectedUser);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> editar(@PathVariable Long id, @RequestBody EditarSuscripcionRequest request) {
+        clienteSuscripcionService.editarSuscripcion(id, request);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/{id}/renovar")
+    public ResponseEntity<com.ansicode.SistemaAdministracionGym.venta.VentaResponse> renovar(
+            @PathVariable Long id,
+            org.springframework.security.core.Authentication connectedUser) {
+        return ResponseEntity.ok(clienteSuscripcionService.renovarSuscripcion(id, connectedUser));
     }
 }

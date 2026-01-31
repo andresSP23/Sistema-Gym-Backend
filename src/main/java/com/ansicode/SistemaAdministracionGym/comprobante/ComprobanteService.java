@@ -32,6 +32,7 @@ import java.nio.file.Files;
 import java.math.BigDecimal;
 
 import java.time.format.DateTimeFormatter;
+
 @Service
 @RequiredArgsConstructor
 public class ComprobanteService {
@@ -41,7 +42,6 @@ public class ComprobanteService {
     @Value("${app.storage.comprobantes-dir:storage/comprobantes}")
     private String comprobantesDir;
 
-    @Transactional
     public Comprobante generarFacturaPdf(Venta venta) {
 
         if (venta == null) {
@@ -93,10 +93,11 @@ public class ComprobanteService {
             String sucursalNombre = venta.getSucursal() != null ? ns(venta.getSucursal().getNombre()) : "-";
             // Ajusta estos getters a tu modelo Sucursal (los nombres pueden variar)
             String sucursalDireccion = venta.getSucursal() != null ? ns(venta.getSucursal().getDireccion()) : "-";
-            String sucursalTelefono  = venta.getSucursal() != null ? ns(venta.getSucursal().getTelefono()) : "-";
-            String sucursalEmail     = venta.getSucursal() != null ? ns(venta.getSucursal().getEmail()) : "-";
-            String sucursalRuc       = venta.getSucursal() != null ? ns(venta.getSucursal().getRuc()) : "-";
-            String razonSocial       = venta.getSucursal() != null ? ns(venta.getSucursal().getRazonSocial()) : sucursalNombre;
+            String sucursalTelefono = venta.getSucursal() != null ? ns(venta.getSucursal().getTelefono()) : "-";
+            String sucursalEmail = venta.getSucursal() != null ? ns(venta.getSucursal().getEmail()) : "-";
+            String sucursalRuc = venta.getSucursal() != null ? ns(venta.getSucursal().getRuc()) : "-";
+            String razonSocial = venta.getSucursal() != null ? ns(venta.getSucursal().getRazonSocial())
+                    : sucursalNombre;
 
             // Título
             doc.add(new Paragraph("FACTURA")
@@ -105,7 +106,7 @@ public class ComprobanteService {
                     .setFontSize(16));
 
             // Bloque emisor
-            Table emisor = new Table(UnitValue.createPercentArray(new float[]{70, 30}))
+            Table emisor = new Table(UnitValue.createPercentArray(new float[] { 70, 30 }))
                     .useAllAvailableWidth();
 
             emisor.addCell(new Cell().setBorder(null).add(new Paragraph(ns(razonSocial)).setBold()));
@@ -114,7 +115,7 @@ public class ComprobanteService {
 
             emisor.addCell(new Cell().setBorder(null).add(new Paragraph("RUC: " + ns(sucursalRuc))));
             emisor.addCell(new Cell().setBorder(null).add(new Paragraph("Fecha: " +
-                            (venta.getFechaVenta() != null ? venta.getFechaVenta().format(dtf) : "-")))
+                    (venta.getFechaVenta() != null ? venta.getFechaVenta().format(dtf) : "-")))
                     .setTextAlignment(TextAlignment.RIGHT));
 
             emisor.addCell(new Cell().setBorder(null).add(new Paragraph("Sucursal: " + ns(sucursalNombre))));
@@ -126,10 +127,11 @@ public class ComprobanteService {
 
             emisor.addCell(new Cell().setBorder(null).add(new Paragraph("Dirección: " + ns(sucursalDireccion))));
             emisor.addCell(new Cell().setBorder(null).add(new Paragraph("Estado: " +
-                            (venta.getEstado() != null ? venta.getEstado().name() : "-")))
+                    (venta.getEstado() != null ? venta.getEstado().name() : "-")))
                     .setTextAlignment(TextAlignment.RIGHT));
 
-            emisor.addCell(new Cell().setBorder(null).add(new Paragraph("Tel: " + ns(sucursalTelefono) + " | Email: " + ns(sucursalEmail))));
+            emisor.addCell(new Cell().setBorder(null)
+                    .add(new Paragraph("Tel: " + ns(sucursalTelefono) + " | Email: " + ns(sucursalEmail))));
             emisor.addCell(new Cell().setBorder(null).add(new Paragraph(" ")));
 
             doc.add(emisor);
@@ -148,11 +150,13 @@ public class ComprobanteService {
             String clienteEmail = venta.getCliente() != null ? ns(venta.getCliente().getEmail()) : "-";
             String clienteDireccion = venta.getCliente() != null ? ns(venta.getCliente().getDireccion()) : "-";
 
-            Table clienteTbl = new Table(UnitValue.createPercentArray(new float[]{50, 50}))
+            Table clienteTbl = new Table(UnitValue.createPercentArray(new float[] { 50, 50 }))
                     .useAllAvailableWidth();
 
-            clienteTbl.addCell(new Cell().setBorder(null).add(new Paragraph("Cliente: " + ns(clienteNombre)).setBold()));
-            clienteTbl.addCell(new Cell().setBorder(null).add(new Paragraph("Identificación: " + ns(clienteIdentificacion))));
+            clienteTbl
+                    .addCell(new Cell().setBorder(null).add(new Paragraph("Cliente: " + ns(clienteNombre)).setBold()));
+            clienteTbl.addCell(
+                    new Cell().setBorder(null).add(new Paragraph("Identificación: " + ns(clienteIdentificacion))));
 
             clienteTbl.addCell(new Cell().setBorder(null).add(new Paragraph("Teléfono: " + ns(clienteTelefono))));
             clienteTbl.addCell(new Cell().setBorder(null).add(new Paragraph("Email: " + ns(clienteEmail))));
@@ -160,8 +164,7 @@ public class ComprobanteService {
             clienteTbl.addCell(
                     new Cell(1, 2)
                             .setBorder(null)
-                            .add(new Paragraph("Dirección: " + ns(clienteDireccion)))
-            );
+                            .add(new Paragraph("Dirección: " + ns(clienteDireccion))));
 
             doc.add(clienteTbl);
             doc.add(new Paragraph(" "));
@@ -169,7 +172,7 @@ public class ComprobanteService {
             // ==========
             // DETALLE
             // ==========
-            Table table = new Table(UnitValue.createPercentArray(new float[]{45, 15, 10, 15, 15}))
+            Table table = new Table(UnitValue.createPercentArray(new float[] { 45, 15, 10, 15, 15 }))
                     .useAllAvailableWidth();
 
             table.addHeaderCell(new Cell().add(new Paragraph("Descripción").setBold()));
@@ -181,7 +184,8 @@ public class ComprobanteService {
             venta.getDetalles().forEach(d -> {
                 table.addCell(new Cell().add(new Paragraph(ns(d.getDescripcionSnapshot()))));
                 table.addCell(new Cell().add(new Paragraph(d.getTipoItem() != null ? d.getTipoItem().name() : "-")));
-                table.addCell(new Cell().add(new Paragraph(d.getCantidad() != null ? d.getCantidad().toPlainString() : "0")));
+                table.addCell(
+                        new Cell().add(new Paragraph(d.getCantidad() != null ? d.getCantidad().toPlainString() : "0")));
                 table.addCell(new Cell().add(new Paragraph(money(d.getPrecioUnitarioSnapshot()))));
                 table.addCell(new Cell().add(new Paragraph(money(d.getTotalLinea()))));
             });
@@ -192,7 +196,7 @@ public class ComprobanteService {
             // ==========
             // TOTALES
             // ==========
-            Table totales = new Table(UnitValue.createPercentArray(new float[]{70, 30}))
+            Table totales = new Table(UnitValue.createPercentArray(new float[] { 70, 30 }))
                     .useAllAvailableWidth();
 
             totales.addCell(new Cell().setBorder(null).add(new Paragraph(" ")));
@@ -200,16 +204,18 @@ public class ComprobanteService {
                     .setTextAlignment(TextAlignment.RIGHT));
 
             totales.addCell(new Cell().setBorder(null).add(new Paragraph(" ")));
-            totales.addCell(new Cell().setBorder(null).add(new Paragraph("Descuento: " + money(venta.getDescuentoTotal())))
-                    .setTextAlignment(TextAlignment.RIGHT));
+            totales.addCell(
+                    new Cell().setBorder(null).add(new Paragraph("Descuento: " + money(venta.getDescuentoTotal())))
+                            .setTextAlignment(TextAlignment.RIGHT));
 
             totales.addCell(new Cell().setBorder(null).add(new Paragraph(" ")));
-            totales.addCell(new Cell().setBorder(null).add(new Paragraph("Impuesto: " + money(venta.getImpuestoTotal())))
-                    .setTextAlignment(TextAlignment.RIGHT));
+            totales.addCell(
+                    new Cell().setBorder(null).add(new Paragraph("Impuesto: " + money(venta.getImpuestoTotal())))
+                            .setTextAlignment(TextAlignment.RIGHT));
 
             totales.addCell(new Cell().setBorder(null).add(new Paragraph(" ")));
             totales.addCell(new Cell().setBorder(null).add(new Paragraph("TOTAL: " + money(venta.getTotal()))
-                            .setBold().setFontSize(12))
+                    .setBold().setFontSize(12))
                     .setTextAlignment(TextAlignment.RIGHT));
 
             doc.add(totales);
@@ -244,7 +250,8 @@ public class ComprobanteService {
     }
 
     private static String money(BigDecimal v) {
-        if (v == null) return "0.00";
+        if (v == null)
+            return "0.00";
         return v.setScale(2, java.math.RoundingMode.HALF_UP).toPlainString();
     }
 

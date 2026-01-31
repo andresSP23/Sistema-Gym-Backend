@@ -21,48 +21,47 @@ public interface PagoRepository extends JpaRepository<Pago, Long> {
     Page<Pago> findByVentaId(Long ventaId, Pageable pageable);
 
     @Query("""
-        select coalesce(sum(p.monto), 0)
-        from Pago p
-        where p.venta.id = :ventaId and p.estado = :estado
-    """)
+                select coalesce(sum(p.monto), 0)
+                from Pago p
+                where p.venta.id = :ventaId and p.estado = :estado
+            """)
     BigDecimal sumMontoByVentaAndEstado(@Param("ventaId") Long ventaId,
-                                        @Param("estado") EstadoPago estado);
-
+            @Param("estado") EstadoPago estado);
 
     @Query("""
-        SELECT p FROM Pago p
-        WHERE p.fechaPago >= COALESCE(:desde, p.fechaPago)
-          AND p.fechaPago <= COALESCE(:hasta, p.fechaPago)
-          AND p.tipoOperacion = COALESCE(:tipoOperacion, p.tipoOperacion)
-          AND p.metodo = COALESCE(:metodo, p.metodo)
-        ORDER BY p.fechaPago DESC
-    """)
+                SELECT p FROM Pago p
+                WHERE p.fechaPago >= COALESCE(:desde, p.fechaPago)
+                  AND p.fechaPago <= COALESCE(:hasta, p.fechaPago)
+                  AND p.tipoOperacion = COALESCE(:tipoOperacion, p.tipoOperacion)
+                  AND p.metodo = COALESCE(:metodo, p.metodo)
+                ORDER BY p.fechaPago DESC
+            """)
     Page<Pago> buscarPagos(
             @Param("desde") LocalDateTime desde,
             @Param("hasta") LocalDateTime hasta,
             @Param("tipoOperacion") TipoOperacionPago tipoOperacion,
             @Param("metodo") MetodoPago metodo,
-            Pageable pageable
-    );
-
-
-
-
+            Pageable pageable);
 
     @Query("""
-        SELECT p FROM Pago p
-        WHERE p.fechaPago >= COALESCE(:desde, p.fechaPago)
-          AND p.fechaPago <= COALESCE(:hasta, p.fechaPago)
-          AND p.tipoOperacion = COALESCE(:tipoOperacion, p.tipoOperacion)
-          AND p.metodo = COALESCE(:metodo, p.metodo)
-          AND p.estado = COALESCE(:estado, p.estado)
-        ORDER BY p.fechaPago DESC
-    """)
+                SELECT p FROM Pago p
+                WHERE p.fechaPago >= COALESCE(:desde, p.fechaPago)
+                  AND p.fechaPago <= COALESCE(:hasta, p.fechaPago)
+                  AND p.tipoOperacion = COALESCE(:tipoOperacion, p.tipoOperacion)
+                  AND p.metodo = COALESCE(:metodo, p.metodo)
+                  AND p.estado = COALESCE(:estado, p.estado)
+                ORDER BY p.fechaPago DESC
+            """)
     List<Pago> buscarPagosReporte(
             @Param("desde") LocalDateTime desde,
             @Param("hasta") LocalDateTime hasta,
             @Param("tipoOperacion") TipoOperacionPago tipoOperacion,
             @Param("metodo") MetodoPago metodo,
-            @Param("estado") EstadoPago estado
-    );
+            @Param("estado") EstadoPago estado);
+
+    @org.springframework.transaction.annotation.Transactional
+    @org.springframework.data.jpa.repository.Modifying
+    @Query("UPDATE Pago p SET p.comprobante = :comprobante, p.tipoComprobante = :#{#comprobante.tipo} WHERE p.id = :id")
+    void updateComprobante(@Param("id") Long id,
+            @Param("comprobante") com.ansicode.SistemaAdministracionGym.comprobante.Comprobante comprobante);
 }

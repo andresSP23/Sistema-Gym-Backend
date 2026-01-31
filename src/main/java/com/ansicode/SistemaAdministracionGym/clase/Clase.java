@@ -1,6 +1,6 @@
 package com.ansicode.SistemaAdministracionGym.clase;
 
-import com.ansicode.SistemaAdministracionGym.common.BaseEntity;
+import com.ansicode.SistemaAdministracionGym.common.AuditedEntity;
 import com.ansicode.SistemaAdministracionGym.user.User;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -23,7 +23,7 @@ import org.hibernate.annotations.Where;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class Clase extends BaseEntity {
+public class Clase extends AuditedEntity {
 
     private String nombre;
 

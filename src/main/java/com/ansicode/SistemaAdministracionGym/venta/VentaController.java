@@ -17,20 +17,23 @@ import org.springframework.web.bind.annotation.*;
 public class VentaController {
 
     private final VentaService ventaService;
+
     @PostMapping("/crear-venta-servicio")
     public ResponseEntity<VentaResponse> crearVentaServicio(
             @RequestBody @Valid CrearVentaServicioRequest request,
-            Authentication connectedUser
-    ) {
+            Authentication connectedUser) {
         return ResponseEntity.ok(ventaService.crearVentaServicio(request, connectedUser));
     }
-
 
     @PostMapping("/crear-venta-productos")
     public ResponseEntity<VentaResponse> crearVentaProductos(
             @RequestBody @Valid CrearVentaProductoRequest request,
-            Authentication connectedUser
-    ) {
+            Authentication connectedUser) {
         return ResponseEntity.ok(ventaService.crearVentaProductos(request, connectedUser));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<VentaResponse> obtenerPorId(@PathVariable Long id) {
+        return ResponseEntity.ok(ventaService.findById(id));
     }
 }

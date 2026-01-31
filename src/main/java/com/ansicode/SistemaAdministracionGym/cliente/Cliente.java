@@ -1,18 +1,14 @@
 package com.ansicode.SistemaAdministracionGym.cliente;
 
-import com.ansicode.SistemaAdministracionGym.common.BaseEntity;
-import com.ansicode.SistemaAdministracionGym.enums.EstadoMembresia;
+import com.ansicode.SistemaAdministracionGym.common.AuditedEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 
 import java.time.LocalDate;
 
@@ -21,10 +17,10 @@ import java.time.LocalDate;
 @Setter
 @SuperBuilder
 @SQLDelete(sql = "UPDATE Cliente SET is_visible = false WHERE id = ?")
-@Where(clause = "is_visible = true")
+@SQLDelete(sql = "UPDATE Cliente SET is_visible = false WHERE id = ?")
 @AllArgsConstructor
 @NoArgsConstructor
-public class Cliente  extends BaseEntity {
+public class Cliente extends AuditedEntity {
 
     @Column(nullable = false, unique = true, length = 20)
     private String cedula;
@@ -38,7 +34,7 @@ public class Cliente  extends BaseEntity {
     @Column(nullable = false, length = 50)
     private String email;
 
-    @Column(nullable = false, length = 20 ,unique = true)
+    @Column(nullable = false, length = 20, unique = true)
     private String telefono;
     @Column(nullable = false, length = 255)
     private String direccion;
@@ -47,11 +43,6 @@ public class Cliente  extends BaseEntity {
 
     @Column(unique = true)
     private String codigoInterno;
-
-
-
-
-
 
     public String getNombreCompleto() {
         return nombres + " " + apellidos;

@@ -42,4 +42,9 @@ public abstract class AuditedEntity {
     @LastModifiedBy
     @Column(name = "updated_by")
     private Long updatedBy;
+
+    /** Borrado lógico: Unificado para todo el sistema */
+    @jakarta.persistence.Column(name = "is_visible", nullable = false)
+    @lombok.Builder.Default
+    private Boolean isVisible = true;
 }

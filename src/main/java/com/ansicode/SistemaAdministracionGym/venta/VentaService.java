@@ -30,8 +30,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-
-
 @Service
 @RequiredArgsConstructor
 public class VentaService {
@@ -219,8 +217,7 @@ public class VentaService {
 
         List<String> ultimos = ventaRepository.findUltimosNumerosFacturaPorSucursal(
                 sucursal.getId(),
-                PageRequest.of(0, 1)
-        );
+                PageRequest.of(0, 1));
 
         long siguiente = 1L;
         if (!ultimos.isEmpty() && ultimos.get(0) != null) {
@@ -240,6 +237,12 @@ public class VentaService {
 
     private static String ns(String s) {
         return s == null ? "" : s;
+    }
+
+    public VentaResponse findById(Long id) {
+        return ventaRepository.findById(id)
+                .map(ventaMapper::toResponse)
+                .orElseThrow(() -> new EntityNotFoundException("Venta no encontrada"));
     }
 
 }

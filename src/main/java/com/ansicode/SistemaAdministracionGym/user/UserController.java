@@ -20,20 +20,21 @@ import org.springframework.data.domain.Pageable;
 @Tag(name = "User")
 @RequiredArgsConstructor
 @ApiErrorResponses
-@RestControllerAdvice
 public class UserController {
     private final UserService userService;
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    public UserResponse create(@RequestBody @Valid UserRequest request , Authentication connectedUser) {
-        return userService.create(request , connectedUser);
+    @org.springframework.security.access.prepost.PreAuthorize("hasRole('ADMINISTRADOR')")
+    public UserResponse create(@RequestBody @Valid UserRequest request, Authentication connectedUser) {
+        return userService.create(request, connectedUser);
     }
+
     @GetMapping("/findAll")
     public ResponseEntity<PageResponse<UserResponse>> findAll(
 
-            @RequestParam(name = "page", defaultValue = "0" ,required = false) int page,
-            @RequestParam(name = "size", defaultValue = "10" ,required = false) int size,
+            @RequestParam(name = "page", defaultValue = "0", required = false) int page,
+            @RequestParam(name = "size", defaultValue = "10", required = false) int size,
             @ParameterObject Pageable pageable) {
         return ResponseEntity.ok(userService.findAll(pageable));
     }
@@ -43,25 +44,21 @@ public class UserController {
         return userService.findById(id);
     }
 
-
-
     @PatchMapping("/update/{id}")
     public ResponseEntity<UserResponse> updateUser(
             @PathVariable Long id,
             @Valid @RequestBody UserUpdateRequest request,
-            Authentication authentication
-    ) {
+            Authentication authentication) {
         UserResponse response = userService.update(id, request, authentication);
         return ResponseEntity.ok(response);
     }
 
-
     @DeleteMapping("/delete/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @org.springframework.security.access.prepost.PreAuthorize("hasRole('ADMINISTRADOR')")
     public void delete(@PathVariable Long id) {
         userService.delete(id);
     }
-
 
     @GetMapping("/me")
     public UserResponse me(Authentication authentication) {

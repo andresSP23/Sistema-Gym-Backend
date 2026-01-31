@@ -22,16 +22,20 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class ClienteSuscripcionService {
 
     private final ClienteSuscripcionRepository clienteSuscripcionRepository;
     private final ServiciosRepository serviciosRepository;
+    private final com.ansicode.SistemaAdministracionGym.venta.VentaService ventaService;
+    private final com.ansicode.SistemaAdministracionGym.movimientodinero.MovimientoDineroService movimientoDineroService;
 
     @Transactional
     public void registrarSuscripcionDesdeVenta(Venta venta, LocalDateTime fechaPago) {
-
+        // ... (el código de este método no cambia, pero necesitamos reinyeccionar las
+        // dependencias arriba)
         if (venta == null) {
             throw new BussinessException(BusinessErrorCodes.SUSCRIPCION_VENTA_REQUIRED);
         }
@@ -50,13 +54,11 @@ public class ClienteSuscripcionService {
                 .filter(d -> d.getTipoItem() == TipoItemVenta.SERVICIO)
                 .findFirst()
                 .orElseThrow(() -> new BussinessException(
-                        BusinessErrorCodes.SUSCRIPCION_VENTA_SIN_DETALLE_SERVICIO
-                ));
+                        BusinessErrorCodes.SUSCRIPCION_VENTA_SIN_DETALLE_SERVICIO));
 
         Servicios servicio = serviciosRepository.findById(detServicio.getReferenciaId())
                 .orElseThrow(() -> new BussinessException(
-                        BusinessErrorCodes.SUSCRIPCION_SERVICIO_NOT_FOUND
-                ));
+                        BusinessErrorCodes.SUSCRIPCION_SERVICIO_NOT_FOUND));
 
         // Si no es suscripción, aquí NO hacemos nada
         if (!servicio.isEsSuscripcion()) {
@@ -72,12 +74,11 @@ public class ClienteSuscripcionService {
         // Renovación inteligente
         LocalDateTime base = inicioPago;
 
-        Optional<ClienteSuscripcion> ultimaActivaOpt =
-                clienteSuscripcionRepository.findTopByClienteIdAndEstadoAndFechaFinAfterOrderByFechaFinDesc(
+        Optional<ClienteSuscripcion> ultimaActivaOpt = clienteSuscripcionRepository
+                .findTopByClienteIdAndEstadoAndFechaFinAfterOrderByFechaFinDesc(
                         cliente.getId(),
                         EstadoSuscripcion.ACTIVA,
-                        LocalDateTime.now()
-                );
+                        LocalDateTime.now());
 
         if (ultimaActivaOpt.isPresent()) {
             LocalDateTime finActual = ultimaActivaOpt.get().getFechaFin();
@@ -106,7 +107,6 @@ public class ClienteSuscripcionService {
         return list.isEmpty() ? null : mapper.toResponse(list.get(0));
     }
 
-
     @Transactional(readOnly = true)
     public PageResponse<ClienteSuscripcionResponse> listarConFiltros(
             Long clienteId,
@@ -116,8 +116,7 @@ public class ClienteSuscripcionService {
             LocalDateTime desde,
             LocalDateTime hasta,
             Pageable pageable,
-            ClienteSuscripcionMapper mapper
-    ) {
+            ClienteSuscripcionMapper mapper) {
         Specification<ClienteSuscripcion> spec = Specification.allOf(
                 ClienteSuscripcionSpecifications.clienteVisible(),
                 ClienteSuscripcionSpecifications.clienteId(clienteId),
@@ -125,8 +124,7 @@ public class ClienteSuscripcionService {
                 ClienteSuscripcionSpecifications.estado(estado),
                 ClienteSuscripcionSpecifications.vigente(vigente),
                 ClienteSuscripcionSpecifications.fechaInicioDesde(desde),
-                ClienteSuscripcionSpecifications.fechaInicioHasta(hasta)
-        );
+                ClienteSuscripcionSpecifications.fechaInicioHasta(hasta));
 
         Page<ClienteSuscripcion> page = clienteSuscripcionRepository.findAll(spec, pageable);
 
@@ -138,8 +136,7 @@ public class ClienteSuscripcionService {
                                     res.setDiasRestantes(calcularDiasRestantes(cs.getFechaFin()));
                                     return res;
                                 })
-                                .toList()
-                )
+                                .toList())
                 .number(page.getNumber())
                 .size(page.getSize())
                 .totalElements(page.getTotalElements())
@@ -149,11 +146,92 @@ public class ClienteSuscripcionService {
                 .build();
     }
 
+    // ... (otros métodos)
+
+    @Transactional
+    public void cancelarSuscripcion(Long id, CancelarSuscripcionRequest request,
+            org.springframework.security.core.Authentication connectedUser) {
+        ClienteSuscripcion cs = clienteSuscripcionRepository.findById(id)
+                .orElseThrow(() -> new BussinessException(BusinessErrorCodes.SUSCRIPCION_NOT_FOUND));
+
+        if (cs.getEstado() == EstadoSuscripcion.CANCELADA) {
+            throw new BussinessException(BusinessErrorCodes.SUSCRIPCION_YA_CANCELADA);
+        }
+
+        cs.setEstado(EstadoSuscripcion.CANCELADA);
+
+        // Logica de Devolución
+        if (request != null && Boolean.TRUE.equals(request.getDevolverDinero())) {
+            if (request.getMontoDevolucion() == null
+                    || request.getMontoDevolucion().compareTo(java.math.BigDecimal.ZERO) <= 0) {
+                throw new BussinessException(BusinessErrorCodes.MOVIMIENTO_DINERO_MONTO_INVALIDO);
+            }
+            if (request.getMetodoDevolucion() == null) {
+                throw new BussinessException(BusinessErrorCodes.MOVIMIENTO_DINERO_METODO_REQUIRED);
+            }
+
+            com.ansicode.SistemaAdministracionGym.movimientodinero.MovimientoDineroCreateRequest egreso = new com.ansicode.SistemaAdministracionGym.movimientodinero.MovimientoDineroCreateRequest();
+
+            egreso.setMonto(request.getMontoDevolucion());
+            egreso.setMetodo(request.getMetodoDevolucion());
+            egreso.setTipo(com.ansicode.SistemaAdministracionGym.enums.TipoMovimientoDinero.EGRESO);
+            egreso.setConcepto(com.ansicode.SistemaAdministracionGym.enums.ConceptoMovimientoDinero.DEVOLUCION_VENTA);
+            egreso.setDescripcion("Devolución por cancelación de suscripción #" + cs.getId());
+            egreso.setSucursalId(cs.getVenta().getSucursal().getId());
+            egreso.setVentaId(cs.getVenta().getId());
+            egreso.setServicioId(cs.getServicio().getId());
+            egreso.setMoneda("USD"); // O la de la venta si se guardara
+
+            movimientoDineroService.crearMovimiento(egreso, connectedUser);
+        }
+
+        clienteSuscripcionRepository.save(cs);
+    }
+
+    @Transactional
+    public void editarSuscripcion(Long id, EditarSuscripcionRequest request) {
+        ClienteSuscripcion cs = clienteSuscripcionRepository.findById(id)
+                .orElseThrow(() -> new BussinessException(BusinessErrorCodes.SUSCRIPCION_NOT_FOUND));
+
+        if (request.getFechaInicio() != null) {
+            cs.setFechaInicio(request.getFechaInicio());
+        }
+        if (request.getFechaFin() != null) {
+            cs.setFechaFin(request.getFechaFin());
+        }
+
+        // Validación básica de coherencia
+        if (cs.getFechaInicio().isAfter(cs.getFechaFin())) {
+            throw new BussinessException(BusinessErrorCodes.SUSCRIPCION_DURACION_INVALIDA);
+        }
+
+        clienteSuscripcionRepository.save(cs);
+    }
+
+    @Transactional
+    public com.ansicode.SistemaAdministracionGym.venta.VentaResponse renovarSuscripcion(Long id,
+            org.springframework.security.core.Authentication connectedUser) {
+        ClienteSuscripcion cs = clienteSuscripcionRepository.findById(id)
+                .orElseThrow(() -> new BussinessException(BusinessErrorCodes.SUSCRIPCION_NOT_FOUND));
+
+        Servicios servicio = cs.getServicio();
+        Cliente cliente = cs.getCliente();
+
+        com.ansicode.SistemaAdministracionGym.venta.CrearVentaServicioRequest ventaRequest = new com.ansicode.SistemaAdministracionGym.venta.CrearVentaServicioRequest();
+        ventaRequest.setSucursalId(cs.getVenta().getSucursal().getId());
+        ventaRequest.setClienteId(cliente.getId());
+        ventaRequest.setServicioId(servicio.getId());
+        ventaRequest.setCantidad(java.math.BigDecimal.ONE);
+
+        return ventaService.crearVentaServicio(ventaRequest, connectedUser);
+    }
+
     // =========================
     // HELPERS
     // =========================
     private Long calcularDiasRestantes(LocalDateTime fechaFin) {
-        if (fechaFin == null) return 0L;
+        if (fechaFin == null)
+            return 0L;
 
         long dias = ChronoUnit.DAYS.between(LocalDateTime.now(), fechaFin);
         return Math.max(dias, 0);

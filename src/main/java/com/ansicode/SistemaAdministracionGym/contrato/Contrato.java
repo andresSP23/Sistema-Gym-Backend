@@ -1,7 +1,7 @@
 package com.ansicode.SistemaAdministracionGym.contrato;
 
 import com.ansicode.SistemaAdministracionGym.cliente.Cliente;
-import com.ansicode.SistemaAdministracionGym.common.BaseEntity;
+import com.ansicode.SistemaAdministracionGym.common.AuditedEntity;
 import com.ansicode.SistemaAdministracionGym.enums.EstadoContrato;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -17,7 +17,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class Contrato extends BaseEntity {
+public class Contrato extends AuditedEntity {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "cliente_id")

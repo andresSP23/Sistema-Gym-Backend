@@ -1,7 +1,6 @@
 package com.ansicode.SistemaAdministracionGym.movimientoinventario;
 
 import com.ansicode.SistemaAdministracionGym.common.AuditedEntity;
-import com.ansicode.SistemaAdministracionGym.common.BaseEntity;
 import com.ansicode.SistemaAdministracionGym.enums.TipoMovimientoInventario;
 import com.ansicode.SistemaAdministracionGym.producto.Producto;
 import com.ansicode.SistemaAdministracionGym.user.User;
@@ -17,11 +16,10 @@ import org.hibernate.annotations.Where;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "movimientos_inventario",
-        indexes = {
+@Table(name = "movimientos_inventario", indexes = {
                 @Index(name = "ix_mov_inv_producto_fecha", columnList = "producto_id, createdAt "),
                 @Index(name = "ix_mov_inv_tipo", columnList = "tipo_movimiento")
-        })
+})
 @Getter
 @Setter
 @NoArgsConstructor
@@ -29,27 +27,24 @@ import java.time.LocalDateTime;
 @SuperBuilder
 public class MovimientoInventario extends AuditedEntity {
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "producto_id", nullable = false)
-    private Producto producto;
+        @ManyToOne(fetch = FetchType.LAZY, optional = false)
+        @JoinColumn(name = "producto_id", nullable = false)
+        private Producto producto;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "tipo_movimiento", nullable = false, length = 20)
-    private TipoMovimientoInventario tipoMovimiento;
+        @Enumerated(EnumType.STRING)
+        @Column(name = "tipo_movimiento", nullable = false, length = 20)
+        private TipoMovimientoInventario tipoMovimiento;
 
-    @Column(nullable = false)
-    private Integer cantidad;
+        @Column(nullable = false)
+        private Integer cantidad;
 
-    @Column(length = 255)
-    private String observacion;
+        @Column(length = 255)
+        private String observacion;
 
-    @Column(name = "stock_anterior", nullable = false)
-    private Integer stockAnterior;
+        @Column(name = "stock_anterior", nullable = false)
+        private Integer stockAnterior;
 
-    @Column(name = "stock_actual", nullable = false)
-    private Integer stockActual;
-
-
-
+        @Column(name = "stock_actual", nullable = false)
+        private Integer stockActual;
 
 }

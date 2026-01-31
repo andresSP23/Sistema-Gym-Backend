@@ -20,46 +20,44 @@ public class ClienteController {
     private final ClienteService clienteService;
 
     @PostMapping("/create")
-    //@PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     public ClienteResponse create(
-            @Valid @RequestBody ClienteRequest request
-    ) {
+            @Valid @RequestBody ClienteRequest request) {
         return clienteService.create(request);
     }
 
-   // @PreAuthorize("hasAnyRole('ADMIN','USER')")
+    // @PreAuthorize("hasAnyRole('ADMIN','USER')")
     @GetMapping("/findAll")
     public ResponseEntity<PageResponse<ClienteResponse>> findAll(
 
-            @RequestParam(name = "page", defaultValue = "0" ,required = false) int page,
-            @RequestParam(name = "size", defaultValue = "10" ,required = false) int size,
+            @RequestParam(name = "page", defaultValue = "0", required = false) int page,
+            @RequestParam(name = "size", defaultValue = "10", required = false) int size,
             @ParameterObject Pageable pageable) {
         return ResponseEntity.ok(clienteService.findAll(pageable));
     }
 
     @GetMapping("/findById/{id}")
-    //PreAuthorize("hasAnyRole('ADMIN','USER')")
+    // PreAuthorize("hasAnyRole('ADMIN','USER')")
     public ClienteResponse findById(@PathVariable Long id) {
         return clienteService.findById(id);
     }
 
     @GetMapping("/cedula/{cedula}")
-    //@PreAuthorize("hasAnyRole('ADMIN','USER')")
+    // @PreAuthorize("hasAnyRole('ADMIN','USER')")
     public ClienteResponse findByCedula(@PathVariable String cedula) {
         return clienteService.findByCedula(cedula);
     }
 
     @PutMapping("/update/{id}")
-   // @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     public ClienteResponse update(
             @PathVariable Long id,
-            @Valid @RequestBody ClienteRequest request
-    ) {
+            @Valid @RequestBody ClienteRequest request) {
         return clienteService.update(id, request);
     }
 
     @DeleteMapping("/delete/{id}")
-    //@PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     public void delete(@PathVariable Long id) {
         clienteService.delete(id);
     }

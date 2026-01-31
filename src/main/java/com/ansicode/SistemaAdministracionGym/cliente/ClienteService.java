@@ -26,6 +26,7 @@ public class ClienteService {
     @Transactional
     public ClienteResponse create(ClienteRequest request) {
 
+        // Validaciones previas (optimistas)
         if (clienteRepository.existsByCedula(request.getCedula())) {
             throw new BussinessException(BusinessErrorCodes.CLIENTE_CEDULA_ALREADY_EXISTS);
         }
@@ -49,7 +50,13 @@ public class ClienteService {
 
         cliente.setCodigoInterno(null);
         cliente.setIsVisible(true);
-        cliente = clienteRepository.save(cliente);
+
+        try {
+            cliente = clienteRepository.save(cliente);
+        } catch (DataIntegrityViolationException e) {
+            // Manejo de Race Condition
+            throw new BussinessException(BusinessErrorCodes.CLIENTE_ALREADY_EXISTS);
+        }
 
         if (cliente.getId() == null) {
             throw new BussinessException(BusinessErrorCodes.CLIENTE_CODIGO_INTERNO_ERROR);
@@ -66,15 +73,14 @@ public class ClienteService {
 
     public PageResponse<ClienteResponse> findAll(Pageable pageable) {
 
-        Page<Cliente> page = clienteRepository.findAll(pageable);
+        Page<Cliente> page = clienteRepository.findAllByIsVisibleTrue(pageable);
 
         return PageResponse.<ClienteResponse>builder()
                 .content(
                         page.getContent()
                                 .stream()
                                 .map(clienteMapper::toClienteResponse)
-                                .toList()
-                )
+                                .toList())
                 .number(page.getNumber())
                 .size(page.getSize())
                 .totalElements(page.getTotalElements())
@@ -91,7 +97,7 @@ public class ClienteService {
     }
 
     public ClienteResponse findByCedula(String cedula) {
-        Cliente cliente = clienteRepository.findByCedula(cedula)
+        Cliente cliente = clienteRepository.findByCedulaAndIsVisibleTrue(cedula)
                 .orElseThrow(() -> new BussinessException(BusinessErrorCodes.CLIENTE_NOT_FOUND));
         return clienteMapper.toClienteResponse(cliente);
     }
@@ -123,14 +129,14 @@ public class ClienteService {
 
         clienteMapper.updateClienteFromRequest(cliente, request);
 
-        // 🔥 OJO: te faltaba guardar (si tu JPA no está gestionando cambios como esperas)
+        // 🔥 OJO: te faltaba guardar (si tu JPA no está gestionando cambios como
+        // esperas)
         cliente = clienteRepository.save(cliente);
 
         return clienteMapper.toClienteResponse(cliente);
     }
 
-
-
+    @Transactional
     public void delete(Long id) {
 
         Cliente cliente = clienteRepository.findById(id)
@@ -150,17 +156,17 @@ public class ClienteService {
         return String.format("CLI-%d-%06d", year, totalClientes);
     }
 
-//    public void activarCliente (Long clienteId){
-//
-//
-//        Cliente cliente = clienteRepository.findById(clienteId)
-//                .orElseThrow(() -> new EntityNotFoundException("Cliente no encontrado"));
-//
-//         if(cliente.getEstado() == EstadoMembresia.ACTIVO){
-//             return;
-//         }
-//         cliente.setEstado(EstadoMembresia.ACTIVO);
-//         clienteRepository.save(cliente);
-//    }
+    // public void activarCliente (Long clienteId){
+    //
+    //
+    // Cliente cliente = clienteRepository.findById(clienteId)
+    // .orElseThrow(() -> new EntityNotFoundException("Cliente no encontrado"));
+    //
+    // if(cliente.getEstado() == EstadoMembresia.ACTIVO){
+    // return;
+    // }
+    // cliente.setEstado(EstadoMembresia.ACTIVO);
+    // clienteRepository.save(cliente);
+    // }
 
 }

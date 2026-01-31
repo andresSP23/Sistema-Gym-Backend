@@ -7,5 +7,6 @@ public enum ConceptoMovimientoDinero {
     GASTO,
     RETIRO,
     DEPOSITO,
-    AJUSTE_CAJA
+    AJUSTE_CAJA,
+    DEVOLUCION_VENTA
 }

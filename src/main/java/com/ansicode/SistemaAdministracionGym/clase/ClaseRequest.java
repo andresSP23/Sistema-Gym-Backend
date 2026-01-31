@@ -1,6 +1,5 @@
 package com.ansicode.SistemaAdministracionGym.clase;
 
-import com.ansicode.SistemaAdministracionGym.common.BaseEntity;
 import com.ansicode.SistemaAdministracionGym.user.User;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;

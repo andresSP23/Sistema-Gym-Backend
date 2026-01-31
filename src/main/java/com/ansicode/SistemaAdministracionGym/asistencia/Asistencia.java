@@ -1,7 +1,7 @@
 package com.ansicode.SistemaAdministracionGym.asistencia;
 
 import com.ansicode.SistemaAdministracionGym.cliente.Cliente;
-import com.ansicode.SistemaAdministracionGym.common.BaseEntity;
+import com.ansicode.SistemaAdministracionGym.common.AuditedEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,10 +14,7 @@ import org.hibernate.annotations.Where;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(
-        name = "asistencias",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"cliente_id", "fechaEntrada"})
-)
+@Table(name = "asistencias", uniqueConstraints = @UniqueConstraint(columnNames = { "cliente_id", "fechaEntrada" }))
 @Getter
 @Setter
 @NoArgsConstructor
@@ -25,7 +22,7 @@ import java.time.LocalDateTime;
 @Where(clause = "is_visible = true")
 @AllArgsConstructor
 @SuperBuilder
-public class Asistencia extends BaseEntity {
+public class Asistencia extends AuditedEntity {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "cliente_id")

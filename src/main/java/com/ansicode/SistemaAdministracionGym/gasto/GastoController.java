@@ -1,0 +1,51 @@
+package com.ansicode.SistemaAdministracionGym.gasto;
+
+import com.ansicode.SistemaAdministracionGym.common.PageResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("gastos")
+@RequiredArgsConstructor
+@Tag(name = "Gastos")
+public class GastoController {
+
+    private final GastoService service;
+
+    @PostMapping
+    public ResponseEntity<GastoResponse> create(
+            @RequestBody @Valid GastoRequest request,
+            Authentication connectedUser) {
+        return ResponseEntity.ok(service.create(request, connectedUser));
+    }
+
+    @GetMapping
+    public ResponseEntity<PageResponse<GastoResponse>> findAll(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        // Orden por defecto: fechaGasto descendente
+        Pageable pageable = PageRequest.of(page, size, Sort.by("fechaGasto").descending());
+        return ResponseEntity.ok(service.findAll(pageable));
+    }
+
+    @PostMapping("/{id}/pagar")
+    public ResponseEntity<GastoResponse> pagar(
+            @PathVariable Long id,
+            @RequestBody @Valid PagarGastoRequest request,
+            Authentication connectedUser) {
+        return ResponseEntity.ok(service.pagarGasto(id, request, connectedUser));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        service.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+}

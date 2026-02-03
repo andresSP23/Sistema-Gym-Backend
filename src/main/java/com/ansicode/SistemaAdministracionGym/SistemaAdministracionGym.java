@@ -27,11 +27,13 @@ public class SistemaAdministracionGym {
 		SpringApplication.run(SistemaAdministracionGym.class, args);
 	}
 
-
 	@Bean
-	public CommandLineRunner runner(RoleRepository roleRepository , UserRepository userRepository,
-									PasswordEncoder passwordEncoder) {
+	public CommandLineRunner runner(RoleRepository roleRepository, UserRepository userRepository,
+			PasswordEncoder passwordEncoder, org.springframework.core.env.Environment env) {
 		return args -> {
+			// Check active profile
+			boolean isDev = java.util.Arrays.asList(env.getActiveProfiles()).contains("dev");
+
 			if (roleRepository.findByName("ADMINISTRADOR").isEmpty()) {
 				roleRepository.save(Role.builder().name("ADMINISTRADOR").build());
 			}
@@ -44,11 +46,8 @@ public class SistemaAdministracionGym {
 				roleRepository.save(Role.builder().name("ENTRENADOR").build());
 			}
 
-
-
-
 			// ===== USER ADMIN =====
-			if (userRepository.findByEmail("admin@admin.com").isEmpty()) {
+			if (isDev && userRepository.findByEmail("admin@admin.com").isEmpty()) {
 
 				Role adminRole = roleRepository.findByName("ADMINISTRADOR")
 						.orElseThrow(() -> new RuntimeException("Rol ADMINISTRADOR no existe"));

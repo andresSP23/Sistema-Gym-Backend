@@ -23,8 +23,9 @@ public class EquipamientoController {
     @PostMapping("/crear")
     @PreAuthorize("hasRole('ADMINISTRADOR')")
     public ResponseEntity<EquipamientoResponse> create(
-            @RequestBody @Valid EquipamientoRequest request) {
-        return ResponseEntity.ok(equipamientoService.create(request));
+            @RequestBody @Valid EquipamientoRequest request,
+            org.springframework.security.core.Authentication connectedUser) {
+        return ResponseEntity.ok(equipamientoService.create(request, connectedUser));
     }
 
     @PutMapping("/actualizar/{id}")

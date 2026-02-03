@@ -31,6 +31,7 @@ public class ClienteSuscripcionService {
     private final ServiciosRepository serviciosRepository;
     private final com.ansicode.SistemaAdministracionGym.venta.VentaService ventaService;
     private final com.ansicode.SistemaAdministracionGym.movimientodinero.MovimientoDineroService movimientoDineroService;
+    private final com.ansicode.SistemaAdministracionGym.contrato.ContratoService contratoService;
 
     @Transactional
     public void registrarSuscripcionDesdeVenta(Venta venta, LocalDateTime fechaPago) {
@@ -99,6 +100,16 @@ public class ClienteSuscripcionService {
                 .build();
 
         clienteSuscripcionRepository.save(cs);
+
+        // Auto-generar contrato
+        try {
+            contratoService.generarContratoAutomatico(cs);
+        } catch (Exception e) {
+            // Loguear error pero no fallar transacción por ahora, o sí?
+            // Mejor no fallar la venta si la plantilla no existe, se puede crear despues
+            // manual.
+            System.err.println("Error generando contrato automatico: " + e.getMessage());
+        }
     }
 
     @Transactional(readOnly = true)

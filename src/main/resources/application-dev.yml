@@ -4,12 +4,11 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5435/sistema_gym
     username: postgres
-    password: pelusa
+    password: ${DB_PASSWORD:pelusa}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: update
-
+      ddl-auto: update # Mantener update por ahora mientras se construye V1 completa
     show-sql: true
     properties:
       hibernate:
@@ -17,13 +16,17 @@ spring:
     database: PostgreSQL
     database-platform: org.hibernate.dialect.PostgreSQLDialect
 
+  flyway:
+    baseline-on-migrate: true
+    baseline-version: 1
+
 
 
 
 application:
   security:
     jwt:
-      secret-key: Qx9L2mR7T4ZCwEJp8DkS5A6HfYVbN0UeXW3M7N4JcRZpUeA2S9H5LkX
+      secret-key: ${JWT_SECRET:Qx9L2mR7T4ZCwEJp8DkS5A6HfYVbN0UeXW3M7N4JcRZpUeA2S9H5LkX}
       expiration: 8640000
 
 storage:

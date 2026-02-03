@@ -6,6 +6,5 @@ import java.util.Optional;
 
 public interface ContratoRepository extends JpaRepository<Contrato, Long> {
 
-    Optional<Contrato> findTopByClienteIdOrderByCreatedAtDesc(
-            Integer clienteId);
+    Optional<Contrato> findTopByClienteIdOrderByCreatedAtDesc(Integer clienteId);
 }

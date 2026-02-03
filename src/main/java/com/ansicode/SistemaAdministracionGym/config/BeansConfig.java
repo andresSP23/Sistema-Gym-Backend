@@ -19,87 +19,55 @@ import org.springframework.web.filter.CorsFilter;
 import java.time.Clock;
 import java.time.ZoneId;
 import java.util.Arrays;
-import java.util.Collections;
-
-import static org.springframework.http.HttpHeaders.*;
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @Configuration
 @RequiredArgsConstructor
 public class BeansConfig {
-    private final UserDetailsService userDetailsService;
-    @Bean
-    public AuthenticationProvider authenticationProvider() {
-
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsService);
-        authProvider.setPasswordEncoder(passwordEncoder());
-        return authProvider;
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-
-    }
-
-
-    @Bean
-    public Clock clock() {
-        return Clock.system(ZoneId.of("America/Guayaquil"));
-    }
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
-
-        return config.getAuthenticationManager();
-    }
-    @Bean
-    public AuditorAware<Long> auditorAware(){
-        return  new ApplicationAuditAware();
-    }
-
+  private final UserDetailsService userDetailsService;
 
   @Bean
-  public CorsFilter corsFilter(){
-    final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-    final CorsConfiguration config = new CorsConfiguration();
-    config.setAllowCredentials(true);
-    config.setAllowedOrigins(Collections.singletonList("http://localhost:4200"));
-    config.setAllowedHeaders(Arrays.asList(
-      ORIGIN,
-      CONTENT_TYPE,
-      ACCEPT,
-      AUTHORIZATION
+  public AuthenticationProvider authenticationProvider() {
 
-
-
-    ));
-
-    config.setAllowedMethods(Arrays.asList(
-      "GET",
-      "POST",
-      "DELETE",
-      "PUT",
-      "PATCH"
-    ));
-
-    source.registerCorsConfiguration("/**", config);
-    return new org.springframework.web.filter.CorsFilter(source);
+    DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+    authProvider.setUserDetailsService(userDetailsService);
+    authProvider.setPasswordEncoder(passwordEncoder());
+    return authProvider;
   }
 
+  @Bean
+  public PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
 
+  }
 
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration config = new CorsConfiguration();
-        config.setAllowCredentials(true);
-        config.addAllowedOriginPattern("*"); // en prod el dominio
-        config.addAllowedHeader("*");
-        config.addAllowedMethod("*");
-        config.addExposedHeader("Content-Disposition");
+  @Bean
+  public Clock clock() {
+    return Clock.system(ZoneId.of("America/Guayaquil"));
+  }
 
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", config);
-        return source;
-    }
+  @Bean
+  public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+
+    return config.getAuthenticationManager();
+  }
+
+  @Bean
+  public AuditorAware<Long> auditorAware() {
+    return new ApplicationAuditAware();
+  }
+
+  @Bean
+  public CorsConfigurationSource corsConfigurationSource() {
+    CorsConfiguration config = new CorsConfiguration();
+    config.setAllowCredentials(true);
+    // Restringir a orígenes confiables (Frontend)
+    config.setAllowedOrigins(Arrays.asList("http://localhost:4200"));
+    config.setAllowedHeaders(Arrays.asList("*"));
+    config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
+    config.addExposedHeader("Content-Disposition");
+
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", config);
+    return source;
+  }
 }

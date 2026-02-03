@@ -156,6 +156,7 @@ public enum BusinessErrorCodes {
         PAGO_PRODUCTO_NOT_FOUND(3222, HttpStatus.NOT_FOUND, "Producto no encontrado"),
 
         PAGO_RANGO_FECHAS_INVALIDO(3223, HttpStatus.BAD_REQUEST, "La fecha desde no puede ser mayor que hasta"),
+        PAGO_BANCO_ID_REQUIRED(3224, HttpStatus.BAD_REQUEST, "Para transferencias/tarjetas el bancoId es obligatorio"),
 
         // REPORTE PAGOS (3300–3399)
         REPORTE_PAGOS_RANGO_FECHAS_INVALIDO(3300, HttpStatus.BAD_REQUEST,
@@ -210,6 +211,8 @@ public enum BusinessErrorCodes {
 
         SESION_CAJA_YA_CERRADA(3609, HttpStatus.CONFLICT, "La sesión ya está CERRADA"),
         SESION_CAJA_REQUIERE_CUADRE(3610, HttpStatus.BAD_REQUEST, "Debe realizar el cuadre antes de cerrar caja"),
+        SESION_CAJA_SALDO_INSUFICIENTE(3611, HttpStatus.BAD_REQUEST,
+                        "Fondos insuficientes en caja para realizar este egreso"),
 
         // SUCURSAL (3700–3799)
         SUCURSAL_YA_REGISTRADA(3700, HttpStatus.CONFLICT, "La sucursal ya está registrada"),
@@ -246,7 +249,8 @@ public enum BusinessErrorCodes {
         EQUIPAMIENTO_NOT_FOUND(3900, HttpStatus.NOT_FOUND, "Equipamiento no encontrado"),
 
         // CONTRATO (4000-4099)
-        CONTRATO_NOT_FOUND(4000, HttpStatus.NOT_FOUND, "Contrato no encontrado");
+        CONTRATO_NOT_FOUND(4000, HttpStatus.NOT_FOUND, "Contrato no encontrado"),
+        PLANTILLA_CONTRATO_NOT_FOUND(4001, HttpStatus.NOT_FOUND, "Plantilla de contrato activa no encontrada");
 
         @Getter
         private final int code;

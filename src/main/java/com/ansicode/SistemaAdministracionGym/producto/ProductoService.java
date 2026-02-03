@@ -29,7 +29,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-
 @Service
 @RequiredArgsConstructor
 public class ProductoService {
@@ -40,6 +39,7 @@ public class ProductoService {
     private final CategoriaProductoRepository categoriaProductoRepository;
 
     private final MovimientoDineroService movimientoDineroService;
+    private final com.ansicode.SistemaAdministracionGym.banco.BancoService bancoService;
 
     // (los dejo porque tú los tenías, pero aquí no se usan)
     private final SesionCajaService sesionCajaService;
@@ -88,8 +88,7 @@ public class ProductoService {
                         page.getContent()
                                 .stream()
                                 .map(productoMapper::toProductoResponse)
-                                .toList()
-                )
+                                .toList())
                 .number(page.getNumber())
                 .size(page.getSize())
                 .totalElements(page.getTotalElements())
@@ -183,9 +182,6 @@ public class ProductoService {
         // 2) Caja/dinero: egreso (opcional)
         if (Boolean.TRUE.equals(request.getRegistrarEgreso())) {
 
-            if (request.getSucursalId() == null) {
-                throw new BussinessException(BusinessErrorCodes.PRODUCTO_SUCURSAL_REQUIRED_PARA_EGRESO);
-            }
             if (request.getMetodoPago() == null) {
                 throw new BussinessException(BusinessErrorCodes.PRODUCTO_METODO_PAGO_REQUIRED_PARA_EGRESO);
             }
@@ -193,17 +189,40 @@ public class ProductoService {
                 throw new BussinessException(BusinessErrorCodes.BAD_CREDENTIALS);
             }
 
-            MovimientoDineroCreateRequest mdRequest = new MovimientoDineroCreateRequest();
-            mdRequest.setSucursalId(request.getSucursalId());
-            mdRequest.setTipo(TipoMovimientoDinero.EGRESO);
-            mdRequest.setConcepto(ConceptoMovimientoDinero.COMPRA_STOCK);
-            mdRequest.setMetodo(request.getMetodoPago());
-            mdRequest.setMoneda(normalizeMoneda(request.getMoneda()));
-            mdRequest.setMonto(montoTotal);
-            mdRequest.setDescripcion(request.getObservacion());
-            mdRequest.setProductoId(productoId);
+            if (request.getMetodoPago() == com.ansicode.SistemaAdministracionGym.enums.MetodoPago.TRANSFERENCIA
+                    || request.getMetodoPago() == com.ansicode.SistemaAdministracionGym.enums.MetodoPago.TARJETA) {
 
-            movimientoDineroService.crearMovimiento(mdRequest, connectedUser);
+                // Registrar en BANCO
+                if (request.getBancoId() == null) {
+                    throw new BussinessException(BusinessErrorCodes.PAGO_BANCO_ID_REQUIRED);
+                }
+
+                bancoService.registrarMovimiento(
+                        request.getBancoId(),
+                        com.ansicode.SistemaAdministracionGym.enums.TipoMovimientoBanco.EGRESO,
+                        montoTotal,
+                        request.getObservacion(),
+                        "Compra Stock Producto: " + producto.getNombre(),
+                        ConceptoMovimientoDinero.COMPRA_STOCK);
+
+            } else {
+                // Registrar en CAJA (Default / Efectivo)
+                if (request.getSucursalId() == null) {
+                    throw new BussinessException(BusinessErrorCodes.PRODUCTO_SUCURSAL_REQUIRED_PARA_EGRESO);
+                }
+
+                MovimientoDineroCreateRequest mdRequest = new MovimientoDineroCreateRequest();
+                mdRequest.setSucursalId(request.getSucursalId());
+                mdRequest.setTipo(TipoMovimientoDinero.EGRESO);
+                mdRequest.setConcepto(ConceptoMovimientoDinero.COMPRA_STOCK);
+                mdRequest.setMetodo(request.getMetodoPago());
+                mdRequest.setMoneda(normalizeMoneda(request.getMoneda()));
+                mdRequest.setMonto(montoTotal);
+                mdRequest.setDescripcion(request.getObservacion());
+                mdRequest.setProductoId(productoId);
+
+                movimientoDineroService.crearMovimiento(mdRequest, connectedUser);
+            }
         }
     }
 

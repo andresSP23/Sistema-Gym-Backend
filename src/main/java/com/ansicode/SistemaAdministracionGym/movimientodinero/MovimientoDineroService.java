@@ -21,10 +21,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ansicode.SistemaAdministracionGym.enums.MetodoPago;
+import com.ansicode.SistemaAdministracionGym.enums.TipoMovimientoDinero;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-
 
 @Service
 @RequiredArgsConstructor
@@ -38,7 +39,8 @@ public class MovimientoDineroService {
     private final VentaRepository ventaRepository;
 
     @Transactional
-    public MovimientoDineroResponse crearMovimiento(MovimientoDineroCreateRequest request, Authentication connectedUser) {
+    public MovimientoDineroResponse crearMovimiento(MovimientoDineroCreateRequest request,
+            Authentication connectedUser) {
 
         // ✅ Seguridad extra (evitar NPE)
         if (request == null) {
@@ -64,8 +66,24 @@ public class MovimientoDineroService {
             throw new BussinessException(BusinessErrorCodes.BAD_CREDENTIALS);
         }
 
-        // 1) Sesión abierta (si no existe, que tu SesionCajaService lance BussinessException)
+        // 1) Sesión abierta (si no existe, que tu SesionCajaService lance
+        // BussinessException)
         SesionCaja sesion = sesionCajaService.obtenerSesionAbiertaPorSucursal(request.getSucursalId());
+
+        // ✅ Validación: No permitir EGRESO en EFECTIVO si deja la caja en negativo
+        // ✅ Validación: No permitir EGRESO en EFECTIVO si deja la caja en negativo
+        if (request.getMetodo() == MetodoPago.EFECTIVO && request.getTipo() == TipoMovimientoDinero.EGRESO) {
+            String moneda = normalizeMoneda(request.getMoneda());
+
+            BigDecimal saldoNetoMovimientos = repository.netoEfectivoPorSesion(sesion.getId(), moneda);
+            BigDecimal saldoDisponible = sesion.getBaseInicialEfectivo().add(saldoNetoMovimientos);
+
+            if (saldoDisponible.compareTo(request.getMonto()) < 0) {
+                throw new BussinessException(BusinessErrorCodes.SESION_CAJA_SALDO_INSUFICIENTE);
+            }
+        } else if (request.getMetodo() == MetodoPago.OTRO && request.getTipo() == TipoMovimientoDinero.EGRESO) {
+            // Permitir gastos externos (Tracker) sin validar saldo de caja
+        }
 
         // 2) Crear entity
         MovimientoDinero m = new MovimientoDinero();
@@ -116,21 +134,19 @@ public class MovimientoDineroService {
             Long usuarioId,
             LocalDateTime desde,
             LocalDateTime hasta,
-            Pageable pageable
-    ) {
+            Pageable pageable) {
         // ✅ Validación rango fechas (evita filtros raros)
         if (desde != null && hasta != null && desde.isAfter(hasta)) {
             throw new BussinessException(BusinessErrorCodes.MOVIMIENTO_DINERO_RANGO_FECHAS_INVALIDO);
         }
 
-        Specification<MovimientoDinero> spec =
-                MovimientoDineroSpecifications.tipo(tipo)
-                        .and(MovimientoDineroSpecifications.concepto(concepto))
-                        .and(MovimientoDineroSpecifications.metodo(metodo))
-                        .and(MovimientoDineroSpecifications.moneda(moneda))
-                        .and(MovimientoDineroSpecifications.usuarioId(usuarioId))
-                        .and(MovimientoDineroSpecifications.fechaDesde(desde))
-                        .and(MovimientoDineroSpecifications.fechaHasta(hasta));
+        Specification<MovimientoDinero> spec = MovimientoDineroSpecifications.tipo(tipo)
+                .and(MovimientoDineroSpecifications.concepto(concepto))
+                .and(MovimientoDineroSpecifications.metodo(metodo))
+                .and(MovimientoDineroSpecifications.moneda(moneda))
+                .and(MovimientoDineroSpecifications.usuarioId(usuarioId))
+                .and(MovimientoDineroSpecifications.fechaDesde(desde))
+                .and(MovimientoDineroSpecifications.fechaHasta(hasta));
 
         Page<MovimientoDinero> page = repository.findAll(spec, pageable);
 

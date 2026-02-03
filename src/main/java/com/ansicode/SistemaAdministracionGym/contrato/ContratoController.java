@@ -70,11 +70,27 @@ public class ContratoController {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_PDF);
-        headers.setContentDispositionFormData("attachment", "contrato_" + id + ".pdf");
+        headers.setContentDispositionFormData("inline", "contrato_" + id + ".pdf");
 
         return ResponseEntity.ok()
                 .headers(headers)
                 .body(pdfBytes);
+    }
+
+    @GetMapping("/{id}/preview")
+    @PreAuthorize("hasRole('ADMINISTRADOR') or hasRole('CAJERO')")
+    public ResponseEntity<String> preview(@PathVariable Long id) {
+        // Obtenemos response normal que ya tiene el contenido
+        ContratoResponse response = contratoService.findById(id);
+
+        // Retornamos solo el HTML/Texto
+        String html = response.getContenidoContrato();
+        if (html == null)
+            html = "";
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.TEXT_HTML)
+                .body(html);
     }
 
     @PostMapping(value = "/{id}/subir", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

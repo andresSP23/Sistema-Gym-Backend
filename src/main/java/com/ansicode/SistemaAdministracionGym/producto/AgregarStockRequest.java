@@ -17,8 +17,9 @@ public class AgregarStockRequest {
     private Integer cantidad;
     private String observacion;
 
-    private Boolean registrarEgreso = false;  // <- ESTE
+    private Boolean registrarEgreso = false; // <- ESTE
 
     private MetodoPago metodoPago;
     private String moneda = "USD";
+    private Long bancoId;
 }

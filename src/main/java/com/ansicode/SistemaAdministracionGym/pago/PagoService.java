@@ -43,6 +43,7 @@ public class PagoService {
     private final ClienteService clienteService; // (no lo uso aquí, lo dejo por si lo usas luego)
     private final PlatformTransactionManager transactionManager;
     private final ApplicationEventPublisher eventPublisher;
+    private final com.ansicode.SistemaAdministracionGym.banco.BancoService bancoService;
 
     public PagoResponse registrarPago(PagoRequest request, Authentication connectedUser) {
 
@@ -197,33 +198,50 @@ public class PagoService {
             Pago savedPago = pagoRepository.save(pago);
 
             // =========================
-            // 1) MOVIMIENTO DINERO (INGRESO)
+            // 1) FINACIAL INTEGRATION (MovimientoDinero OR MovimientoBanco)
             // =========================
-            if (venta.getSucursal() == null || venta.getSucursal().getId() == null) {
-                throw new BussinessException(BusinessErrorCodes.PAGO_SUCURSAL_REQUIRED);
+            if (savedPago.getMetodo() == MetodoPago.TRANSFERENCIA || savedPago.getMetodo() == MetodoPago.TARJETA) {
+                // Registrar en BANCO
+                if (request.getBancoId() == null) {
+                    throw new BussinessException(BusinessErrorCodes.PAGO_BANCO_ID_REQUIRED);
+                }
+
+                bancoService.registrarMovimiento(
+                        request.getBancoId(),
+                        com.ansicode.SistemaAdministracionGym.enums.TipoMovimientoBanco.INGRESO,
+                        savedPago.getMonto(),
+                        "Pago Venta " + venta.getNumeroFactura(),
+                        "Pago ID: " + savedPago.getId(),
+                        ConceptoMovimientoDinero.PAGO_VENTA);
+
+            } else {
+                // Registrar en CAJA (Efectivo)
+                if (venta.getSucursal() == null || venta.getSucursal().getId() == null) {
+                    throw new BussinessException(BusinessErrorCodes.PAGO_SUCURSAL_REQUIRED);
+                }
+
+                MovimientoDineroCreateRequest movReq = new MovimientoDineroCreateRequest();
+                movReq.setSucursalId(venta.getSucursal().getId());
+                movReq.setTipo(TipoMovimientoDinero.INGRESO);
+                movReq.setConcepto(ConceptoMovimientoDinero.PAGO_VENTA);
+                movReq.setMetodo(savedPago.getMetodo());
+                movReq.setMoneda(savedPago.getMoneda());
+                movReq.setMonto(savedPago.getMonto());
+                movReq.setDescripcion("Pago venta " + venta.getNumeroFactura());
+                movReq.setVentaId(venta.getId());
+                movReq.setPagoId(savedPago.getId());
+
+                if (tieneServicio) {
+                    Long servicioId = venta.getDetalles().stream()
+                            .filter(d -> d.getTipoItem() == TipoItemVenta.SERVICIO)
+                            .map(DetalleVenta::getReferenciaId)
+                            .findFirst()
+                            .orElse(null);
+                    movReq.setServicioId(servicioId);
+                }
+
+                movimientoDineroService.crearMovimiento(movReq, connectedUser);
             }
-
-            MovimientoDineroCreateRequest movReq = new MovimientoDineroCreateRequest();
-            movReq.setSucursalId(venta.getSucursal().getId());
-            movReq.setTipo(TipoMovimientoDinero.INGRESO);
-            movReq.setConcepto(ConceptoMovimientoDinero.PAGO_VENTA);
-            movReq.setMetodo(savedPago.getMetodo());
-            movReq.setMoneda(savedPago.getMoneda());
-            movReq.setMonto(savedPago.getMonto());
-            movReq.setDescripcion("Pago venta " + venta.getNumeroFactura());
-            movReq.setVentaId(venta.getId());
-            movReq.setPagoId(savedPago.getId());
-
-            if (tieneServicio) {
-                Long servicioId = venta.getDetalles().stream()
-                        .filter(d -> d.getTipoItem() == TipoItemVenta.SERVICIO)
-                        .map(DetalleVenta::getReferenciaId)
-                        .findFirst()
-                        .orElse(null);
-                movReq.setServicioId(servicioId);
-            }
-
-            movimientoDineroService.crearMovimiento(movReq, connectedUser);
 
             // =========================
             // 4) CONFIRMAR VENTA

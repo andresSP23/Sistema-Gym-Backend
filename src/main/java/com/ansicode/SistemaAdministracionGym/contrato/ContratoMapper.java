@@ -21,8 +21,11 @@ public class ContratoMapper {
                 .clienteId(contrato.getCliente().getId())
                 .clienteNombre(contrato.getCliente().getNombres() + " " + contrato.getCliente().getApellidos())
                 .archivoUrl(contrato.getArchivoUrl())
+                .contenidoContrato(contrato.getContenidoContrato())
                 .estadoContrato(contrato.getEstadoContrato())
                 .activo(contrato.getIsVisible())
+                .fechaFirma(contrato.getFechaFirma())
+                .fechaGeneracion(contrato.getCreatedAt())
                 .build();
     }
 

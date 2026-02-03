@@ -1,0 +1,722 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ------------< com.ansicode:Sistema-Administracion-Gimnasio >------------
+[INFO] Building Sistema Administracion Gimnasio 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ Sistema-Administracion-Gimnasio ---
+[INFO] Copying 2 resources from src\main\resources to target\classes
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ Sistema-Administracion-Gimnasio ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ Sistema-Administracion-Gimnasio ---
+[INFO] skip non existing resourceDirectory C:\Users\andre\OneDrive\Escritorio\Sistema-Administracion-Gimnasio\src\test\resources
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ Sistema-Administracion-Gimnasio ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- surefire:3.5.4:test (default-test) @ Sistema-Administracion-Gimnasio ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.ansicode.SistemaAdministracionGym.pago.PagoServiceIntegrationTest
+22:54:52.930 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.ansicode.SistemaAdministracionGym.pago.PagoServiceIntegrationTest]: PagoServiceIntegrationTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+22:54:53.243 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.ansicode.SistemaAdministracionGym.SistemaAdministracionGym for test class com.ansicode.SistemaAdministracionGym.pago.PagoServiceIntegrationTest
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.5.8)
+
+2026-01-30T22:54:54.089-05:00  INFO 13376 --- [           main] c.a.S.pago.PagoServiceIntegrationTest    : Starting PagoServiceIntegrationTest using Java 21.0.8 with PID 13376 (started by andre in C:\Users\andre\OneDrive\Escritorio\Sistema-Administracion-Gimnasio)
+2026-01-30T22:54:54.092-05:00  INFO 13376 --- [           main] c.a.S.pago.PagoServiceIntegrationTest    : The following 1 profile is active: "dev"
+2026-01-30T22:54:56.706-05:00  INFO 13376 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-01-30T22:54:57.003-05:00  INFO 13376 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 281 ms. Found 24 JPA repository interfaces.
+2026-01-30T22:54:58.646-05:00  INFO 13376 --- [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-01-30T22:54:58.817-05:00  INFO 13376 --- [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.36.Final
+2026-01-30T22:54:58.904-05:00  INFO 13376 --- [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-01-30T22:54:59.451-05:00  INFO 13376 --- [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-01-30T22:54:59.509-05:00  INFO 13376 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-01-30T22:54:59.856-05:00  INFO 13376 --- [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@1c66cd02
+2026-01-30T22:54:59.859-05:00  INFO 13376 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-01-30T22:54:59.927-05:00  WARN 13376 --- [           main] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-01-30T22:54:59.957-05:00  INFO 13376 --- [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 18.1
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-01-30T22:55:02.488-05:00  INFO 13376 --- [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-01-30T22:55:02.866-05:00  INFO 13376 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-01-30T22:55:03.471-05:00  INFO 13376 --- [           main] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-01-30T22:55:04.499-05:00  INFO 13376 --- [           main] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-01-30T22:55:04.499-05:00  WARN 13376 --- [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-01-30T22:55:06.695-05:00  WARN 13376 --- [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-01-30T22:55:07.408-05:00  INFO 13376 --- [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint beneath base path '/actuator'
+2026-01-30T22:55:08.428-05:00  INFO 13376 --- [           main] c.a.S.pago.PagoServiceIntegrationTest    : Started PagoServiceIntegrationTest in 14.922 seconds (process running for 16.756)
+Hibernate: 
+    select
+        r1_0.id,
+        r1_0.fecha_creacion,
+        r1_0.fecha_modificacion,
+        r1_0.name 
+    from
+        role r1_0 
+    where
+        r1_0.name=?
+Hibernate: 
+    select
+        r1_0.id,
+        r1_0.fecha_creacion,
+        r1_0.fecha_modificacion,
+        r1_0.name 
+    from
+        role r1_0 
+    where
+        r1_0.name=?
+Hibernate: 
+    select
+        r1_0.id,
+        r1_0.fecha_creacion,
+        r1_0.fecha_modificacion,
+        r1_0.name 
+    from
+        role r1_0 
+    where
+        r1_0.name=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.activa,
+        u1_0.apellido,
+        u1_0.cuenta_bloqueada,
+        u1_0.email,
+        u1_0.fecha_creacion,
+        u1_0.fecha_modificacion,
+        u1_0.fecha_nacimiento,
+        u1_0.nombre,
+        u1_0.password,
+        u1_0.telefono 
+    from
+        _user u1_0 
+    where
+        (
+            u1_0.activa = true
+        ) 
+        and u1_0.email=?
+Hibernate: 
+    select
+        r1_0.users_id,
+        r1_1.id,
+        r1_1.fecha_creacion,
+        r1_1.fecha_modificacion,
+        r1_1.name 
+    from
+        _user_roles r1_0 
+    join
+        role r1_1 
+            on r1_1.id=r1_0.roles_id 
+    where
+        r1_0.users_id=?
+Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
+Java HotSpot(TM) 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+WARNING: A Java agent has been loaded dynamically (C:\Users\andre\.m2\repository\net\bytebuddy\byte-buddy-agent\1.17.8\byte-buddy-agent-1.17.8.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+Hibernate: 
+    insert 
+    into
+        _user
+        (activa, apellido, cuenta_bloqueada, email, fecha_creacion, fecha_nacimiento, nombre, password, telefono) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        sucursal
+        (aforo_maximo, ciudad, codigo_sucursal, color_primario, created_at, created_by, direccion, email, fecha_apertura, hora_apertura, hora_cierre, is_visible, logo_url, nombre, pais, provincia, razon_social, ruc, telefono, updated_at, updated_by) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        cliente
+        (apellidos, cedula, codigo_interno, created_at, created_by, direccion, email, fecha_nacimiento, is_visible, nombres, telefono, updated_at, updated_by) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        categoria_producto
+        (created_at, created_by, descripcion, is_visible, nombre, updated_at, updated_by) 
+    values
+        (?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        caja_sesiones
+        (base_inicial_efectivo, created_at, created_by, estado, fecha_apertura, fecha_cierre, is_visible, observacion, sucursal_id, updated_at, updated_by, usuario_apertura_id, usuario_cierre_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        servicios
+        (created_at, created_by, descripcion, duracion_dias, es_suscripcion, estado, is_visible, nombre, precio, updated_at, updated_by) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        ventas
+        (cajero_usuario_id, cliente_id, created_at, created_by, descuento_total, estado, fecha_venta, impuesto_total, is_visible, numero_factura, subtotal, sucursal_id, total, updated_at, updated_by) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        venta_detalles
+        (cantidad, created_at, created_by, descripcion_snapshot, descuento, impuesto, is_visible, precio_unitario_snapshot, referencia_id, tipo_item, total_linea, updated_at, updated_by, venta_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    select
+        v1_0.id,
+        v1_0.cajero_usuario_id,
+        c1_0.id,
+        c1_0.apellidos,
+        c1_0.cedula,
+        c1_0.codigo_interno,
+        c1_0.created_at,
+        c1_0.created_by,
+        c1_0.direccion,
+        c1_0.email,
+        c1_0.fecha_nacimiento,
+        c1_0.is_visible,
+        c1_0.nombres,
+        c1_0.telefono,
+        c1_0.updated_at,
+        c1_0.updated_by,
+        v1_0.created_at,
+        v1_0.created_by,
+        v1_0.descuento_total,
+        d1_0.venta_id,
+        d1_0.id,
+        d1_0.cantidad,
+        d1_0.created_at,
+        d1_0.created_by,
+        d1_0.descripcion_snapshot,
+        d1_0.descuento,
+        d1_0.impuesto,
+        d1_0.is_visible,
+        d1_0.precio_unitario_snapshot,
+        d1_0.referencia_id,
+        d1_0.tipo_item,
+        d1_0.total_linea,
+        d1_0.updated_at,
+        d1_0.updated_by,
+        v1_0.estado,
+        v1_0.fecha_venta,
+        v1_0.impuesto_total,
+        v1_0.is_visible,
+        v1_0.numero_factura,
+        v1_0.subtotal,
+        s1_0.id,
+        s1_0.aforo_maximo,
+        s1_0.ciudad,
+        s1_0.codigo_sucursal,
+        s1_0.color_primario,
+        s1_0.created_at,
+        s1_0.created_by,
+        s1_0.direccion,
+        s1_0.email,
+        s1_0.fecha_apertura,
+        s1_0.hora_apertura,
+        s1_0.hora_cierre,
+        s1_0.is_visible,
+        s1_0.logo_url,
+        s1_0.nombre,
+        s1_0.pais,
+        s1_0.provincia,
+        s1_0.razon_social,
+        s1_0.ruc,
+        s1_0.telefono,
+        s1_0.updated_at,
+        s1_0.updated_by,
+        v1_0.total,
+        v1_0.updated_at,
+        v1_0.updated_by 
+    from
+        ventas v1_0 
+    left join
+        cliente c1_0 
+            on c1_0.id=v1_0.cliente_id 
+    left join
+        venta_detalles d1_0 
+            on v1_0.id=d1_0.venta_id 
+    left join
+        sucursal s1_0 
+            on s1_0.id=v1_0.sucursal_id 
+            and (s1_0.is_visible = true) 
+    where
+        v1_0.id=?
+Hibernate: 
+    select
+        coalesce(sum(p1_0.monto), 0) 
+    from
+        pagos p1_0 
+    where
+        p1_0.venta_id=? 
+        and p1_0.estado=?
+Hibernate: 
+    insert 
+    into
+        pagos
+        (cambio, cliente_id, cliente_id_snapshot, comprobante_id, created_at, created_by, efectivo_recibido, estado, fecha_pago, is_visible, metodo, moneda, monto, nombre_cliente_snapshot, referencia_transaccion, tipo_comprobante, tipo_operacion, updated_at, updated_by, venta_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    select
+        sc1_0.id,
+        sc1_0.base_inicial_efectivo,
+        sc1_0.created_at,
+        sc1_0.created_by,
+        sc1_0.estado,
+        sc1_0.fecha_apertura,
+        sc1_0.fecha_cierre,
+        sc1_0.is_visible,
+        sc1_0.observacion,
+        sc1_0.sucursal_id,
+        sc1_0.updated_at,
+        sc1_0.updated_by,
+        sc1_0.usuario_apertura_id,
+        sc1_0.usuario_cierre_id 
+    from
+        caja_sesiones sc1_0 
+    where
+        sc1_0.sucursal_id=? 
+        and sc1_0.estado=? 
+    order by
+        sc1_0.fecha_apertura desc 
+    fetch
+        first ? rows only
+Hibernate: 
+    insert 
+    into
+        movimientos_dinero
+        (concepto, created_at, created_by, descripcion, fecha, is_visible, metodo, moneda, monto, pago_id, producto_id, servicio_id, sesion_caja_id, tipo, updated_at, updated_by, usuario_id, venta_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    update
+        ventas 
+    set
+        cajero_usuario_id=?,
+        cliente_id=?,
+        descuento_total=?,
+        estado=?,
+        fecha_venta=?,
+        impuesto_total=?,
+        is_visible=?,
+        numero_factura=?,
+        subtotal=?,
+        sucursal_id=?,
+        total=?,
+        updated_at=?,
+        updated_by=? 
+    where
+        id=?
+Hibernate: 
+    select
+        cs1_0.id 
+    from
+        cliente_suscripciones cs1_0 
+    join
+        ventas v1_0 
+            on v1_0.id=cs1_0.venta_id 
+    where
+        v1_0.id=? 
+    fetch
+        first ? rows only
+Hibernate: 
+    select
+        cs1_0.id,
+        cs1_0.cliente_id,
+        cs1_0.created_at,
+        cs1_0.created_by,
+        cs1_0.estado,
+        cs1_0.fecha_fin,
+        cs1_0.fecha_inicio,
+        cs1_0.is_visible,
+        cs1_0.servicio_id,
+        cs1_0.updated_at,
+        cs1_0.updated_by,
+        cs1_0.venta_id 
+    from
+        cliente_suscripciones cs1_0 
+    join
+        cliente c1_0 
+            on c1_0.id=cs1_0.cliente_id 
+    where
+        c1_0.id=? 
+        and cs1_0.estado=? 
+        and cs1_0.fecha_fin>? 
+    order by
+        cs1_0.fecha_fin desc 
+    fetch
+        first ? rows only
+Hibernate: 
+    insert 
+    into
+        cliente_suscripciones
+        (cliente_id, created_at, created_by, estado, fecha_fin, fecha_inicio, is_visible, servicio_id, updated_at, updated_by, venta_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    select
+        c1_0.id,
+        c1_0.created_at,
+        c1_0.created_by,
+        c1_0.estado,
+        c1_0.is_visible,
+        c1_0.numero,
+        c1_0.pdf_ref,
+        c1_0.tipo,
+        c1_0.updated_at,
+        c1_0.updated_by,
+        c1_0.venta_id 
+    from
+        comprobantes c1_0 
+    join
+        ventas v1_0 
+            on v1_0.id=c1_0.venta_id 
+    where
+        v1_0.id=? 
+        and c1_0.tipo=? 
+        and c1_0.estado=? 
+    order by
+        c1_0.created_at desc 
+    fetch
+        first ? rows only
+Hibernate: 
+    insert 
+    into
+        comprobantes
+        (created_at, created_by, estado, is_visible, numero, pdf_ref, tipo, updated_at, updated_by, venta_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    update
+        pagos p1_0 
+    set
+        comprobante_id=?,
+        tipo_comprobante=? 
+    where
+        p1_0.id=?
+Hibernate: 
+    select
+        cs1_0.id,
+        cs1_0.cliente_id,
+        cs1_0.created_at,
+        cs1_0.created_by,
+        cs1_0.estado,
+        cs1_0.fecha_fin,
+        cs1_0.fecha_inicio,
+        cs1_0.is_visible,
+        cs1_0.servicio_id,
+        cs1_0.updated_at,
+        cs1_0.updated_by,
+        cs1_0.venta_id 
+    from
+        cliente_suscripciones cs1_0
+Hibernate: 
+    insert 
+    into
+        _user
+        (activa, apellido, cuenta_bloqueada, email, fecha_creacion, fecha_nacimiento, nombre, password, telefono) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        sucursal
+        (aforo_maximo, ciudad, codigo_sucursal, color_primario, created_at, created_by, direccion, email, fecha_apertura, hora_apertura, hora_cierre, is_visible, logo_url, nombre, pais, provincia, razon_social, ruc, telefono, updated_at, updated_by) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        cliente
+        (apellidos, cedula, codigo_interno, created_at, created_by, direccion, email, fecha_nacimiento, is_visible, nombres, telefono, updated_at, updated_by) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        categoria_producto
+        (created_at, created_by, descripcion, is_visible, nombre, updated_at, updated_by) 
+    values
+        (?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        caja_sesiones
+        (base_inicial_efectivo, created_at, created_by, estado, fecha_apertura, fecha_cierre, is_visible, observacion, sucursal_id, updated_at, updated_by, usuario_apertura_id, usuario_cierre_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        productos
+        (categoria_producto_id, created_at, created_by, is_visible, nombre, precio_compra, precio_venta, stock, updated_at, updated_by) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        ventas
+        (cajero_usuario_id, cliente_id, created_at, created_by, descuento_total, estado, fecha_venta, impuesto_total, is_visible, numero_factura, subtotal, sucursal_id, total, updated_at, updated_by) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        venta_detalles
+        (cantidad, created_at, created_by, descripcion_snapshot, descuento, impuesto, is_visible, precio_unitario_snapshot, referencia_id, tipo_item, total_linea, updated_at, updated_by, venta_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    select
+        v1_0.id,
+        v1_0.cajero_usuario_id,
+        c1_0.id,
+        c1_0.apellidos,
+        c1_0.cedula,
+        c1_0.codigo_interno,
+        c1_0.created_at,
+        c1_0.created_by,
+        c1_0.direccion,
+        c1_0.email,
+        c1_0.fecha_nacimiento,
+        c1_0.is_visible,
+        c1_0.nombres,
+        c1_0.telefono,
+        c1_0.updated_at,
+        c1_0.updated_by,
+        v1_0.created_at,
+        v1_0.created_by,
+        v1_0.descuento_total,
+        d1_0.venta_id,
+        d1_0.id,
+        d1_0.cantidad,
+        d1_0.created_at,
+        d1_0.created_by,
+        d1_0.descripcion_snapshot,
+        d1_0.descuento,
+        d1_0.impuesto,
+        d1_0.is_visible,
+        d1_0.precio_unitario_snapshot,
+        d1_0.referencia_id,
+        d1_0.tipo_item,
+        d1_0.total_linea,
+        d1_0.updated_at,
+        d1_0.updated_by,
+        v1_0.estado,
+        v1_0.fecha_venta,
+        v1_0.impuesto_total,
+        v1_0.is_visible,
+        v1_0.numero_factura,
+        v1_0.subtotal,
+        s1_0.id,
+        s1_0.aforo_maximo,
+        s1_0.ciudad,
+        s1_0.codigo_sucursal,
+        s1_0.color_primario,
+        s1_0.created_at,
+        s1_0.created_by,
+        s1_0.direccion,
+        s1_0.email,
+        s1_0.fecha_apertura,
+        s1_0.hora_apertura,
+        s1_0.hora_cierre,
+        s1_0.is_visible,
+        s1_0.logo_url,
+        s1_0.nombre,
+        s1_0.pais,
+        s1_0.provincia,
+        s1_0.razon_social,
+        s1_0.ruc,
+        s1_0.telefono,
+        s1_0.updated_at,
+        s1_0.updated_by,
+        v1_0.total,
+        v1_0.updated_at,
+        v1_0.updated_by 
+    from
+        ventas v1_0 
+    left join
+        cliente c1_0 
+            on c1_0.id=v1_0.cliente_id 
+    left join
+        venta_detalles d1_0 
+            on v1_0.id=d1_0.venta_id 
+    left join
+        sucursal s1_0 
+            on s1_0.id=v1_0.sucursal_id 
+            and (s1_0.is_visible = true) 
+    where
+        v1_0.id=?
+Hibernate: 
+    select
+        coalesce(sum(p1_0.monto), 0) 
+    from
+        pagos p1_0 
+    where
+        p1_0.venta_id=? 
+        and p1_0.estado=?
+Hibernate: 
+    insert 
+    into
+        pagos
+        (cambio, cliente_id, cliente_id_snapshot, comprobante_id, created_at, created_by, efectivo_recibido, estado, fecha_pago, is_visible, metodo, moneda, monto, nombre_cliente_snapshot, referencia_transaccion, tipo_comprobante, tipo_operacion, updated_at, updated_by, venta_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    select
+        sc1_0.id,
+        sc1_0.base_inicial_efectivo,
+        sc1_0.created_at,
+        sc1_0.created_by,
+        sc1_0.estado,
+        sc1_0.fecha_apertura,
+        sc1_0.fecha_cierre,
+        sc1_0.is_visible,
+        sc1_0.observacion,
+        sc1_0.sucursal_id,
+        sc1_0.updated_at,
+        sc1_0.updated_by,
+        sc1_0.usuario_apertura_id,
+        sc1_0.usuario_cierre_id 
+    from
+        caja_sesiones sc1_0 
+    where
+        sc1_0.sucursal_id=? 
+        and sc1_0.estado=? 
+    order by
+        sc1_0.fecha_apertura desc 
+    fetch
+        first ? rows only
+Hibernate: 
+    insert 
+    into
+        movimientos_dinero
+        (concepto, created_at, created_by, descripcion, fecha, is_visible, metodo, moneda, monto, pago_id, producto_id, servicio_id, sesion_caja_id, tipo, updated_at, updated_by, usuario_id, venta_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    update
+        ventas 
+    set
+        cajero_usuario_id=?,
+        cliente_id=?,
+        descuento_total=?,
+        estado=?,
+        fecha_venta=?,
+        impuesto_total=?,
+        is_visible=?,
+        numero_factura=?,
+        subtotal=?,
+        sucursal_id=?,
+        total=?,
+        updated_at=?,
+        updated_by=? 
+    where
+        id=?
+Hibernate: 
+    select
+        c1_0.id,
+        c1_0.created_at,
+        c1_0.created_by,
+        c1_0.estado,
+        c1_0.is_visible,
+        c1_0.numero,
+        c1_0.pdf_ref,
+        c1_0.tipo,
+        c1_0.updated_at,
+        c1_0.updated_by,
+        c1_0.venta_id 
+    from
+        comprobantes c1_0 
+    join
+        ventas v1_0 
+            on v1_0.id=c1_0.venta_id 
+    where
+        v1_0.id=? 
+        and c1_0.tipo=? 
+        and c1_0.estado=? 
+    order by
+        c1_0.created_at desc 
+    fetch
+        first ? rows only
+Hibernate: 
+    insert 
+    into
+        comprobantes
+        (created_at, created_by, estado, is_visible, numero, pdf_ref, tipo, updated_at, updated_by, venta_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    update
+        pagos p1_0 
+    set
+        comprobante_id=?,
+        tipo_comprobante=? 
+    where
+        p1_0.id=?
+Hibernate: 
+    insert 
+    into
+        movimientos_inventario
+        (cantidad, created_at, created_by, is_visible, observacion, producto_id, stock_actual, stock_anterior, tipo_movimiento, updated_at, updated_by) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    select
+        mi1_0.id,
+        mi1_0.cantidad,
+        mi1_0.created_at,
+        mi1_0.created_by,
+        mi1_0.is_visible,
+        mi1_0.observacion,
+        mi1_0.producto_id,
+        mi1_0.stock_actual,
+        mi1_0.stock_anterior,
+        mi1_0.tipo_movimiento,
+        mi1_0.updated_at,
+        mi1_0.updated_by 
+    from
+        movimientos_inventario mi1_0
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 17.56 s -- in com.ansicode.SistemaAdministracionGym.pago.PagoServiceIntegrationTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  22.408 s
+[INFO] Finished at: 2026-01-30T22:55:10-05:00
+[INFO] ------------------------------------------------------------------------

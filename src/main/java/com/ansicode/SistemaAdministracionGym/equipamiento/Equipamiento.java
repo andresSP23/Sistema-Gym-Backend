@@ -28,4 +28,21 @@ public class Equipamiento extends AuditedEntity {
 
     private String fotoUrl;
 
+    // --- Asset Management Fields ---
+    private String marca;
+    private String modelo;
+    private String numeroSerie;
+
+    private java.time.LocalDate fechaCompra;
+    private java.math.BigDecimal costo;
+    private String proveedor;
+    private java.time.LocalDate garantiaFin;
+
+    // --- Maintenance Scheduling ---
+    private Integer frecuenciaMantenimientoDias; // Cada cuantos dias requiere mant.
+    private java.time.LocalDate proximoMantenimiento; // Calculado o manual
+
+    @ManyToOne
+    @JoinColumn(name = "sucursal_id")
+    private com.ansicode.SistemaAdministracionGym.sucursal.Sucursal sucursal;
 }

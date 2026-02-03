@@ -1,0 +1,162 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ------------< com.ansicode:Sistema-Administracion-Gimnasio >------------
+[INFO] Building Sistema Administracion Gimnasio 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] >>> spring-boot:3.5.8:run (default-cli) > test-compile @ Sistema-Administracion-Gimnasio >>>
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ Sistema-Administracion-Gimnasio ---
+[INFO] Copying 2 resources from src\main\resources to target\classes
+[INFO] Copying 2 resources from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ Sistema-Administracion-Gimnasio ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ Sistema-Administracion-Gimnasio ---
+[INFO] Not copying test resources
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ Sistema-Administracion-Gimnasio ---
+[INFO] Not compiling test sources
+[INFO] 
+[INFO] <<< spring-boot:3.5.8:run (default-cli) < test-compile @ Sistema-Administracion-Gimnasio <<<
+[INFO] 
+[INFO] 
+[INFO] --- spring-boot:3.5.8:run (default-cli) @ Sistema-Administracion-Gimnasio ---
+Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-buildpack-platform/3.5.8/spring-boot-buildpack-platform-3.5.8.jar
+Progress (1): 0.9/323 kBProgress (1): 2.3/323 kBProgress (1): 3.6/323 kBProgress (1): 5.0/323 kBProgress (1): 6.4/323 kBProgress (1): 7.7/323 kBProgress (1): 9.1/323 kBProgress (1): 10/323 kB Progress (1): 12/323 kBProgress (1): 12/323 kBProgress (1): 14/323 kBProgress (1): 15/323 kBProgress (1): 16/323 kBProgress (1): 18/323 kBProgress (1): 19/323 kBProgress (1): 21/323 kBProgress (1): 22/323 kBProgress (1): 23/323 kBProgress (1): 25/323 kBProgress (1): 26/323 kBProgress (1): 27/323 kBProgress (1): 29/323 kBProgress (1): 30/323 kBProgress (1): 31/323 kBProgress (1): 33/323 kBProgress (1): 34/323 kBProgress (1): 36/323 kBProgress (1): 37/323 kBProgress (1): 38/323 kBProgress (1): 40/323 kBProgress (1): 41/323 kBProgress (1): 42/323 kBProgress (1): 44/323 kBProgress (1): 45/323 kBProgress (1): 47/323 kBProgress (1): 48/323 kBProgress (1): 49/323 kBProgress (1): 51/323 kBProgress (1): 52/323 kBProgress (1): 53/323 kBProgress (1): 55/323 kBProgress (1): 59/323 kBProgress (1): 63/323 kBProgress (1): 67/323 kBProgress (1): 72/323 kBProgress (1): 76/323 kBProgress (1): 80/323 kBProgress (1): 84/323 kBProgress (1): 89/323 kBProgress (1): 93/323 kBProgress (1): 97/323 kBProgress (1): 101/323 kBProgress (1): 105/323 kBProgress (1): 110/323 kBProgress (1): 114/323 kBProgress (1): 118/323 kBProgress (1): 122/323 kBProgress (1): 127/323 kBProgress (1): 131/323 kBProgress (1): 135/323 kBProgress (1): 139/323 kBProgress (1): 143/323 kBProgress (1): 148/323 kBProgress (1): 152/323 kBProgress (1): 156/323 kBProgress (1): 160/323 kBProgress (1): 165/323 kBProgress (1): 169/323 kBProgress (1): 173/323 kBProgress (1): 177/323 kBProgress (1): 181/323 kBProgress (1): 186/323 kBProgress (1): 190/323 kBProgress (1): 194/323 kBProgress (1): 198/323 kBProgress (1): 203/323 kBProgress (1): 207/323 kBProgress (1): 211/323 kBProgress (1): 215/323 kBProgress (1): 219/323 kBProgress (1): 224/323 kBProgress (1): 240/323 kBProgress (1): 256/323 kBProgress (1): 273/323 kBProgress (1): 274/323 kBProgress (1): 291/323 kBProgress (1): 307/323 kBProgress (1): 323 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-buildpack-platform/3.5.8/spring-boot-buildpack-platform-3.5.8.jar (323 kB at 47 kB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/org/apache/httpcomponents/client5/httpclient5/5.5.1/httpclient5-5.5.1.jar
+Downloading from central: https://repo.maven.apache.org/maven2/org/apache/httpcomponents/core5/httpcore5/5.3.6/httpcore5-5.3.6.jar
+Downloading from central: https://repo.maven.apache.org/maven2/org/apache/httpcomponents/core5/httpcore5-h2/5.3.6/httpcore5-h2-5.3.6.jar
+Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-loader-tools/3.5.8/spring-boot-loader-tools-3.5.8.jar
+Downloading from central: https://repo.maven.apache.org/maven2/io/micrometer/micrometer-observation/1.14.13/micrometer-observation-1.14.13.jar
+Progress (1): 0.9/959 kBProgress (1): 2.3/959 kBProgress (1): 3.6/959 kBProgress (1): 5.0/959 kBProgress (1): 6.4/959 kBProgress (1): 7.7/959 kBProgress (1): 9.1/959 kBProgress (1): 10/959 kB Progress (1): 12/959 kBProgress (1): 13/959 kBProgress (1): 15/959 kBProgress (1): 16/959 kBProgress (1): 17/959 kBProgress (1): 19/959 kBProgress (1): 20/959 kBProgress (1): 21/959 kBProgress (1): 23/959 kBProgress (1): 24/959 kBProgress (1): 26/959 kBProgress (1): 27/959 kBProgress (1): 28/959 kBProgress (1): 30/959 kBProgress (1): 31/959 kBProgress (1): 32/959 kBProgress (1): 34/959 kBProgress (1): 35/959 kBProgress (1): 36/959 kBProgress (1): 38/959 kBProgress (1): 39/959 kBProgress (1): 41/959 kBProgress (1): 42/959 kBProgress (1): 43/959 kBProgress (1): 45/959 kBProgress (1): 46/959 kBProgress (1): 47/959 kBProgress (1): 49/959 kBProgress (1): 50/959 kBProgress (1): 52/959 kBProgress (1): 53/959 kBProgress (1): 54/959 kBProgress (1): 56/959 kBProgress (1): 60/959 kBProgress (1): 64/959 kBProgress (1): 68/959 kBProgress (1): 73/959 kBProgress (1): 77/959 kBProgress (2): 77/959 kB | 0.9/909 kBProgress (2): 81/959 kB | 0.9/909 kBProgress (2): 81/959 kB | 2.3/909 kBProgress (2): 81/959 kB | 3.6/909 kBProgress (2): 85/959 kB | 3.6/909 kBProgress (2): 85/959 kB | 5.0/909 kBProgress (2): 89/959 kB | 5.0/909 kBProgress (2): 89/959 kB | 6.4/909 kBProgress (2): 94/959 kB | 6.4/909 kBProgress (2): 94/959 kB | 7.7/909 kBProgress (2): 94/959 kB | 9.1/909 kBProgress (2): 98/959 kB | 9.1/909 kBProgress (2): 98/959 kB | 10/909 kB Progress (2): 98/959 kB | 12/909 kBProgress (2): 102/959 kB | 12/909 kBProgress (2): 102/959 kB | 13/909 kBProgress (2): 106/959 kB | 13/909 kBProgress (2): 106/959 kB | 15/909 kBProgress (2): 106/959 kB | 16/909 kBProgress (2): 111/959 kB | 16/909 kBProgress (2): 111/959 kB | 17/909 kBProgress (2): 115/959 kB | 17/909 kBProgress (2): 115/959 kB | 19/909 kBProgress (2): 119/959 kB | 19/909 kBProgress (2): 119/959 kB | 20/909 kBProgress (2): 123/959 kB | 20/909 kBProgress (2): 123/959 kB | 21/909 kBProgress (2): 123/959 kB | 23/909 kBProgress (2): 128/959 kB | 23/909 kBProgress (2): 128/959 kB | 24/909 kBProgress (2): 128/959 kB | 26/909 kBProgress (2): 128/959 kB | 27/909 kBProgress (2): 132/959 kB | 27/909 kBProgress (2): 132/959 kB | 28/909 kBProgress (2): 132/959 kB | 30/909 kBProgress (2): 136/959 kB | 30/909 kBProgress (2): 136/959 kB | 31/909 kBProgress (2): 136/959 kB | 32/909 kBProgress (2): 140/959 kB | 32/909 kBProgress (2): 140/959 kB | 34/909 kBProgress (2): 144/959 kB | 34/909 kBProgress (2): 144/959 kB | 35/909 kBProgress (2): 144/959 kB | 36/909 kBProgress (2): 144/959 kB | 38/909 kBProgress (2): 144/959 kB | 39/909 kBProgress (2): 144/959 kB | 41/909 kBProgress (2): 144/959 kB | 42/909 kBProgress (2): 144/959 kB | 43/909 kBProgress (2): 144/959 kB | 45/909 kBProgress (2): 144/959 kB | 46/909 kBProgress (2): 144/959 kB | 47/909 kBProgress (2): 144/959 kB | 49/909 kBProgress (2): 144/959 kB | 50/909 kBProgress (2): 144/959 kB | 52/909 kBProgress (2): 144/959 kB | 53/909 kBProgress (2): 144/959 kB | 54/909 kBProgress (2): 144/959 kB | 56/909 kBProgress (2): 144/959 kB | 60/909 kBProgress (2): 149/959 kB | 60/909 kBProgress (2): 153/959 kB | 60/909 kBProgress (2): 157/959 kB | 60/909 kBProgress (2): 161/959 kB | 60/909 kBProgress (2): 166/959 kB | 60/909 kBProgress (2): 170/959 kB | 60/909 kBProgress (2): 174/959 kB | 60/909 kBProgress (2): 178/959 kB | 60/909 kBProgress (2): 183/959 kB | 60/909 kBProgress (2): 187/959 kB | 60/909 kBProgress (2): 191/959 kB | 60/909 kBProgress (2): 191/959 kB | 64/909 kBProgress (2): 191/959 kB | 68/909 kBProgress (2): 191/959 kB | 73/909 kBProgress (2): 191/959 kB | 77/909 kBProgress (2): 191/959 kB | 81/909 kBProgress (2): 191/959 kB | 85/909 kBProgress (2): 191/959 kB | 89/909 kBProgress (2): 191/959 kB | 94/909 kBProgress (2): 191/959 kB | 98/909 kBProgress (2): 191/959 kB | 102/909 kBProgress (2): 191/959 kB | 106/909 kBProgress (2): 191/959 kB | 111/909 kBProgress (2): 191/959 kB | 115/909 kBProgress (2): 191/959 kB | 119/909 kBProgress (2): 191/959 kB | 123/909 kBProgress (2): 191/959 kB | 128/909 kBProgress (2): 191/959 kB | 132/909 kBProgress (2): 191/959 kB | 136/909 kBProgress (2): 191/959 kB | 140/909 kBProgress (2): 191/959 kB | 144/909 kBProgress (2): 195/959 kB | 144/909 kBProgress (2): 195/959 kB | 149/909 kBProgress (2): 199/959 kB | 149/909 kBProgress (2): 199/959 kB | 153/909 kBProgress (2): 204/959 kB | 153/909 kBProgress (2): 204/959 kB | 157/909 kBProgress (2): 208/959 kB | 157/909 kBProgress (2): 208/959 kB | 161/909 kBProgress (2): 212/959 kB | 161/909 kBProgress (2): 212/959 kB | 166/909 kBProgress (2): 212/959 kB | 170/909 kBProgress (2): 216/959 kB | 170/909 kBProgress (2): 216/959 kB | 174/909 kBProgress (2): 221/959 kB | 174/909 kBProgress (2): 221/959 kB | 178/909 kBProgress (2): 225/959 kB | 178/909 kBProgress (2): 225/959 kB | 183/909 kBProgress (2): 225/959 kB | 187/909 kBProgress (2): 225/959 kB | 191/909 kBProgress (2): 241/959 kB | 191/909 kBProgress (2): 258/959 kB | 191/909 kBProgress (2): 274/959 kB | 191/909 kBProgress (2): 290/959 kB | 191/909 kBProgress (2): 307/959 kB | 191/909 kBProgress (2): 323/959 kB | 191/909 kBProgress (2): 340/959 kB | 191/909 kBProgress (2): 356/959 kB | 191/909 kBProgress (2): 372/959 kB | 191/909 kBProgress (2): 389/959 kB | 191/909 kBProgress (2): 389/959 kB | 195/909 kBProgress (2): 389/959 kB | 199/909 kBProgress (2): 389/959 kB | 204/909 kBProgress (2): 405/959 kB | 204/909 kBProgress (2): 405/959 kB | 208/909 kBProgress (2): 405/959 kB | 212/909 kBProgress (2): 405/959 kB | 216/909 kBProgress (2): 421/959 kB | 216/909 kBProgress (2): 421/959 kB | 221/909 kBProgress (2): 421/959 kB | 225/909 kBProgress (2): 438/959 kB | 225/909 kBProgress (2): 454/959 kB | 225/909 kBProgress (2): 454/959 kB | 241/909 kBProgress (2): 454/959 kB | 258/909 kBProgress (2): 454/959 kB | 274/909 kBProgress (2): 471/959 kB | 274/909 kBProgress (2): 471/959 kB | 290/909 kBProgress (2): 487/959 kB | 290/909 kBProgress (2): 487/959 kB | 307/909 kBProgress (2): 503/959 kB | 307/909 kBProgress (2): 503/959 kB | 323/909 kBProgress (2): 520/959 kB | 323/909 kBProgress (2): 536/959 kB | 323/909 kBProgress (2): 552/959 kB | 323/909 kBProgress (2): 569/959 kB | 323/909 kBProgress (2): 569/959 kB | 340/909 kBProgress (2): 569/959 kB | 356/909 kBProgress (2): 585/959 kB | 356/909 kBProgress (2): 585/959 kB | 372/909 kBProgress (2): 602/959 kB | 372/909 kBProgress (2): 618/959 kB | 372/909 kBProgress (2): 634/959 kB | 372/909 kBProgress (2): 651/959 kB | 372/909 kBProgress (2): 667/959 kB | 372/909 kBProgress (2): 684/959 kB | 372/909 kBProgress (2): 700/959 kB | 372/909 kBProgress (2): 700/959 kB | 389/909 kBProgress (2): 716/959 kB | 389/909 kBProgress (2): 733/959 kB | 389/909 kBProgress (2): 733/959 kB | 405/909 kBProgress (2): 749/959 kB | 405/909 kBProgress (2): 749/959 kB | 421/909 kBProgress (2): 765/959 kB | 421/909 kBProgress (2): 782/959 kB | 421/909 kBProgress (2): 782/959 kB | 438/909 kBProgress (2): 798/959 kB | 438/909 kBProgress (2): 815/959 kB | 438/909 kBProgress (2): 815/959 kB | 454/909 kBProgress (2): 831/959 kB | 454/909 kBProgress (2): 847/959 kB | 454/909 kBProgress (2): 847/959 kB | 471/909 kBProgress (2): 847/959 kB | 487/909 kBProgress (2): 864/959 kB | 487/909 kBProgress (2): 864/959 kB | 503/909 kBProgress (2): 880/959 kB | 503/909 kBProgress (2): 880/959 kB | 520/909 kBProgress (2): 897/959 kB | 520/909 kBProgress (2): 913/959 kB | 520/909 kBProgress (2): 929/959 kB | 520/909 kBProgress (2): 946/959 kB | 520/909 kBProgress (2): 946/959 kB | 536/909 kBProgress (2): 959 kB | 536/909 kB    Progress (2): 959 kB | 552/909 kBProgress (2): 959 kB | 569/909 kBProgress (2): 959 kB | 585/909 kBProgress (2): 959 kB | 602/909 kBProgress (2): 959 kB | 618/909 kBProgress (2): 959 kB | 634/909 kBProgress (2): 959 kB | 651/909 kBProgress (2): 959 kB | 667/909 kBProgress (2): 959 kB | 684/909 kBProgress (2): 959 kB | 700/909 kBProgress (2): 959 kB | 716/909 kBProgress (2): 959 kB | 733/909 kBProgress (2): 959 kB | 749/909 kBProgress (2): 959 kB | 765/909 kBProgress (2): 959 kB | 782/909 kBProgress (2): 959 kB | 798/909 kBProgress (2): 959 kB | 815/909 kBProgress (2): 959 kB | 831/909 kBProgress (2): 959 kB | 847/909 kBProgress (2): 959 kB | 864/909 kBProgress (2): 959 kB | 880/909 kBProgress (2): 959 kB | 897/909 kBProgress (2): 959 kB | 909 kB                                 Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/httpcomponents/client5/httpclient5/5.5.1/httpclient5-5.5.1.jar (959 kB at 6.2 MB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/io/micrometer/micrometer-commons/1.14.13/micrometer-commons-1.14.13.jar
+Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/httpcomponents/core5/httpcore5/5.3.6/httpcore5-5.3.6.jar (909 kB at 5.5 MB/s)
+Progress (1): 7.7/48 kBProgress (1): 8.2/48 kBProgress (1): 25/48 kB Progress (1): 41/48 kBProgress (1): 48 kB                      Downloaded from central: https://repo.maven.apache.org/maven2/io/micrometer/micrometer-commons/1.14.13/micrometer-commons-1.14.13.jar (48 kB at 217 kB/s)
+Progress (1): 7.7/75 kBProgress (1): 16/75 kB Progress (1): 32/75 kBProgress (1): 49/75 kBProgress (1): 65/75 kBProgress (1): 75 kB                      Downloaded from central: https://repo.maven.apache.org/maven2/io/micrometer/micrometer-observation/1.14.13/micrometer-observation-1.14.13.jar (75 kB at 48 kB/s)
+Progress (1): 0.9/243 kBProgress (1): 2.3/243 kBProgress (1): 3.6/243 kBProgress (2): 3.6/243 kB | 1.4/465 kBProgress (2): 5.0/243 kB | 1.4/465 kBProgress (2): 5.0/243 kB | 2.7/465 kBProgress (2): 5.0/243 kB | 4.1/465 kBProgress (2): 6.4/243 kB | 4.1/465 kBProgress (2): 6.4/243 kB | 5.5/465 kBProgress (2): 7.7/243 kB | 5.5/465 kBProgress (2): 7.7/243 kB | 6.8/465 kBProgress (2): 9.1/243 kB | 6.8/465 kBProgress (2): 9.1/243 kB | 8.2/465 kBProgress (2): 10/243 kB | 8.2/465 kB Progress (2): 10/243 kB | 9.6/465 kBProgress (2): 12/243 kB | 9.6/465 kBProgress (2): 12/243 kB | 11/465 kB Progress (2): 13/243 kB | 11/465 kBProgress (2): 15/243 kB | 11/465 kBProgress (2): 15/243 kB | 12/465 kBProgress (2): 16/243 kB | 12/465 kBProgress (2): 16/243 kB | 14/465 kBProgress (2): 16/243 kB | 15/465 kBProgress (2): 17/243 kB | 15/465 kBProgress (2): 17/243 kB | 16/465 kBProgress (2): 17/243 kB | 18/465 kBProgress (2): 19/243 kB | 18/465 kBProgress (2): 20/243 kB | 18/465 kBProgress (2): 20/243 kB | 19/465 kBProgress (2): 20/243 kB | 21/465 kBProgress (2): 21/243 kB | 21/465 kBProgress (2): 23/243 kB | 21/465 kBProgress (2): 24/243 kB | 21/465 kBProgress (2): 26/243 kB | 21/465 kBProgress (2): 27/243 kB | 21/465 kBProgress (2): 28/243 kB | 21/465 kBProgress (2): 30/243 kB | 21/465 kBProgress (2): 31/243 kB | 21/465 kBProgress (2): 32/243 kB | 21/465 kBProgress (2): 34/243 kB | 21/465 kBProgress (2): 35/243 kB | 21/465 kBProgress (2): 36/243 kB | 21/465 kBProgress (2): 38/243 kB | 21/465 kBProgress (2): 39/243 kB | 21/465 kBProgress (2): 41/243 kB | 21/465 kBProgress (2): 42/243 kB | 21/465 kBProgress (2): 43/243 kB | 21/465 kBProgress (2): 45/243 kB | 21/465 kBProgress (2): 46/243 kB | 21/465 kBProgress (2): 46/243 kB | 22/465 kBProgress (2): 47/243 kB | 22/465 kBProgress (2): 49/243 kB | 22/465 kBProgress (2): 50/243 kB | 22/465 kBProgress (2): 50/243 kB | 23/465 kBProgress (2): 52/243 kB | 23/465 kBProgress (2): 53/243 kB | 23/465 kBProgress (2): 53/243 kB | 25/465 kBProgress (2): 53/243 kB | 26/465 kBProgress (2): 53/243 kB | 27/465 kBProgress (2): 53/243 kB | 29/465 kBProgress (2): 53/243 kB | 30/465 kBProgress (2): 53/243 kB | 31/465 kBProgress (2): 54/243 kB | 31/465 kBProgress (2): 54/243 kB | 33/465 kBProgress (2): 54/243 kB | 34/465 kBProgress (2): 54/243 kB | 36/465 kBProgress (2): 54/243 kB | 37/465 kBProgress (2): 54/243 kB | 38/465 kBProgress (2): 54/243 kB | 40/465 kBProgress (2): 54/243 kB | 41/465 kBProgress (2): 54/243 kB | 42/465 kBProgress (2): 54/243 kB | 44/465 kBProgress (2): 54/243 kB | 45/465 kBProgress (2): 54/243 kB | 46/465 kBProgress (2): 54/243 kB | 48/465 kBProgress (2): 56/243 kB | 48/465 kBProgress (2): 56/243 kB | 49/465 kBProgress (2): 56/243 kB | 51/465 kBProgress (2): 56/243 kB | 52/465 kBProgress (2): 60/243 kB | 52/465 kBProgress (2): 60/243 kB | 53/465 kBProgress (2): 60/243 kB | 55/465 kBProgress (2): 64/243 kB | 55/465 kBProgress (2): 64/243 kB | 57/465 kBProgress (2): 64/243 kB | 62/465 kBProgress (2): 64/243 kB | 66/465 kBProgress (2): 68/243 kB | 66/465 kBProgress (2): 73/243 kB | 66/465 kBProgress (2): 73/243 kB | 70/465 kBProgress (2): 77/243 kB | 70/465 kBProgress (2): 77/243 kB | 74/465 kBProgress (2): 77/243 kB | 78/465 kBProgress (2): 81/243 kB | 78/465 kBProgress (2): 81/243 kB | 83/465 kBProgress (2): 85/243 kB | 83/465 kBProgress (2): 89/243 kB | 83/465 kBProgress (2): 94/243 kB | 83/465 kBProgress (2): 94/243 kB | 87/465 kBProgress (2): 98/243 kB | 87/465 kBProgress (2): 98/243 kB | 91/465 kBProgress (2): 102/243 kB | 91/465 kBProgress (2): 102/243 kB | 95/465 kBProgress (2): 102/243 kB | 100/465 kBProgress (2): 106/243 kB | 100/465 kBProgress (2): 106/243 kB | 104/465 kBProgress (2): 106/243 kB | 108/465 kBProgress (2): 106/243 kB | 112/465 kBProgress (2): 106/243 kB | 117/465 kBProgress (2): 111/243 kB | 117/465 kBProgress (2): 115/243 kB | 117/465 kBProgress (2): 119/243 kB | 117/465 kBProgress (2): 123/243 kB | 117/465 kBProgress (2): 128/243 kB | 117/465 kBProgress (2): 128/243 kB | 121/465 kBProgress (2): 131/243 kB | 121/465 kBProgress (2): 131/243 kB | 125/465 kBProgress (2): 135/243 kB | 125/465 kBProgress (2): 139/243 kB | 125/465 kBProgress (2): 139/243 kB | 129/465 kBProgress (2): 143/243 kB | 129/465 kBProgress (2): 147/243 kB | 129/465 kBProgress (2): 152/243 kB | 129/465 kBProgress (2): 156/243 kB | 129/465 kBProgress (2): 160/243 kB | 129/465 kBProgress (2): 164/243 kB | 129/465 kBProgress (2): 169/243 kB | 129/465 kBProgress (2): 173/243 kB | 129/465 kBProgress (2): 177/243 kB | 129/465 kBProgress (2): 181/243 kB | 129/465 kBProgress (2): 186/243 kB | 129/465 kBProgress (2): 190/243 kB | 129/465 kBProgress (2): 194/243 kB | 129/465 kBProgress (2): 198/243 kB | 129/465 kBProgress (2): 202/243 kB | 129/465 kBProgress (2): 207/243 kB | 129/465 kBProgress (2): 211/243 kB | 129/465 kBProgress (2): 215/243 kB | 129/465 kBProgress (2): 219/243 kB | 129/465 kBProgress (2): 224/243 kB | 129/465 kBProgress (2): 224/243 kB | 133/465 kBProgress (2): 224/243 kB | 138/465 kBProgress (2): 224/243 kB | 142/465 kBProgress (2): 224/243 kB | 146/465 kBProgress (2): 224/243 kB | 150/465 kBProgress (2): 224/243 kB | 155/465 kBProgress (2): 224/243 kB | 159/465 kBProgress (2): 224/243 kB | 163/465 kBProgress (2): 224/243 kB | 167/465 kBProgress (2): 224/243 kB | 172/465 kBProgress (2): 224/243 kB | 176/465 kBProgress (2): 224/243 kB | 180/465 kBProgress (2): 224/243 kB | 184/465 kBProgress (2): 224/243 kB | 188/465 kBProgress (2): 224/243 kB | 193/465 kBProgress (2): 224/243 kB | 197/465 kBProgress (2): 224/243 kB | 201/465 kBProgress (2): 224/243 kB | 205/465 kBProgress (2): 224/243 kB | 210/465 kBProgress (2): 224/243 kB | 214/465 kBProgress (2): 224/243 kB | 218/465 kBProgress (2): 224/243 kB | 222/465 kBProgress (2): 224/243 kB | 239/465 kBProgress (2): 224/243 kB | 255/465 kBProgress (2): 224/243 kB | 271/465 kBProgress (2): 224/243 kB | 288/465 kBProgress (2): 224/243 kB | 304/465 kBProgress (2): 224/243 kB | 319/465 kBProgress (2): 224/243 kB | 336/465 kBProgress (2): 224/243 kB | 352/465 kBProgress (2): 224/243 kB | 369/465 kBProgress (2): 224/243 kB | 385/465 kBProgress (2): 224/243 kB | 401/465 kBProgress (2): 224/243 kB | 418/465 kBProgress (2): 224/243 kB | 434/465 kBProgress (2): 224/243 kB | 451/465 kBProgress (2): 224/243 kB | 465 kB                                     Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-loader-tools/3.5.8/spring-boot-loader-tools-3.5.8.jar (465 kB at 47 kB/s)
+Progress (1): 240/243 kBProgress (1): 243 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/httpcomponents/core5/httpcore5-h2/5.3.6/httpcore5-h2-5.3.6.jar (243 kB at 7.0 kB/s)
+[INFO] Attaching agents: []
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.5.8)
+
+2026-02-01T22:00:07.821-05:00  INFO 2252 --- [           main] c.a.S.SistemaAdministracionGym           : Starting SistemaAdministracionGym using Java 21.0.8 with PID 2252 (C:\Users\andre\OneDrive\Escritorio\Sistema-Administracion-Gimnasio\target\classes started by andre in C:\Users\andre\OneDrive\Escritorio\Sistema-Administracion-Gimnasio)
+2026-02-01T22:00:07.824-05:00  INFO 2252 --- [           main] c.a.S.SistemaAdministracionGym           : The following 1 profile is active: "dev"
+2026-02-01T22:00:10.080-05:00  INFO 2252 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-02-01T22:00:10.393-05:00  INFO 2252 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 292 ms. Found 29 JPA repository interfaces.
+2026-02-01T22:00:11.287-05:00  INFO 2252 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8081 (http)
+2026-02-01T22:00:11.313-05:00  INFO 2252 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-02-01T22:00:11.313-05:00  INFO 2252 --- [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.49]
+2026-02-01T22:00:11.410-05:00  INFO 2252 --- [           main] o.a.c.c.C.[.[localhost].[/api/v1]        : Initializing Spring embedded WebApplicationContext
+2026-02-01T22:00:11.411-05:00  INFO 2252 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 3531 ms
+2026-02-01T22:00:11.724-05:00  INFO 2252 --- [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-02-01T22:00:11.785-05:00  INFO 2252 --- [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.36.Final
+2026-02-01T22:00:11.826-05:00  INFO 2252 --- [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-02-01T22:00:12.175-05:00  INFO 2252 --- [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-02-01T22:00:12.226-05:00  INFO 2252 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-02-01T22:00:12.474-05:00  INFO 2252 --- [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@31c56721
+2026-02-01T22:00:12.477-05:00  INFO 2252 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-02-01T22:00:12.517-05:00  WARN 2252 --- [           main] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-02-01T22:00:12.538-05:00  INFO 2252 --- [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 18.1
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-02-01T22:00:14.393-05:00  INFO 2252 --- [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-02-01T22:00:14.719-05:00  INFO 2252 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-02-01T22:00:15.345-05:00  INFO 2252 --- [           main] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-02-01T22:00:15.959-05:00  INFO 2252 --- [           main] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-02-01T22:00:15.959-05:00  WARN 2252 --- [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-02-01T22:00:18.391-05:00  WARN 2252 --- [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-02-01T22:00:18.895-05:00  INFO 2252 --- [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint beneath base path '/actuator'
+2026-02-01T22:00:19.880-05:00  INFO 2252 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8081 (http) with context path '/api/v1'
+2026-02-01T22:00:19.898-05:00  INFO 2252 --- [           main] c.a.S.SistemaAdministracionGym           : Started SistemaAdministracionGym in 12.626 seconds (process running for 13.093)
+Hibernate: 
+    select
+        r1_0.id,
+        r1_0.fecha_creacion,
+        r1_0.fecha_modificacion,
+        r1_0.name 
+    from
+        role r1_0 
+    where
+        r1_0.name=?
+Hibernate: 
+    select
+        r1_0.id,
+        r1_0.fecha_creacion,
+        r1_0.fecha_modificacion,
+        r1_0.name 
+    from
+        role r1_0 
+    where
+        r1_0.name=?
+Hibernate: 
+    select
+        r1_0.id,
+        r1_0.fecha_creacion,
+        r1_0.fecha_modificacion,
+        r1_0.name 
+    from
+        role r1_0 
+    where
+        r1_0.name=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.activa,
+        u1_0.apellido,
+        u1_0.cuenta_bloqueada,
+        u1_0.email,
+        u1_0.fecha_creacion,
+        u1_0.fecha_modificacion,
+        u1_0.fecha_nacimiento,
+        u1_0.nombre,
+        u1_0.password,
+        u1_0.telefono 
+    from
+        _user u1_0 
+    where
+        (
+            u1_0.activa = true
+        ) 
+        and u1_0.email=?
+Hibernate: 
+    select
+        r1_0.users_id,
+        r1_1.id,
+        r1_1.fecha_creacion,
+        r1_1.fecha_modificacion,
+        r1_1.name 
+    from
+        _user_roles r1_0 
+    join
+        role r1_1 
+            on r1_1.id=r1_0.roles_id 
+    where
+        r1_0.users_id=?
+? Restricción de base de datos actualizada correctamente: movimientos_dinero_metodo_check
+2026-02-01T22:00:36.381-05:00  INFO 2252 --- [ionShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-02-01T22:00:36.391-05:00  INFO 2252 --- [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-02-01T22:00:36.404-05:00  INFO 2252 --- [ionShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-02-01T22:00:36.407-05:00  INFO 2252 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2026-02-01T22:00:36.411-05:00  INFO 2252 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  01:15 min
+[INFO] Finished at: 2026-02-01T22:00:36-05:00
+[INFO] ------------------------------------------------------------------------
+¨Desea terminar el trabajo por lotes (S/N)? 

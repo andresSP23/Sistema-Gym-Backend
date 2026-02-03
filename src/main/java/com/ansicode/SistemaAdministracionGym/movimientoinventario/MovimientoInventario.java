@@ -17,9 +17,11 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "movimientos_inventario", indexes = {
-                @Index(name = "ix_mov_inv_producto_fecha", columnList = "producto_id, createdAt "),
+                @Index(name = "ix_mov_inv_producto_fecha", columnList = "producto_id, created_at"),
                 @Index(name = "ix_mov_inv_tipo", columnList = "tipo_movimiento")
 })
+@SQLDelete(sql = "UPDATE movimientos_inventario SET is_visible = false WHERE id = ?")
+@Where(clause = "is_visible = true")
 @Getter
 @Setter
 @NoArgsConstructor

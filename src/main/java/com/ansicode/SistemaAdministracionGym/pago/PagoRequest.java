@@ -11,7 +11,6 @@ import lombok.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-
 @Getter
 @Setter
 @NoArgsConstructor
@@ -25,7 +24,7 @@ public class PagoRequest {
     private Long clienteId;
 
     @NotNull(message = "metodo es obligatorio")
-    private MetodoPago metodo;   // EFECTIVO, TRANSFERENCIA, TARJETA, etc.
+    private MetodoPago metodo; // EFECTIVO, TRANSFERENCIA, TARJETA, etc.
 
     @NotNull(message = "monto es obligatorio")
     @DecimalMin(value = "0.01", message = "monto debe ser mayor a 0")
@@ -38,11 +37,14 @@ public class PagoRequest {
     private String referenciaTransaccion;
 
     @NotNull(message = "tipoOperacion es obligatorio")
-    private TipoOperacionPago tipoOperacion;  // PRODUCTO / SERVICIO / MIXTO
+    private TipoOperacionPago tipoOperacion; // PRODUCTO / SERVICIO / MIXTO
 
     @NotNull(message = "tipoComprobante es obligatorio")
-    private TipoComprobante tipoComprobante;  // FACTURA / RECIBO
+    private TipoComprobante tipoComprobante; // FACTURA / RECIBO
 
     // opcional, por defecto USD
     private String moneda;
+
+    // opcional para Movimientos Bancarios
+    private Long bancoId;
 }

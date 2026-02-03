@@ -2,7 +2,6 @@ package com.ansicode.SistemaAdministracionGym.equipamiento;
 
 import com.ansicode.SistemaAdministracionGym.enums.EstadoEquipamiento;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Getter
@@ -15,12 +14,26 @@ public class EquipamientoRequest {
     @NotBlank(message = "El nombre del equipamiento es obligatorio")
     private String nombre;
 
-    @NotBlank(message = "La ubicación es obligatoria")
     private String ubicacion;
 
-    @NotNull(message = "El estado del equipamiento es obligatorio")
     private EstadoEquipamiento estadoEquipamiento;
 
-    @NotBlank(message = "La URL de la foto es obligatoria")
     private String fotoUrl;
+
+    private String marca;
+    private String modelo;
+    private String numeroSerie;
+
+    private java.time.LocalDate fechaCompra;
+    private java.math.BigDecimal costo;
+    private String proveedor;
+    private java.time.LocalDate garantiaFin;
+
+    private Integer frecuenciaMantenimientoDias;
+    private java.time.LocalDate proximoMantenimiento;
+
+    // --- Financial Integration ---
+    private com.ansicode.SistemaAdministracionGym.enums.MetodoPago metodoPago;
+    private Long bancoId; // Required if MetodoPago == TRANSFERENCIA
+    private Long sucursalId; // Required if MetodoPago == EFECTIVO
 }

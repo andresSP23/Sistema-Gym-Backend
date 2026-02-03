@@ -15,4 +15,14 @@ public class EquipamientoResponse {
     private EstadoEquipamiento estadoEquipamiento;
     private String fotoUrl;
     private boolean activo;
+
+    private String marca;
+    private String modelo;
+    private String numeroSerie;
+    private java.time.LocalDate fechaCompra;
+    private java.math.BigDecimal costo;
+    private String proveedor;
+    private java.time.LocalDate garantiaFin;
+    private Integer frecuenciaMantenimientoDias;
+    private java.time.LocalDate proximoMantenimiento;
 }

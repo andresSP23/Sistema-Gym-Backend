@@ -1,0 +1,650 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ------------< com.ansicode:Sistema-Administracion-Gimnasio >------------
+[INFO] Building Sistema Administracion Gimnasio 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ Sistema-Administracion-Gimnasio ---
+[INFO] Copying 2 resources from src\main\resources to target\classes
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ Sistema-Administracion-Gimnasio ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ Sistema-Administracion-Gimnasio ---
+[INFO] skip non existing resourceDirectory C:\Users\andre\OneDrive\Escritorio\Sistema-Administracion-Gimnasio\src\test\resources
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ Sistema-Administracion-Gimnasio ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- surefire:3.5.4:test (default-test) @ Sistema-Administracion-Gimnasio ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.ansicode.SistemaAdministracionGym.pago.PagoServiceIntegrationTest
+17:32:22.714 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.ansicode.SistemaAdministracionGym.pago.PagoServiceIntegrationTest]: PagoServiceIntegrationTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+17:32:23.080 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.ansicode.SistemaAdministracionGym.SistemaAdministracionGym for test class com.ansicode.SistemaAdministracionGym.pago.PagoServiceIntegrationTest
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.5.8)
+
+2026-01-30T17:32:24.062-05:00  INFO 22400 --- [           main] c.a.S.pago.PagoServiceIntegrationTest    : Starting PagoServiceIntegrationTest using Java 21.0.8 with PID 22400 (started by andre in C:\Users\andre\OneDrive\Escritorio\Sistema-Administracion-Gimnasio)
+2026-01-30T17:32:24.064-05:00  INFO 22400 --- [           main] c.a.S.pago.PagoServiceIntegrationTest    : The following 1 profile is active: "dev"
+2026-01-30T17:32:27.023-05:00  INFO 22400 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-01-30T17:32:27.455-05:00  INFO 22400 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 412 ms. Found 24 JPA repository interfaces.
+2026-01-30T17:32:29.421-05:00  INFO 22400 --- [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-01-30T17:32:29.570-05:00  INFO 22400 --- [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.36.Final
+2026-01-30T17:32:29.628-05:00  INFO 22400 --- [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-01-30T17:32:30.244-05:00  INFO 22400 --- [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-01-30T17:32:30.316-05:00  INFO 22400 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-01-30T17:32:30.624-05:00  INFO 22400 --- [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@126d8659
+2026-01-30T17:32:30.624-05:00  INFO 22400 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-01-30T17:32:30.674-05:00  WARN 22400 --- [           main] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-01-30T17:32:30.704-05:00  INFO 22400 --- [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 18.1
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-01-30T17:32:33.261-05:00  INFO 22400 --- [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-01-30T22:53:30.101-05:00  INFO 22400 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-01-30T22:53:33.485-05:00  INFO 22400 --- [           main] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-01-30T22:53:35.862-05:00  INFO 22400 --- [           main] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-01-30T22:53:35.862-05:00  WARN 22400 --- [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-01-30T22:53:39.440-05:00  WARN 22400 --- [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-01-30T22:53:40.672-05:00  INFO 22400 --- [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint beneath base path '/actuator'
+2026-01-30T22:53:42.153-05:00  INFO 22400 --- [           main] c.a.S.pago.PagoServiceIntegrationTest    : Started PagoServiceIntegrationTest in 19278.723 seconds (process running for 19280.885)
+Hibernate: 
+    select
+        r1_0.id,
+        r1_0.fecha_creacion,
+        r1_0.fecha_modificacion,
+        r1_0.name 
+    from
+        role r1_0 
+    where
+        r1_0.name=?
+Hibernate: 
+    select
+        r1_0.id,
+        r1_0.fecha_creacion,
+        r1_0.fecha_modificacion,
+        r1_0.name 
+    from
+        role r1_0 
+    where
+        r1_0.name=?
+Hibernate: 
+    select
+        r1_0.id,
+        r1_0.fecha_creacion,
+        r1_0.fecha_modificacion,
+        r1_0.name 
+    from
+        role r1_0 
+    where
+        r1_0.name=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.activa,
+        u1_0.apellido,
+        u1_0.cuenta_bloqueada,
+        u1_0.email,
+        u1_0.fecha_creacion,
+        u1_0.fecha_modificacion,
+        u1_0.fecha_nacimiento,
+        u1_0.nombre,
+        u1_0.password,
+        u1_0.telefono 
+    from
+        _user u1_0 
+    where
+        (
+            u1_0.activa = true
+        ) 
+        and u1_0.email=?
+Hibernate: 
+    select
+        r1_0.users_id,
+        r1_1.id,
+        r1_1.fecha_creacion,
+        r1_1.fecha_modificacion,
+        r1_1.name 
+    from
+        _user_roles r1_0 
+    join
+        role r1_1 
+            on r1_1.id=r1_0.roles_id 
+    where
+        r1_0.users_id=?
+Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
+WARNING: A Java agent has been loaded dynamically (C:\Users\andre\.m2\repository\net\bytebuddy\byte-buddy-agent\1.17.8\byte-buddy-agent-1.17.8.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+Java HotSpot(TM) 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+Hibernate: 
+    insert 
+    into
+        _user
+        (activa, apellido, cuenta_bloqueada, email, fecha_creacion, fecha_nacimiento, nombre, password, telefono) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        sucursal
+        (aforo_maximo, ciudad, codigo_sucursal, color_primario, created_at, created_by, direccion, email, fecha_apertura, hora_apertura, hora_cierre, is_visible, logo_url, nombre, pais, provincia, razon_social, ruc, telefono, updated_at, updated_by) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        cliente
+        (apellidos, cedula, codigo_interno, created_at, created_by, direccion, email, fecha_nacimiento, is_visible, nombres, telefono, updated_at, updated_by) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        categoria_producto
+        (created_at, created_by, descripcion, is_visible, nombre, updated_at, updated_by) 
+    values
+        (?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        caja_sesiones
+        (base_inicial_efectivo, created_at, created_by, estado, fecha_apertura, fecha_cierre, is_visible, observacion, sucursal_id, updated_at, updated_by, usuario_apertura_id, usuario_cierre_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        servicios
+        (created_at, created_by, descripcion, duracion_dias, es_suscripcion, estado, is_visible, nombre, precio, updated_at, updated_by) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        ventas
+        (cajero_usuario_id, cliente_id, created_at, created_by, descuento_total, estado, fecha_venta, impuesto_total, is_visible, numero_factura, subtotal, sucursal_id, total, updated_at, updated_by) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        venta_detalles
+        (cantidad, created_at, created_by, descripcion_snapshot, descuento, impuesto, is_visible, precio_unitario_snapshot, referencia_id, tipo_item, total_linea, updated_at, updated_by, venta_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    select
+        v1_0.id,
+        v1_0.cajero_usuario_id,
+        c1_0.id,
+        c1_0.apellidos,
+        c1_0.cedula,
+        c1_0.codigo_interno,
+        c1_0.created_at,
+        c1_0.created_by,
+        c1_0.direccion,
+        c1_0.email,
+        c1_0.fecha_nacimiento,
+        c1_0.is_visible,
+        c1_0.nombres,
+        c1_0.telefono,
+        c1_0.updated_at,
+        c1_0.updated_by,
+        v1_0.created_at,
+        v1_0.created_by,
+        v1_0.descuento_total,
+        d1_0.venta_id,
+        d1_0.id,
+        d1_0.cantidad,
+        d1_0.created_at,
+        d1_0.created_by,
+        d1_0.descripcion_snapshot,
+        d1_0.descuento,
+        d1_0.impuesto,
+        d1_0.is_visible,
+        d1_0.precio_unitario_snapshot,
+        d1_0.referencia_id,
+        d1_0.tipo_item,
+        d1_0.total_linea,
+        d1_0.updated_at,
+        d1_0.updated_by,
+        v1_0.estado,
+        v1_0.fecha_venta,
+        v1_0.impuesto_total,
+        v1_0.is_visible,
+        v1_0.numero_factura,
+        v1_0.subtotal,
+        s1_0.id,
+        s1_0.aforo_maximo,
+        s1_0.ciudad,
+        s1_0.codigo_sucursal,
+        s1_0.color_primario,
+        s1_0.created_at,
+        s1_0.created_by,
+        s1_0.direccion,
+        s1_0.email,
+        s1_0.fecha_apertura,
+        s1_0.hora_apertura,
+        s1_0.hora_cierre,
+        s1_0.is_visible,
+        s1_0.logo_url,
+        s1_0.nombre,
+        s1_0.pais,
+        s1_0.provincia,
+        s1_0.razon_social,
+        s1_0.ruc,
+        s1_0.telefono,
+        s1_0.updated_at,
+        s1_0.updated_by,
+        v1_0.total,
+        v1_0.updated_at,
+        v1_0.updated_by 
+    from
+        ventas v1_0 
+    left join
+        cliente c1_0 
+            on c1_0.id=v1_0.cliente_id 
+    left join
+        venta_detalles d1_0 
+            on v1_0.id=d1_0.venta_id 
+    left join
+        sucursal s1_0 
+            on s1_0.id=v1_0.sucursal_id 
+            and (s1_0.is_visible = true) 
+    where
+        v1_0.id=?
+Hibernate: 
+    select
+        coalesce(sum(p1_0.monto), 0) 
+    from
+        pagos p1_0 
+    where
+        p1_0.venta_id=? 
+        and p1_0.estado=?
+Hibernate: 
+    insert 
+    into
+        pagos
+        (cambio, cliente_id, cliente_id_snapshot, comprobante_id, created_at, created_by, efectivo_recibido, estado, fecha_pago, is_visible, metodo, moneda, monto, nombre_cliente_snapshot, referencia_transaccion, tipo_comprobante, tipo_operacion, updated_at, updated_by, venta_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    select
+        sc1_0.id,
+        sc1_0.base_inicial_efectivo,
+        sc1_0.created_at,
+        sc1_0.created_by,
+        sc1_0.estado,
+        sc1_0.fecha_apertura,
+        sc1_0.fecha_cierre,
+        sc1_0.is_visible,
+        sc1_0.observacion,
+        sc1_0.sucursal_id,
+        sc1_0.updated_at,
+        sc1_0.updated_by,
+        sc1_0.usuario_apertura_id,
+        sc1_0.usuario_cierre_id 
+    from
+        caja_sesiones sc1_0 
+    where
+        sc1_0.sucursal_id=? 
+        and sc1_0.estado=? 
+    order by
+        sc1_0.fecha_apertura desc 
+    fetch
+        first ? rows only
+Hibernate: 
+    insert 
+    into
+        movimientos_dinero
+        (concepto, created_at, created_by, descripcion, fecha, is_visible, metodo, moneda, monto, pago_id, producto_id, servicio_id, sesion_caja_id, tipo, updated_at, updated_by, usuario_id, venta_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        _user
+        (activa, apellido, cuenta_bloqueada, email, fecha_creacion, fecha_nacimiento, nombre, password, telefono) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        sucursal
+        (aforo_maximo, ciudad, codigo_sucursal, color_primario, created_at, created_by, direccion, email, fecha_apertura, hora_apertura, hora_cierre, is_visible, logo_url, nombre, pais, provincia, razon_social, ruc, telefono, updated_at, updated_by) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        cliente
+        (apellidos, cedula, codigo_interno, created_at, created_by, direccion, email, fecha_nacimiento, is_visible, nombres, telefono, updated_at, updated_by) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        categoria_producto
+        (created_at, created_by, descripcion, is_visible, nombre, updated_at, updated_by) 
+    values
+        (?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        caja_sesiones
+        (base_inicial_efectivo, created_at, created_by, estado, fecha_apertura, fecha_cierre, is_visible, observacion, sucursal_id, updated_at, updated_by, usuario_apertura_id, usuario_cierre_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        productos
+        (categoria_producto_id, created_at, created_by, is_visible, nombre, precio_compra, precio_venta, stock, updated_at, updated_by) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        ventas
+        (cajero_usuario_id, cliente_id, created_at, created_by, descuento_total, estado, fecha_venta, impuesto_total, is_visible, numero_factura, subtotal, sucursal_id, total, updated_at, updated_by) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        venta_detalles
+        (cantidad, created_at, created_by, descripcion_snapshot, descuento, impuesto, is_visible, precio_unitario_snapshot, referencia_id, tipo_item, total_linea, updated_at, updated_by, venta_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    select
+        v1_0.id,
+        v1_0.cajero_usuario_id,
+        c1_0.id,
+        c1_0.apellidos,
+        c1_0.cedula,
+        c1_0.codigo_interno,
+        c1_0.created_at,
+        c1_0.created_by,
+        c1_0.direccion,
+        c1_0.email,
+        c1_0.fecha_nacimiento,
+        c1_0.is_visible,
+        c1_0.nombres,
+        c1_0.telefono,
+        c1_0.updated_at,
+        c1_0.updated_by,
+        v1_0.created_at,
+        v1_0.created_by,
+        v1_0.descuento_total,
+        d1_0.venta_id,
+        d1_0.id,
+        d1_0.cantidad,
+        d1_0.created_at,
+        d1_0.created_by,
+        d1_0.descripcion_snapshot,
+        d1_0.descuento,
+        d1_0.impuesto,
+        d1_0.is_visible,
+        d1_0.precio_unitario_snapshot,
+        d1_0.referencia_id,
+        d1_0.tipo_item,
+        d1_0.total_linea,
+        d1_0.updated_at,
+        d1_0.updated_by,
+        v1_0.estado,
+        v1_0.fecha_venta,
+        v1_0.impuesto_total,
+        v1_0.is_visible,
+        v1_0.numero_factura,
+        v1_0.subtotal,
+        s1_0.id,
+        s1_0.aforo_maximo,
+        s1_0.ciudad,
+        s1_0.codigo_sucursal,
+        s1_0.color_primario,
+        s1_0.created_at,
+        s1_0.created_by,
+        s1_0.direccion,
+        s1_0.email,
+        s1_0.fecha_apertura,
+        s1_0.hora_apertura,
+        s1_0.hora_cierre,
+        s1_0.is_visible,
+        s1_0.logo_url,
+        s1_0.nombre,
+        s1_0.pais,
+        s1_0.provincia,
+        s1_0.razon_social,
+        s1_0.ruc,
+        s1_0.telefono,
+        s1_0.updated_at,
+        s1_0.updated_by,
+        v1_0.total,
+        v1_0.updated_at,
+        v1_0.updated_by 
+    from
+        ventas v1_0 
+    left join
+        cliente c1_0 
+            on c1_0.id=v1_0.cliente_id 
+    left join
+        venta_detalles d1_0 
+            on v1_0.id=d1_0.venta_id 
+    left join
+        sucursal s1_0 
+            on s1_0.id=v1_0.sucursal_id 
+            and (s1_0.is_visible = true) 
+    where
+        v1_0.id=?
+Hibernate: 
+    select
+        coalesce(sum(p1_0.monto), 0) 
+    from
+        pagos p1_0 
+    where
+        p1_0.venta_id=? 
+        and p1_0.estado=?
+Hibernate: 
+    insert 
+    into
+        pagos
+        (cambio, cliente_id, cliente_id_snapshot, comprobante_id, created_at, created_by, efectivo_recibido, estado, fecha_pago, is_visible, metodo, moneda, monto, nombre_cliente_snapshot, referencia_transaccion, tipo_comprobante, tipo_operacion, updated_at, updated_by, venta_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    select
+        sc1_0.id,
+        sc1_0.base_inicial_efectivo,
+        sc1_0.created_at,
+        sc1_0.created_by,
+        sc1_0.estado,
+        sc1_0.fecha_apertura,
+        sc1_0.fecha_cierre,
+        sc1_0.is_visible,
+        sc1_0.observacion,
+        sc1_0.sucursal_id,
+        sc1_0.updated_at,
+        sc1_0.updated_by,
+        sc1_0.usuario_apertura_id,
+        sc1_0.usuario_cierre_id 
+    from
+        caja_sesiones sc1_0 
+    where
+        sc1_0.sucursal_id=? 
+        and sc1_0.estado=? 
+    order by
+        sc1_0.fecha_apertura desc 
+    fetch
+        first ? rows only
+Hibernate: 
+    insert 
+    into
+        movimientos_dinero
+        (concepto, created_at, created_by, descripcion, fecha, is_visible, metodo, moneda, monto, pago_id, producto_id, servicio_id, sesion_caja_id, tipo, updated_at, updated_by, usuario_id, venta_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+[ERROR] Tests run: 2, Failures: 0, Errors: 2, Skipped: 0, Time elapsed: 19283 s <<< FAILURE! -- in com.ansicode.SistemaAdministracionGym.pago.PagoServiceIntegrationTest
+[ERROR] com.ansicode.SistemaAdministracionGym.pago.PagoServiceIntegrationTest.registrarPago_Servicio_SuscripcionCreated -- Time elapsed: 2.321 s <<< ERROR!
+java.lang.UnsupportedOperationException
+	at java.base/java.util.ImmutableCollections.uoe(ImmutableCollections.java:142)
+	at java.base/java.util.ImmutableCollections$AbstractImmutableCollection.clear(ImmutableCollections.java:149)
+	at org.hibernate.collection.spi.PersistentBag.clear(PersistentBag.java:471)
+	at org.hibernate.type.CollectionType.replaceElements(CollectionType.java:506)
+	at org.hibernate.type.CollectionType.replace(CollectionType.java:719)
+	at org.hibernate.type.TypeHelper.replace(TypeHelper.java:117)
+	at org.hibernate.event.internal.DefaultMergeEventListener.copyValues(DefaultMergeEventListener.java:596)
+	at org.hibernate.event.internal.DefaultMergeEventListener.entityIsPersistent(DefaultMergeEventListener.java:286)
+	at org.hibernate.event.internal.DefaultMergeEventListener.merge(DefaultMergeEventListener.java:220)
+	at org.hibernate.event.internal.DefaultMergeEventListener.doMerge(DefaultMergeEventListener.java:152)
+	at org.hibernate.event.internal.DefaultMergeEventListener.onMerge(DefaultMergeEventListener.java:136)
+	at org.hibernate.event.internal.DefaultMergeEventListener.onMerge(DefaultMergeEventListener.java:89)
+	at org.hibernate.event.service.internal.EventListenerGroupImpl.fireEventOnEachListener(EventListenerGroupImpl.java:127)
+	at org.hibernate.internal.SessionImpl.fireMerge(SessionImpl.java:854)
+	at org.hibernate.internal.SessionImpl.merge(SessionImpl.java:840)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.orm.jpa.SharedEntityManagerCreator$SharedEntityManagerInvocationHandler.invoke(SharedEntityManagerCreator.java:320)
+	at jdk.proxy2/jdk.proxy2.$Proxy194.merge(Unknown Source)
+	at org.springframework.data.jpa.repository.support.SimpleJpaRepository.save(SimpleJpaRepository.java:657)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:360)
+	at org.springframework.data.repository.core.support.RepositoryMethodInvoker$RepositoryFragmentMethodInvoker.lambda$new$0(RepositoryMethodInvoker.java:277)
+	at org.springframework.data.repository.core.support.RepositoryMethodInvoker.doInvoke(RepositoryMethodInvoker.java:170)
+	at org.springframework.data.repository.core.support.RepositoryMethodInvoker.invoke(RepositoryMethodInvoker.java:158)
+	at org.springframework.data.repository.core.support.RepositoryComposition$RepositoryFragments.invoke(RepositoryComposition.java:515)
+	at org.springframework.data.repository.core.support.RepositoryComposition.invoke(RepositoryComposition.java:284)
+	at org.springframework.data.repository.core.support.RepositoryFactorySupport$ImplementationMethodExecutionInterceptor.invoke(RepositoryFactorySupport.java:734)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.doInvoke(QueryExecutorMethodInterceptor.java:174)
+	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.invoke(QueryExecutorMethodInterceptor.java:149)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.data.projection.DefaultMethodInvokingMethodInterceptor.invoke(DefaultMethodInvokingMethodInterceptor.java:69)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:380)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:138)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.data.jpa.repository.support.CrudMethodMetadataPostProcessor$CrudMethodMetadataPopulatingMethodInterceptor.invoke(CrudMethodMetadataPostProcessor.java:165)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:223)
+	at jdk.proxy2/jdk.proxy2.$Proxy225.save(Unknown Source)
+	at com.ansicode.SistemaAdministracionGym.pago.PagoService.lambda$registrarPago$5(PagoService.java:232)
+	at org.springframework.transaction.support.TransactionTemplate.execute(TransactionTemplate.java:140)
+	at com.ansicode.SistemaAdministracionGym.pago.PagoService.registrarPago(PagoService.java:51)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:360)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:724)
+	at com.ansicode.SistemaAdministracionGym.pago.PagoService$$SpringCGLIB$$0.registrarPago(<generated>)
+	at com.ansicode.SistemaAdministracionGym.pago.PagoServiceIntegrationTest.registrarPago_Servicio_SuscripcionCreated(PagoServiceIntegrationTest.java:240)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.ansicode.SistemaAdministracionGym.pago.PagoServiceIntegrationTest.registrarPago_Producto_InventoryUpdate -- Time elapsed: 0.089 s <<< ERROR!
+java.lang.UnsupportedOperationException
+	at java.base/java.util.ImmutableCollections.uoe(ImmutableCollections.java:142)
+	at java.base/java.util.ImmutableCollections$AbstractImmutableCollection.clear(ImmutableCollections.java:149)
+	at org.hibernate.collection.spi.PersistentBag.clear(PersistentBag.java:471)
+	at org.hibernate.type.CollectionType.replaceElements(CollectionType.java:506)
+	at org.hibernate.type.CollectionType.replace(CollectionType.java:719)
+	at org.hibernate.type.TypeHelper.replace(TypeHelper.java:117)
+	at org.hibernate.event.internal.DefaultMergeEventListener.copyValues(DefaultMergeEventListener.java:596)
+	at org.hibernate.event.internal.DefaultMergeEventListener.entityIsPersistent(DefaultMergeEventListener.java:286)
+	at org.hibernate.event.internal.DefaultMergeEventListener.merge(DefaultMergeEventListener.java:220)
+	at org.hibernate.event.internal.DefaultMergeEventListener.doMerge(DefaultMergeEventListener.java:152)
+	at org.hibernate.event.internal.DefaultMergeEventListener.onMerge(DefaultMergeEventListener.java:136)
+	at org.hibernate.event.internal.DefaultMergeEventListener.onMerge(DefaultMergeEventListener.java:89)
+	at org.hibernate.event.service.internal.EventListenerGroupImpl.fireEventOnEachListener(EventListenerGroupImpl.java:127)
+	at org.hibernate.internal.SessionImpl.fireMerge(SessionImpl.java:854)
+	at org.hibernate.internal.SessionImpl.merge(SessionImpl.java:840)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.orm.jpa.SharedEntityManagerCreator$SharedEntityManagerInvocationHandler.invoke(SharedEntityManagerCreator.java:320)
+	at jdk.proxy2/jdk.proxy2.$Proxy194.merge(Unknown Source)
+	at org.springframework.data.jpa.repository.support.SimpleJpaRepository.save(SimpleJpaRepository.java:657)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:360)
+	at org.springframework.data.repository.core.support.RepositoryMethodInvoker$RepositoryFragmentMethodInvoker.lambda$new$0(RepositoryMethodInvoker.java:277)
+	at org.springframework.data.repository.core.support.RepositoryMethodInvoker.doInvoke(RepositoryMethodInvoker.java:170)
+	at org.springframework.data.repository.core.support.RepositoryMethodInvoker.invoke(RepositoryMethodInvoker.java:158)
+	at org.springframework.data.repository.core.support.RepositoryComposition$RepositoryFragments.invoke(RepositoryComposition.java:515)
+	at org.springframework.data.repository.core.support.RepositoryComposition.invoke(RepositoryComposition.java:284)
+	at org.springframework.data.repository.core.support.RepositoryFactorySupport$ImplementationMethodExecutionInterceptor.invoke(RepositoryFactorySupport.java:734)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.doInvoke(QueryExecutorMethodInterceptor.java:174)
+	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.invoke(QueryExecutorMethodInterceptor.java:149)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.data.projection.DefaultMethodInvokingMethodInterceptor.invoke(DefaultMethodInvokingMethodInterceptor.java:69)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:380)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:138)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.data.jpa.repository.support.CrudMethodMetadataPostProcessor$CrudMethodMetadataPopulatingMethodInterceptor.invoke(CrudMethodMetadataPostProcessor.java:165)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:223)
+	at jdk.proxy2/jdk.proxy2.$Proxy225.save(Unknown Source)
+	at com.ansicode.SistemaAdministracionGym.pago.PagoService.lambda$registrarPago$5(PagoService.java:232)
+	at org.springframework.transaction.support.TransactionTemplate.execute(TransactionTemplate.java:140)
+	at com.ansicode.SistemaAdministracionGym.pago.PagoService.registrarPago(PagoService.java:51)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:360)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:724)
+	at com.ansicode.SistemaAdministracionGym.pago.PagoService$$SpringCGLIB$$0.registrarPago(<generated>)
+	at com.ansicode.SistemaAdministracionGym.pago.PagoServiceIntegrationTest.registrarPago_Producto_InventoryUpdate(PagoServiceIntegrationTest.java:169)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[INFO] 
+[INFO] Results:
+[INFO] 
+[ERROR] Errors: 
+[ERROR]   PagoServiceIntegrationTest.registrarPago_Producto_InventoryUpdate:169 » UnsupportedOperation
+[ERROR]   PagoServiceIntegrationTest.registrarPago_Servicio_SuscripcionCreated:240 » UnsupportedOperation
+[INFO] 
+[ERROR] Tests run: 2, Failures: 0, Errors: 2, Skipped: 0
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  05:21 h
+[INFO] Finished at: 2026-01-30T22:53:45-05:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:3.5.4:test (default-test) on project Sistema-Administracion-Gimnasio: 
+[ERROR] 
+[ERROR] See C:\Users\andre\OneDrive\Escritorio\Sistema-Administracion-Gimnasio\target\surefire-reports for the individual test results.
+[ERROR] See dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

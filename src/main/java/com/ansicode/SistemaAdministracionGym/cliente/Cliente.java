@@ -18,6 +18,7 @@ import java.time.LocalDate;
 @SuperBuilder
 @SQLDelete(sql = "UPDATE Cliente SET is_visible = false WHERE id = ?")
 @SQLDelete(sql = "UPDATE Cliente SET is_visible = false WHERE id = ?")
+@org.hibernate.annotations.SQLRestriction("is_visible = true")
 @AllArgsConstructor
 @NoArgsConstructor
 public class Cliente extends AuditedEntity {

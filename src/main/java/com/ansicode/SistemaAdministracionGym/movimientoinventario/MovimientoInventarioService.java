@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
-
 @Service
 @RequiredArgsConstructor
 public class MovimientoInventarioService {
@@ -89,29 +88,27 @@ public class MovimientoInventarioService {
             case AJUSTE -> valor; // valor = stockReal
         };
 
-        MovimientoInventario m = new MovimientoInventario();
-        m.setProducto(producto);
-        m.setTipoMovimiento(tipo);
-
         // ENTRADA/SALIDA: cantidad = unidades
         // AJUSTE: cantidad = delta (diferencia real)
         int cantidadRegistrada = (tipo == TipoMovimientoInventario.AJUSTE)
                 ? (stockNuevo - stockAnterior)
                 : valor;
 
-        m.setCantidad(cantidadRegistrada);
-        m.setStockAnterior(stockAnterior);
-        m.setStockActual(stockNuevo);
-
-        if (observacion != null && !observacion.isBlank()) {
-            m.setObservacion(observacion.length() > 250 ? observacion.substring(0, 250) : observacion);
-        } else {
-            m.setObservacion(null);
-        }
+        MovimientoInventario m = MovimientoInventario.builder()
+                .producto(producto)
+                .tipoMovimiento(tipo)
+                .cantidad(cantidadRegistrada)
+                .stockAnterior(stockAnterior)
+                .stockActual(stockNuevo)
+                .isVisible(true) // Explícito por seguridad con SuperBuilder
+                .observacion((observacion != null && !observacion.isBlank())
+                        ? (observacion.length() > 250 ? observacion.substring(0, 250) : observacion)
+                        : null)
+                .build();
 
         producto.setStock(stockNuevo);
 
-        repository.save(m);
+        repository.saveAndFlush(m);
     }
 
     @Transactional(readOnly = true)
@@ -126,8 +123,7 @@ public class MovimientoInventarioService {
             Integer cantidadMax,
             Integer stockActualMin,
             Integer stockActualMax,
-            String q
-    ) {
+            String q) {
 
         if (desde != null && hasta != null && desde.isAfter(hasta)) {
             throw new BussinessException(BusinessErrorCodes.INVENTARIO_RANGO_FECHAS_INVALIDO);

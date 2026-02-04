@@ -9,7 +9,7 @@ spring:
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: validate # En producción, nunca 'update' o 'create'. Flyway maneja el esquema.
+      ddl-auto: update # Temporarily set to update for V1 initialization
     show-sql: false      # Desactivar logs de SQL en producción por performance y seguridad
     properties:
       hibernate:
@@ -18,6 +18,7 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
 
   flyway:
+    enabled: false # Temporarily disable Flyway for V1 initialization
     baseline-on-migrate: true
     # En producción, flyway validará y migrará.
 

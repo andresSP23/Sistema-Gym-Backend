@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
-@RequestMapping("movimiento-inventario")
+@RequestMapping("movimientos-inventario")
 @Tag(name = "Movimiento Inventario")
 @RequiredArgsConstructor
 public class MovimientoInventarioController {
@@ -27,7 +27,7 @@ public class MovimientoInventarioController {
         /**
          * Lista movimientos de inventario con filtros y orden DESC por defecto.
          */
-        @GetMapping("/movimientos/findAll")
+        @GetMapping("/listar")
         @Operation(summary = "Listar movimientos", description = "Lista movimientos de inventario con filtros. Orden por defecto: más reciente primero.")
         @ApiResponse(responseCode = "200", description = "Movimientos obtenidos exitosamente")
         public PageResponse<MovimientoInventarioResponse> listar(

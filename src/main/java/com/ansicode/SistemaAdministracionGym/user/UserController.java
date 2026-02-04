@@ -25,7 +25,7 @@ import org.springframework.data.domain.Pageable;
 public class UserController {
     private final UserService userService;
 
-    @PostMapping("/create")
+    @PostMapping("/crear")
     @ResponseStatus(HttpStatus.CREATED)
     @org.springframework.security.access.prepost.PreAuthorize("hasRole('ADMINISTRADOR')")
     @Operation(summary = "Crear usuario", description = "Crea un nuevo usuario del sistema.")
@@ -34,7 +34,7 @@ public class UserController {
         return userService.create(request, connectedUser);
     }
 
-    @GetMapping("/findAll")
+    @GetMapping("/listar")
     @Operation(summary = "Listar usuarios", description = "Obtiene una lista paginada de todos los usuarios.")
     @ApiResponse(responseCode = "200", description = "Usuarios obtenidos exitosamente")
     public ResponseEntity<PageResponse<UserResponse>> findAll(
@@ -45,7 +45,7 @@ public class UserController {
         return ResponseEntity.ok(userService.findAll(pageable));
     }
 
-    @GetMapping("/findById/{id}")
+    @GetMapping("/buscar-por-id/{id}")
     @Operation(summary = "Buscar usuario por ID", description = "Obtiene un usuario por su ID único.")
     @ApiResponse(responseCode = "200", description = "Usuario encontrado")
     @ApiResponse(responseCode = "404", description = "Usuario no encontrado")
@@ -53,7 +53,7 @@ public class UserController {
         return userService.findById(id);
     }
 
-    @PatchMapping("/update/{id}")
+    @PatchMapping("/actualizar/{id}")
     @Operation(summary = "Actualizar usuario", description = "Actualiza la información de un usuario existente.")
     @ApiResponse(responseCode = "200", description = "Usuario actualizado exitosamente")
     @ApiResponse(responseCode = "404", description = "Usuario no encontrado")
@@ -65,7 +65,7 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/eliminar/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @org.springframework.security.access.prepost.PreAuthorize("hasRole('ADMINISTRADOR')")
     @Operation(summary = "Eliminar usuario", description = "Elimina un usuario del sistema.")

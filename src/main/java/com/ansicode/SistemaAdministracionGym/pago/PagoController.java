@@ -34,7 +34,7 @@ public class PagoController {
                 return service.registrarPago(request, connectedUser);
         }
 
-        @GetMapping("/findAll")
+        @GetMapping("/listar")
         @Operation(summary = "Buscar pagos", description = "Obtiene una lista paginada de pagos con filtros opcionales.")
         @ApiResponse(responseCode = "200", description = "Pagos obtenidos exitosamente")
         public ResponseEntity<PageResponse<PagoResponse>> findAll(

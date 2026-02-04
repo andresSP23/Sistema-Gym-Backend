@@ -40,7 +40,7 @@ public class GastoController {
         return ResponseEntity.ok(service.update(id, request));
     }
 
-    @GetMapping
+    @GetMapping("/listar")
     @Operation(summary = "Buscar gastos", description = "Obtiene una lista paginada de gastos con filtros opcionales.")
     @ApiResponse(responseCode = "200", description = "Gastos obtenidos exitosamente")
     public ResponseEntity<PageResponse<GastoResponse>> findAll(
@@ -68,7 +68,7 @@ public class GastoController {
         return ResponseEntity.ok(service.pagarGasto(id, request, connectedUser));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/eliminar/{id}")
     @Operation(summary = "Eliminar gasto", description = "Elimina un registro de gasto por ID.")
     @ApiResponse(responseCode = "204", description = "Gasto eliminado exitosamente")
     public ResponseEntity<Void> delete(@PathVariable Long id) {

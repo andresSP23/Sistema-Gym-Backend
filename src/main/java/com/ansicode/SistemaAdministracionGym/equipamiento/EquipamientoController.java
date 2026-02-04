@@ -43,7 +43,7 @@ public class EquipamientoController {
         return ResponseEntity.ok(equipamientoService.update(id, request));
     }
 
-    @GetMapping("/findById/{id}")
+    @GetMapping("/buscar-por-id/{id}")
     @PreAuthorize("hasRole('ADMINISTRADOR') or hasRole('ENTRENADOR')")
     @Operation(summary = "Buscar equipamiento por ID", description = "Obtiene los detalles de un equipamiento por ID.")
     @ApiResponse(responseCode = "200", description = "Equipamiento encontrado")
@@ -53,7 +53,7 @@ public class EquipamientoController {
         return ResponseEntity.ok(equipamientoService.findById(id));
     }
 
-    @GetMapping("/findAll")
+    @GetMapping("/listar")
     @PreAuthorize("hasRole('ADMINISTRADOR') or hasRole('ENTRENADOR')")
     @Operation(summary = "Listar equipamientos", description = "Obtiene una lista paginada de todos los equipamientos del gimnasio.")
     @ApiResponse(responseCode = "200", description = "Lista de equipamientos obtenida exitosamente")

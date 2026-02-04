@@ -21,7 +21,7 @@ public class ClienteController {
 
     private final ClienteService clienteService;
 
-    @PostMapping("/create")
+    @PostMapping("/crear")
     @PreAuthorize("hasRole('ADMINISTRADOR')")
     @Operation(summary = "Crear cliente", description = "Registra un nuevo cliente en el sistema.")
     @ApiResponse(responseCode = "200", description = "Cliente creado exitosamente")
@@ -31,7 +31,7 @@ public class ClienteController {
     }
 
     // @PreAuthorize("hasAnyRole('ADMIN','USER')")
-    @GetMapping("/findAll")
+    @GetMapping("/listar")
     @Operation(summary = "Listar clientes", description = "Obtiene una lista paginada de todos los clientes.")
     @ApiResponse(responseCode = "200", description = "Clientes obtenidos exitosamente")
     public ResponseEntity<PageResponse<ClienteResponse>> findAll(
@@ -42,7 +42,7 @@ public class ClienteController {
         return ResponseEntity.ok(clienteService.findAll(pageable));
     }
 
-    @GetMapping("/findById/{id}")
+    @GetMapping("/buscar-por-id/{id}")
     // PreAuthorize("hasAnyRole('ADMIN','USER')")
     @Operation(summary = "Buscar cliente por ID", description = "Obtiene un cliente por su ID único.")
     @ApiResponse(responseCode = "200", description = "Cliente encontrado")
@@ -51,7 +51,7 @@ public class ClienteController {
         return clienteService.findById(id);
     }
 
-    @GetMapping("/cedula/{cedula}")
+    @GetMapping("/by-cedula/{cedula}")
     // @PreAuthorize("hasAnyRole('ADMIN','USER')")
     @Operation(summary = "Buscar cliente por cédula", description = "Obtiene un cliente por su número de cédula.")
     @ApiResponse(responseCode = "200", description = "Cliente encontrado")
@@ -60,7 +60,7 @@ public class ClienteController {
         return clienteService.findByCedula(cedula);
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/actualizar/{id}")
     @PreAuthorize("hasRole('ADMINISTRADOR')")
     @Operation(summary = "Actualizar cliente", description = "Actualiza la información de un cliente existente.")
     @ApiResponse(responseCode = "200", description = "Cliente actualizado exitosamente")
@@ -71,7 +71,7 @@ public class ClienteController {
         return clienteService.update(id, request);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/eliminar/{id}")
     @PreAuthorize("hasRole('ADMINISTRADOR')")
     @Operation(summary = "Eliminar cliente", description = "Elimina un cliente del sistema.")
     @ApiResponse(responseCode = "204", description = "Cliente eliminado exitosamente")

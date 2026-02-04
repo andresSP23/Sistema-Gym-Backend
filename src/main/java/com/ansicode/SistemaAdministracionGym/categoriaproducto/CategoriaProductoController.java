@@ -11,14 +11,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("categoria-producto")
+@RequestMapping("categorias-producto")
 @Tag(name = "Categoria Producto")
 @RequiredArgsConstructor
 public class CategoriaProductoController {
         private final CategoriaProductoService categoriaProductoService;
 
         // ===================== CREATE =====================
-        @PostMapping("/crear-categoria")
+        @PostMapping("/crear")
         @Operation(summary = "Crear categoría de producto", description = "Registra una nueva categoría de producto.")
         @ApiResponse(responseCode = "200", description = "Categoría creada exitosamente")
         public ResponseEntity<CategoriaProductoResponse> create(
@@ -28,7 +28,7 @@ public class CategoriaProductoController {
         }
 
         // ===================== FIND ALL (PAGE) =====================
-        @GetMapping("/findAll")
+        @GetMapping("/listar")
         @Operation(summary = "Listar categorías de productos", description = "Obtiene una lista paginada de categorías de productos.")
         @ApiResponse(responseCode = "200", description = "Categorías obtenidas exitosamente")
         public ResponseEntity<PageResponse<CategoriaProductoResponse>> findAll(
@@ -38,7 +38,7 @@ public class CategoriaProductoController {
         }
 
         // ===================== FIND BY ID =====================
-        @GetMapping("/findById/{id}")
+        @GetMapping("/buscar-por-id/{id}")
         @Operation(summary = "Buscar categoría por ID", description = "Obtiene una categoría de producto por su ID único.")
         @ApiResponse(responseCode = "200", description = "Categoría encontrada")
         @ApiResponse(responseCode = "404", description = "Categoría no encontrada")
@@ -49,7 +49,7 @@ public class CategoriaProductoController {
         }
 
         // ===================== UPDATE =====================
-        @PutMapping("/update/{id}")
+        @PutMapping("/actualizar/{id}")
         @Operation(summary = "Actualizar categoría de producto", description = "Actualiza una categoría de producto existente.")
         @ApiResponse(responseCode = "200", description = "Categoría actualizada exitosamente")
         @ApiResponse(responseCode = "404", description = "Categoría no encontrada")
@@ -61,7 +61,7 @@ public class CategoriaProductoController {
         }
 
         // ===================== DELETE (LOGICAL) =====================
-        @DeleteMapping("/delete/{id}")
+        @DeleteMapping("/eliminar/{id}")
         @Operation(summary = "Eliminar categoría de producto", description = "Elimina lógicamente una categoría de producto.")
         @ApiResponse(responseCode = "204", description = "Categoría eliminada exitosamente")
         public ResponseEntity<Void> delete(

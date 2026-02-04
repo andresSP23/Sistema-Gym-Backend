@@ -17,14 +17,14 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalDateTime;
 
 @RestController
-@RequestMapping("movimiento-dinero")
+@RequestMapping("movimientos-dinero")
 @RequiredArgsConstructor
 @Tag(name = "Movimiento Dinero")
 public class MovimientoDineroController {
 
     private final MovimientoDineroService movimientoDineroService;
 
-    @GetMapping
+    @GetMapping("/listar")
     @Operation(summary = "Listar movimientos de dinero", description = "Obtiene una lista paginada de movimientos de dinero con filtros opcionales.")
     @ApiResponse(responseCode = "200", description = "Movimientos de dinero obtenidos exitosamente")
     public PageResponse<MovimientoDineroResponse> listarTodos(

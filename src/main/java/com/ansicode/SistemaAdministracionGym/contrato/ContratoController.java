@@ -50,7 +50,7 @@ public class ContratoController {
         return ResponseEntity.ok(contratoService.update(id, request));
     }
 
-    @GetMapping("/findById/{id}")
+    @GetMapping("/buscar-por-id/{id}")
     @PreAuthorize("hasRole('ADMINISTRADOR') or hasRole('CAJERO')")
     @Operation(summary = "Buscar contrato por ID", description = "Obtiene un contrato por su ID único.")
     @ApiResponse(responseCode = "200", description = "Contrato encontrado")
@@ -124,7 +124,7 @@ public class ContratoController {
                 .body(html);
     }
 
-    @PostMapping(value = "/{id}/subir", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/{id}/subir-firmado", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasRole('ADMINISTRADOR') or hasRole('CAJERO')")
     @Operation(summary = "Subir contrato firmado", description = "Sube un archivo de contrato firmado (PDF o imagen).")
     @ApiResponse(responseCode = "200", description = "Contrato firmado subido exitosamente")

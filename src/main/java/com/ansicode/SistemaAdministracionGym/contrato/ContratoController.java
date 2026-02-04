@@ -1,12 +1,15 @@
 package com.ansicode.SistemaAdministracionGym.contrato;
 
 import com.ansicode.SistemaAdministracionGym.common.PageResponse;
+import com.ansicode.SistemaAdministracionGym.enums.EstadoContrato;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
+
+import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("contratos")
@@ -46,13 +51,24 @@ public class ContratoController {
         return ResponseEntity.ok(contratoService.findById(id));
     }
 
+    /**
+     * Lista contratos con filtros y ordenamiento DESC.
+     * Orden por defecto: más reciente primero (createdAt DESC, id DESC)
+     */
     @GetMapping("/findAll")
     @PreAuthorize("hasRole('ADMINISTRADOR') or hasRole('CAJERO')")
+    @Operation(summary = "Listar contratos", description = "Lista contratos con filtros opcionales y orden DESC")
     public ResponseEntity<PageResponse<ContratoResponse>> findAll(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
-        return ResponseEntity.ok(contratoService.findAll(pageable));
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) EstadoContrato estado,
+            @RequestParam(required = false) String q, // Buscar por cliente: nombre/cedula/email
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime desde,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime hasta) {
+
+        Pageable pageable = PageRequest.of(page, size,
+                Sort.by(Sort.Direction.DESC, "createdAt").and(Sort.by(Sort.Direction.DESC, "id")));
+        return ResponseEntity.ok(contratoService.findAllConFiltros(estado, q, desde, hasta, pageable));
     }
 
     @DeleteMapping("/eliminar/{id}")

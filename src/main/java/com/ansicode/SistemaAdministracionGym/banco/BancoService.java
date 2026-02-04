@@ -32,7 +32,8 @@ public class BancoService {
 
     @Transactional
     public void registrarMovimiento(Long bancoId, TipoMovimientoBanco tipo, BigDecimal monto, String descripcion,
-            String referencia, com.ansicode.SistemaAdministracionGym.enums.ConceptoMovimientoDinero concepto) {
+            String referencia, com.ansicode.SistemaAdministracionGym.enums.ConceptoMovimientoBanco concepto,
+            com.ansicode.SistemaAdministracionGym.enums.OrigenMovimientoBanco origen) {
         Banco banco = bancoRepository.findById(bancoId)
                 .orElseThrow(() -> new RuntimeException("Banco no encontrado"));
 
@@ -47,6 +48,7 @@ public class BancoService {
                 .banco(banco)
                 .tipo(tipo)
                 .concepto(concepto)
+                .origen(origen)
                 .monto(monto)
                 .fecha(LocalDateTime.now())
                 .descripcion(descripcion)

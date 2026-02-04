@@ -55,6 +55,13 @@ public class Gasto extends AuditedEntity {
     @Enumerated(EnumType.STRING)
     private MetodoPago metodoPago;
 
+    // --- Datos para categoría SUMINISTROS (opcionales) ---
+    @Column(precision = 12, scale = 2)
+    private BigDecimal cantidad;
+
+    @Column(precision = 12, scale = 2)
+    private BigDecimal precioUnitario;
+
     @Column(name = "sucursal_id", nullable = false)
     private Long sucursalId;
 }

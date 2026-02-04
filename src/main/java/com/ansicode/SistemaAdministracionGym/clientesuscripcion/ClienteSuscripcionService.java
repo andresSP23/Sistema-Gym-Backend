@@ -1,9 +1,11 @@
 package com.ansicode.SistemaAdministracionGym.clientesuscripcion;
 
+import com.ansicode.SistemaAdministracionGym.banco.BancoService;
 import com.ansicode.SistemaAdministracionGym.cliente.Cliente;
 import com.ansicode.SistemaAdministracionGym.common.PageResponse;
 import com.ansicode.SistemaAdministracionGym.detalleventa.DetalleVenta;
 import com.ansicode.SistemaAdministracionGym.enums.EstadoSuscripcion;
+import com.ansicode.SistemaAdministracionGym.enums.MetodoPago;
 import com.ansicode.SistemaAdministracionGym.enums.TipoItemVenta;
 import com.ansicode.SistemaAdministracionGym.handler.BusinessErrorCodes;
 import com.ansicode.SistemaAdministracionGym.handler.BussinessException;
@@ -32,6 +34,7 @@ public class ClienteSuscripcionService {
     private final com.ansicode.SistemaAdministracionGym.venta.VentaService ventaService;
     private final com.ansicode.SistemaAdministracionGym.movimientodinero.MovimientoDineroService movimientoDineroService;
     private final com.ansicode.SistemaAdministracionGym.contrato.ContratoService contratoService;
+    private final BancoService bancoService;
 
     @Transactional
     public void registrarSuscripcionDesdeVenta(Venta venta, LocalDateTime fechaPago) {
@@ -181,19 +184,43 @@ public class ClienteSuscripcionService {
                 throw new BussinessException(BusinessErrorCodes.MOVIMIENTO_DINERO_METODO_REQUIRED);
             }
 
-            com.ansicode.SistemaAdministracionGym.movimientodinero.MovimientoDineroCreateRequest egreso = new com.ansicode.SistemaAdministracionGym.movimientodinero.MovimientoDineroCreateRequest();
+            String descripcion = "Devolución por cancelación de suscripción #" + cs.getId();
+            String referencia = "SUSCRIPCION#S-" + cs.getId() + " | CLIENTE#C-" + cs.getCliente().getId()
+                    + " | " + cs.getServicio().getNombre();
 
-            egreso.setMonto(request.getMontoDevolucion());
-            egreso.setMetodo(request.getMetodoDevolucion());
-            egreso.setTipo(com.ansicode.SistemaAdministracionGym.enums.TipoMovimientoDinero.EGRESO);
-            egreso.setConcepto(com.ansicode.SistemaAdministracionGym.enums.ConceptoMovimientoDinero.DEVOLUCION_VENTA);
-            egreso.setDescripcion("Devolución por cancelación de suscripción #" + cs.getId());
-            egreso.setSucursalId(cs.getVenta().getSucursal().getId());
-            egreso.setVentaId(cs.getVenta().getId());
-            egreso.setServicioId(cs.getServicio().getId());
-            egreso.setMoneda("USD"); // O la de la venta si se guardara
+            // Si es TRANSFERENCIA o TARJETA, registrar en Banco
+            if (request.getMetodoDevolucion() == MetodoPago.TRANSFERENCIA
+                    || request.getMetodoDevolucion() == MetodoPago.TARJETA) {
 
-            movimientoDineroService.crearMovimiento(egreso, connectedUser);
+                if (request.getBancoId() == null) {
+                    throw new BussinessException(BusinessErrorCodes.PAGO_BANCO_ID_REQUIRED);
+                }
+
+                bancoService.registrarMovimiento(
+                        request.getBancoId(),
+                        com.ansicode.SistemaAdministracionGym.enums.TipoMovimientoBanco.EGRESO,
+                        request.getMontoDevolucion(),
+                        descripcion,
+                        referencia,
+                        com.ansicode.SistemaAdministracionGym.enums.ConceptoMovimientoBanco.DEVOLUCION_CANCELACION_SUSCRIPCION,
+                        com.ansicode.SistemaAdministracionGym.enums.OrigenMovimientoBanco.SUSCRIPCION);
+            } else {
+                // Efectivo u otro - registrar en MovimientoDinero (caja)
+                com.ansicode.SistemaAdministracionGym.movimientodinero.MovimientoDineroCreateRequest egreso = new com.ansicode.SistemaAdministracionGym.movimientodinero.MovimientoDineroCreateRequest();
+
+                egreso.setMonto(request.getMontoDevolucion());
+                egreso.setMetodo(request.getMetodoDevolucion());
+                egreso.setTipo(com.ansicode.SistemaAdministracionGym.enums.TipoMovimientoDinero.EGRESO);
+                egreso.setConcepto(
+                        com.ansicode.SistemaAdministracionGym.enums.ConceptoMovimientoDinero.DEVOLUCION_VENTA);
+                egreso.setDescripcion(descripcion);
+                egreso.setSucursalId(cs.getVenta().getSucursal().getId());
+                egreso.setVentaId(cs.getVenta().getId());
+                egreso.setServicioId(cs.getServicio().getId());
+                egreso.setMoneda("USD");
+
+                movimientoDineroService.crearMovimiento(egreso, connectedUser);
+            }
         }
 
         clienteSuscripcionRepository.save(cs);

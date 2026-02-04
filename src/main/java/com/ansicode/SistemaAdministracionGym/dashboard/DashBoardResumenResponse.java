@@ -7,16 +7,23 @@ import java.util.List;
 
 public record DashBoardResumenResponse(
 
-        BigDecimal ingresosTotales,
-        BigDecimal egresosTotales,
-        BigDecimal gananciaTotal,
+                BigDecimal ingresosTotales,
+                BigDecimal egresosTotales,
+                BigDecimal gananciaTotal,
 
-        BigDecimal ingresosHoy,
-        BigDecimal egresosHoy,
-        BigDecimal gananciaHoy,
+                BigDecimal ingresosHoy,
+                BigDecimal egresosHoy,
+                BigDecimal gananciaHoy,
 
-        Long numeroClientes,
-        BigDecimal productosVendidosCantidad,
-        BigDecimal serviciosVendidosCantidad
-) {
+                Long numeroClientes,
+                BigDecimal productosVendidosCantidad,
+                BigDecimal serviciosVendidosCantidad,
+
+                // Métricas de Bancos
+                BigDecimal saldoTotalBancos,
+                Long numeroBancosActivos,
+                BigDecimal ingresosBancariosRango,
+                BigDecimal egresosBancariosRango,
+                BigDecimal ingresosBancariosHoy,
+                BigDecimal egresosBancariosHoy) {
 }

@@ -70,8 +70,9 @@ public class EquipamientoService {
                         TipoMovimientoBanco.EGRESO,
                         request.getCosto(),
                         descripcion,
-                        "Equipamiento ID: " + saved.getId(),
-                        ConceptoMovimientoDinero.COMPRA_ACTIVO);
+                        "EQUIPAMIENTO#E-" + saved.getId() + " | " + request.getNombre(),
+                        com.ansicode.SistemaAdministracionGym.enums.ConceptoMovimientoBanco.COMPRA_EQUIPAMIENTO,
+                        com.ansicode.SistemaAdministracionGym.enums.OrigenMovimientoBanco.MANUAL);
             } else if (request.getMetodoPago() == MetodoPago.OTRO) {
                 if (request.getSucursalId() == null) {
                     throw new BussinessException(BusinessErrorCodes.VALIDATION_ERROR);

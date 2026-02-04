@@ -211,8 +211,10 @@ public class PagoService {
                         com.ansicode.SistemaAdministracionGym.enums.TipoMovimientoBanco.INGRESO,
                         savedPago.getMonto(),
                         "Pago Venta " + venta.getNumeroFactura(),
-                        "Pago ID: " + savedPago.getId(),
-                        ConceptoMovimientoDinero.PAGO_VENTA);
+                        "PAGO#P-" + savedPago.getId() + " | VENTA#V-" + venta.getId()
+                                + (cliente != null ? " | CLIENTE#C-" + cliente.getId() : ""),
+                        com.ansicode.SistemaAdministracionGym.enums.ConceptoMovimientoBanco.VENTA_PRODUCTO,
+                        com.ansicode.SistemaAdministracionGym.enums.OrigenMovimientoBanco.PAGO);
 
             } else {
                 // Registrar en CAJA (Efectivo)

@@ -26,12 +26,16 @@ public class MovimientoBanco extends AuditedEntity {
     private Banco banco;
 
     @Enumerated(EnumType.STRING)
-    @Column(length = 30)
-    private com.ansicode.SistemaAdministracionGym.enums.ConceptoMovimientoDinero concepto;
+    @Column(length = 40)
+    private com.ansicode.SistemaAdministracionGym.enums.ConceptoMovimientoBanco concepto;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private TipoMovimientoBanco tipo; // INGRESO, EGRESO
+
+    @Enumerated(EnumType.STRING)
+    @Column(length = 20)
+    private com.ansicode.SistemaAdministracionGym.enums.OrigenMovimientoBanco origen;
 
     @Column(nullable = false, precision = 12, scale = 2)
     private BigDecimal monto;
@@ -39,9 +43,12 @@ public class MovimientoBanco extends AuditedEntity {
     @Column(nullable = false)
     private LocalDateTime fecha;
 
+    @Column(length = 500)
     private String descripcion;
 
-    // Optional Reference (e.g., "Compra Equipamiento #5")
+    // Referencia estandarizada (e.g., "PAGO#P-55 | CLIENTE#C-10 | Membresía
+    // Mensual")
+    @Column(length = 300)
     private String referencia;
 
     // We could link specifically to entities like Equipamiento ID later if needed

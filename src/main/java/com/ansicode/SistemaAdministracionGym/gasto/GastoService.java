@@ -58,6 +58,41 @@ public class GastoService {
     }
 
     @Transactional
+    public GastoResponse update(Long id, GastoRequest request) {
+        Gasto gasto = repository.findById(id)
+                .orElseThrow(() -> new BussinessException(BusinessErrorCodes.VALIDATION_ERROR));
+
+        // Solo permitir editar si NO está pagado (simplificación por seguridad)
+        if (gasto.getEstado() == EstadoGasto.PAGADO) {
+            // Opcional: permitir editar campos no financieros
+            // Por ahora restringimos
+            throw new BussinessException(BusinessErrorCodes.VALIDATION_ERROR);
+        }
+
+        // Actualizar campos
+        gasto.setNombre(request.getNombre());
+        gasto.setDescripcion(request.getDescripcion());
+        gasto.setCategoria(request.getCategoria());
+        gasto.setFechaGasto(request.getFechaGasto());
+        gasto.setSucursalId(request.getSucursalId());
+
+        // Actualizar montos/cantidades (para SUMINISTROS o general)
+        if (request.getCantidad() != null && request.getPrecioUnitario() != null) {
+            gasto.setCantidad(request.getCantidad());
+            gasto.setPrecioUnitario(request.getPrecioUnitario());
+            // Recalcular monto
+            java.math.BigDecimal total = request.getPrecioUnitario().multiply(request.getCantidad());
+            gasto.setMonto(total);
+        } else if (request.getMonto() != null) {
+            gasto.setMonto(request.getMonto());
+            gasto.setCantidad(null);
+            gasto.setPrecioUnitario(null);
+        }
+
+        return mapper.toResponse(repository.save(gasto));
+    }
+
+    @Transactional
     public GastoResponse pagarGasto(Long id, PagarGastoRequest pagoRequest, Authentication connectedUser) {
         Gasto gasto = repository.findById(id)
                 .orElseThrow(() -> new BussinessException(BusinessErrorCodes.VALIDATION_ERROR)); // Generic not found
@@ -107,8 +142,9 @@ public class GastoService {
                     TipoMovimientoBanco.EGRESO,
                     request.getMonto(),
                     descripcion,
-                    "Gasto ID: " + gasto.getId(), // Referencia
-                    ConceptoMovimientoDinero.GASTO);
+                    "GASTO#G-" + gasto.getId() + " | " + request.getNombre(),
+                    com.ansicode.SistemaAdministracionGym.enums.ConceptoMovimientoBanco.OTROS,
+                    com.ansicode.SistemaAdministracionGym.enums.OrigenMovimientoBanco.GASTO);
         } else if (request.getMetodoPago() == MetodoPago.OTRO) {
             // Solo registrar movimiento informativo (Tracker)
             MovimientoDineroCreateRequest mov = new MovimientoDineroCreateRequest();

@@ -70,14 +70,9 @@ public class MantenimientoService {
                         com.ansicode.SistemaAdministracionGym.enums.TipoMovimientoBanco.EGRESO,
                         request.getCosto(),
                         request.getDescripcion() != null ? request.getDescripcion() : descripcion,
-                        "Mantenimiento IDs: " + saved.getId(),
-                        com.ansicode.SistemaAdministracionGym.enums.ConceptoMovimientoDinero.COMPRA_ACTIVO // Usamos
-                                                                                                           // COMPRA_ACTIVO
-                                                                                                           // o similar
-                                                                                                           // para
-                                                                                                           // gastos de
-                                                                                                           // activos
-                );
+                        "MANTENIMIENTO#M-" + saved.getId() + " | EQUIPAMIENTO#E-" + equip.getId(),
+                        com.ansicode.SistemaAdministracionGym.enums.ConceptoMovimientoBanco.MANTENIMIENTO,
+                        com.ansicode.SistemaAdministracionGym.enums.OrigenMovimientoBanco.GASTO);
 
             } else {
                 // Caja (Efectivo / Default)

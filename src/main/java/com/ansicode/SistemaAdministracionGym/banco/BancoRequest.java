@@ -22,3 +22,4 @@ public class BancoRequest {
     @NotBlank
     private String titular;
 }
+    

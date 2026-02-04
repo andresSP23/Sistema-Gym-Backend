@@ -28,4 +28,8 @@ public class GastoResponse {
     private LocalDate fechaPago;
     private MetodoPago metodoPago;
     private Long sucursalId;
+
+    // Campos para SUMINISTROS
+    private BigDecimal cantidad;
+    private BigDecimal precioUnitario;
 }

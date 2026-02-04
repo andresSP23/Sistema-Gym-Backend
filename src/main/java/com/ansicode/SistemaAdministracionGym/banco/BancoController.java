@@ -26,13 +26,6 @@ public class BancoController {
         return ResponseEntity.ok(service.findAll());
     }
 
-    @GetMapping("/{id}/movimientos")
-    @PreAuthorize("hasRole('ADMINISTRADOR')")
-    public ResponseEntity<List<com.ansicode.SistemaAdministracionGym.banco.movimiento.MovimientoBancoResponse>> getMovimientos(
-            @PathVariable Long id) {
-        return ResponseEntity.ok(service.getMovimientos(id));
-    }
-
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMINISTRADOR')")
     public ResponseEntity<BancoResponse> update(@PathVariable Long id, @RequestBody @Valid BancoRequest request) {

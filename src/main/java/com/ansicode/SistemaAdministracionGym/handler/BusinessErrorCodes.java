@@ -248,6 +248,9 @@ public enum BusinessErrorCodes {
         // EQUIPAMIENTO (3900-3999)
         EQUIPAMIENTO_NOT_FOUND(3900, HttpStatus.NOT_FOUND, "Equipamiento no encontrado"),
 
+        // BANCO (4100-4199)
+        BANCO_NOT_FOUND(4100, HttpStatus.NOT_FOUND, "Banco no encontrado"),
+
         // CONTRATO (4000-4099)
         CONTRATO_NOT_FOUND(4000, HttpStatus.NOT_FOUND, "Contrato no encontrado"),
         PLANTILLA_CONTRATO_NOT_FOUND(4001, HttpStatus.NOT_FOUND, "Plantilla de contrato activa no encontrada");

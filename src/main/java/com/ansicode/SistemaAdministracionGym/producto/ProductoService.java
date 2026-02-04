@@ -202,8 +202,9 @@ public class ProductoService {
                         com.ansicode.SistemaAdministracionGym.enums.TipoMovimientoBanco.EGRESO,
                         montoTotal,
                         request.getObservacion(),
-                        "Compra Stock Producto: " + producto.getNombre(),
-                        ConceptoMovimientoDinero.COMPRA_STOCK);
+                        "COMPRA_STOCK | PRODUCTO#P-" + productoId + " | " + producto.getNombre(),
+                        com.ansicode.SistemaAdministracionGym.enums.ConceptoMovimientoBanco.COMPRA_STOCK,
+                        com.ansicode.SistemaAdministracionGym.enums.OrigenMovimientoBanco.MANUAL);
 
             } else {
                 // Registrar en CAJA (Default / Efectivo)

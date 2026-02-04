@@ -19,11 +19,18 @@ public class GastoController {
 
     private final GastoService service;
 
-    @PostMapping
+    @PostMapping("/crear")
     public ResponseEntity<GastoResponse> create(
             @RequestBody @Valid GastoRequest request,
             Authentication connectedUser) {
         return ResponseEntity.ok(service.create(request, connectedUser));
+    }
+
+    @PutMapping("/actualizar/{id}")
+    public ResponseEntity<GastoResponse> update(
+            @PathVariable Long id,
+            @RequestBody @Valid GastoRequest request) {
+        return ResponseEntity.ok(service.update(id, request));
     }
 
     @GetMapping

@@ -12,4 +12,7 @@ public class CancelarSuscripcionRequest {
     private Boolean devolverDinero;
     private BigDecimal montoDevolucion;
     private MetodoPago metodoDevolucion;
+
+    // Requerido si metodoDevolucion == TRANSFERENCIA || TARJETA
+    private Long bancoId;
 }

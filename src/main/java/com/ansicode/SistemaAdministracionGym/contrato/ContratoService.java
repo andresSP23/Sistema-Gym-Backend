@@ -3,14 +3,17 @@ package com.ansicode.SistemaAdministracionGym.contrato;
 import com.ansicode.SistemaAdministracionGym.cliente.Cliente;
 import com.ansicode.SistemaAdministracionGym.cliente.ClienteRepository;
 import com.ansicode.SistemaAdministracionGym.common.PageResponse;
+import com.ansicode.SistemaAdministracionGym.enums.EstadoContrato;
 import com.ansicode.SistemaAdministracionGym.handler.BusinessErrorCodes;
 import com.ansicode.SistemaAdministracionGym.handler.BussinessException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -78,6 +81,35 @@ public class ContratoService {
 
     public PageResponse<ContratoResponse> findAll(Pageable pageable) {
         Page<Contrato> page = contratoRepository.findAll(pageable);
+        List<ContratoResponse> content = page.getContent().stream()
+                .map(contratoMapper::toContratoResponse)
+                .toList();
+
+        return PageResponse.<ContratoResponse>builder()
+                .content(content)
+                .number(page.getNumber())
+                .size(page.getSize())
+                .totalElements(page.getTotalElements())
+                .totalPages(page.getTotalPages())
+                .first(page.isFirst())
+                .last(page.isLast())
+                .build();
+    }
+
+    /**
+     * Lista contratos con filtros dinámicos.
+     */
+    @Transactional(readOnly = true)
+    public PageResponse<ContratoResponse> findAllConFiltros(
+            EstadoContrato estado,
+            String clienteBusqueda,
+            LocalDateTime desde,
+            LocalDateTime hasta,
+            Pageable pageable) {
+
+        Specification<Contrato> spec = ContratoSpecifications.conFiltros(estado, clienteBusqueda, desde, hasta);
+        Page<Contrato> page = contratoRepository.findAll(spec, pageable);
+
         List<ContratoResponse> content = page.getContent().stream()
                 .map(contratoMapper::toContratoResponse)
                 .toList();

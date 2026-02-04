@@ -15,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @PasswordMatches
-
+@EmailMatches
 public class UserRequest {
 
     @NotBlank(message = "El nombre es obligatorio")
@@ -31,17 +31,18 @@ public class UserRequest {
     @NotBlank(message = "El email es obligatorio")
     private String email;
 
+    @Email(message = "El email de confirmación no es válido")
+    @NotBlank(message = "Confirmar el email es obligatorio")
+    private String confirmEmail;
+
     @NotBlank(message = "La contraseña es obligatoria")
     private String password;
+
     @NotBlank(message = "Confirmar la contraseña es obligatorio")
     private String confirmPassword;
 
-
     @NotNull(message = "La fecha de nacimiento es obligatoria")
     private LocalDate fechaNacimiento;
-
-
-
 
     @NotNull(message = "Los roles son obligatorios")
     private List<Integer> rolesIds;

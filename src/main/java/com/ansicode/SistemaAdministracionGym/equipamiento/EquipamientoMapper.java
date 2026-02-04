@@ -60,7 +60,7 @@ public class EquipamientoMapper {
         equipamiento.setNombre(request.getNombre());
         equipamiento.setUbicacion(request.getUbicacion());
         equipamiento.setEstadoEquipamiento(request.getEstadoEquipamiento());
-        equipamiento.setFotoUrl(request.getFotoUrl());
+        equipamiento.setFotoUrl(request.getFotoUrl()); // fotoUrl is optional
         equipamiento.setMarca(request.getMarca());
         equipamiento.setModelo(request.getModelo());
         equipamiento.setNumeroSerie(request.getNumeroSerie());
@@ -69,8 +69,19 @@ public class EquipamientoMapper {
         equipamiento.setProveedor(request.getProveedor());
         equipamiento.setGarantiaFin(request.getGarantiaFin());
         equipamiento.setFrecuenciaMantenimientoDias(request.getFrecuenciaMantenimientoDias());
+
+        // Auto-calculate próximo mantenimiento if frequency is set but
+        // proximoMantenimiento is not provided
         if (request.getProximoMantenimiento() != null) {
             equipamiento.setProximoMantenimiento(request.getProximoMantenimiento());
+        } else if (request.getFrecuenciaMantenimientoDias() != null
+                && request.getFrecuenciaMantenimientoDias() > 0) {
+            // Recalculate based on last maintenance or purchase date or today
+            java.time.LocalDate baseDate = equipamiento.getProximoMantenimiento() != null
+                    ? equipamiento.getProximoMantenimiento()
+                    : (equipamiento.getFechaCompra() != null ? equipamiento.getFechaCompra()
+                            : java.time.LocalDate.now());
+            equipamiento.setProximoMantenimiento(baseDate.plusDays(request.getFrecuenciaMantenimientoDias()));
         }
     }
 }

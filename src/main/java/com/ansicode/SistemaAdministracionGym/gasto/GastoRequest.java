@@ -23,7 +23,9 @@ public class GastoRequest {
     @NotNull(message = "La categoría es obligatoria")
     private CategoriaGasto categoria;
 
-    @NotNull(message = "El monto es obligatorio")
+    // Si se proveen cantidad + precioUnitario (para SUMINISTROS), el monto se
+    // calcula automáticamente
+    // De lo contrario, monto debe ser enviado directamente
     @DecimalMin(value = "0.01", message = "El monto debe ser mayor a 0")
     private BigDecimal monto;
 
@@ -32,6 +34,13 @@ public class GastoRequest {
 
     @NotNull(message = "La sucursal es obligatoria")
     private Long sucursalId;
+
+    // --- Campos para SUMINISTROS (opcionales) ---
+    @DecimalMin(value = "0.01", message = "La cantidad debe ser mayor a 0")
+    private BigDecimal cantidad;
+
+    @DecimalMin(value = "0.01", message = "El precio unitario debe ser mayor a 0")
+    private BigDecimal precioUnitario;
 
     // --- Pago inmediato (Opcional) ---
     private boolean pagarAhora;

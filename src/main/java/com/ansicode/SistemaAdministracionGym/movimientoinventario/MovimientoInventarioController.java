@@ -3,6 +3,7 @@ package com.ansicode.SistemaAdministracionGym.movimientoinventario;
 import com.ansicode.SistemaAdministracionGym.common.PageResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -28,6 +29,7 @@ public class MovimientoInventarioController {
          */
         @GetMapping("/movimientos/findAll")
         @Operation(summary = "Listar movimientos", description = "Lista movimientos de inventario con filtros. Orden por defecto: más reciente primero.")
+        @ApiResponse(responseCode = "200", description = "Movimientos obtenidos exitosamente")
         public PageResponse<MovimientoInventarioResponse> listar(
                         @RequestParam(required = false) Long productoId,
                         @RequestParam(required = false) String tipoMovimiento,

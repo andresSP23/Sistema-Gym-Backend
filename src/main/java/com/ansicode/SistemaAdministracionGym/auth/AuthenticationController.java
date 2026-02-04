@@ -1,5 +1,7 @@
 package com.ansicode.SistemaAdministracionGym.auth;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
@@ -16,25 +18,15 @@ import org.springframework.web.bind.annotation.*;
 public class AuthenticationController {
     private final AuthenticationService service;
 
-    @PostMapping("/register")
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public ResponseEntity<?> register(@RequestBody  @Valid RegistrationRequest request) throws MessagingException {
-
-        service.register(request);
-        return ResponseEntity.accepted().build();
-    }
-
-
     @PostMapping("/authenticate")
+    @Operation(summary = "Autenticar usuario", description = "Autentica un usuario y devuelve un token JWT.")
+    @ApiResponse(responseCode = "200", description = "Autenticación exitosa")
+    @ApiResponse(responseCode = "401", description = "Credenciales inválidas")
     public ResponseEntity<AuthenticationResponse> authenticate(
-            @RequestBody @Valid AuthenticationRequest request
-    ){
+            @RequestBody @Valid AuthenticationRequest request) {
 
-        return  ResponseEntity.ok(service.authenticate(request));
-
-
+        return ResponseEntity.ok(service.authenticate(request));
 
     }
-
 
 }

@@ -1,6 +1,8 @@
 package com.ansicode.SistemaAdministracionGym.asistencia;
 
 import com.ansicode.SistemaAdministracionGym.common.PageResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,19 +22,21 @@ public class AsistenciaController {
 
     // 1) Registrar asistencia por cédula
     @PostMapping("/registrar-por-cedula")
+    @Operation(summary = "Registrar asistencia", description = "Registra la asistencia de un cliente al gimnasio por número de cédula.")
+    @ApiResponse(responseCode = "200", description = "Asistencia registrada exitosamente")
     public ResponseEntity<AsistenciaResponse> registrarPorCedula(
-            @RequestBody @Valid AsistenciaRequest request
-    ) {
+            @RequestBody @Valid AsistenciaRequest request) {
         return ResponseEntity.ok(asistenciaService.registrarPorCedula(request));
     }
 
     @GetMapping("/cliente/{clienteId}")
+    @Operation(summary = "Listar asistencias del cliente", description = "Obtiene el historial de asistencias de un cliente específico.")
+    @ApiResponse(responseCode = "200", description = "Lista de asistencias obtenida exitosamente")
     public ResponseEntity<PageResponse<AsistenciaResponse>> listarPorCliente(
             @PathVariable Long clienteId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "fechaEntrada,desc") String sort
-    ) {
+            @RequestParam(defaultValue = "fechaEntrada,desc") String sort) {
         Pageable pageable = buildPageable(page, size, sort);
         return ResponseEntity.ok(asistenciaService.listarPorCliente(clienteId, pageable));
     }

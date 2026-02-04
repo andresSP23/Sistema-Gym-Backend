@@ -23,53 +23,50 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class PagoController {
 
-    private final PagoService service;
+        private final PagoService service;
 
+        @PostMapping
+        public PagoResponse registrarPago(@Valid @RequestBody PagoRequest request, Authentication connectedUser) {
+                return service.registrarPago(request, connectedUser);
+        }
 
-    @PostMapping
-    public PagoResponse registrarPago(@Valid @RequestBody PagoRequest request, Authentication connectedUser) {
-        return service.registrarPago(request, connectedUser);
-    }
+        @GetMapping("/findAll")
+        public ResponseEntity<PageResponse<PagoResponse>> findAll(
 
+                        @RequestParam(name = "page", defaultValue = "0", required = false) int page,
+                        @RequestParam(name = "size", defaultValue = "10", required = false) int size,
 
-    @GetMapping("/findAll")
-    public ResponseEntity<PageResponse<PagoResponse>> findAll(
+                        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime desde,
 
-            @RequestParam(name = "page", defaultValue = "0", required = false) int page,
-            @RequestParam(name = "size", defaultValue = "10", required = false) int size,
+                        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime hasta,
 
-            @RequestParam(required = false)
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-            LocalDateTime desde,
+                        @RequestParam(required = false) TipoOperacionPago tipoOperacion,
 
-            @RequestParam(required = false)
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-            LocalDateTime hasta,
+                        @RequestParam(required = false) MetodoPago metodo,
 
-            @RequestParam(required = false)
-            TipoOperacionPago tipoOperacion,
+                        @RequestParam(required = false) Long clienteId,
+                        @RequestParam(required = false) com.ansicode.SistemaAdministracionGym.enums.EstadoPago estado,
+                        @RequestParam(required = false) String documento,
+                        @RequestParam(required = false) String nombre,
 
-            @RequestParam(required = false)
-            MetodoPago metodo,
+                        @ParameterObject Pageable pageable) {
 
-            @ParameterObject Pageable pageable
-    ) {
+                Pageable finalPageable = PageRequest.of(
+                                page,
+                                size,
+                                Sort.by(Sort.Direction.DESC, "fechaPago"));
 
-        Pageable finalPageable = PageRequest.of(
-                page,
-                size,
-                Sort.by(Sort.Direction.DESC, "fechaPago")
-        );
-
-        return ResponseEntity.ok(
-                service.findAll(
-                        desde,
-                        hasta,
-                        tipoOperacion,
-                        metodo,
-                        finalPageable
-                )
-        );
-    }
+                return ResponseEntity.ok(
+                                service.findAll(
+                                                desde,
+                                                hasta,
+                                                tipoOperacion,
+                                                metodo,
+                                                clienteId,
+                                                estado,
+                                                documento,
+                                                nombre,
+                                                finalPageable));
+        }
 
 }

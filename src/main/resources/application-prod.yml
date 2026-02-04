@@ -1,0 +1,33 @@
+server:
+  port: ${PORT:8080}
+
+spring:
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate # En producción, nunca 'update' o 'create'. Flyway maneja el esquema.
+    show-sql: false      # Desactivar logs de SQL en producción por performance y seguridad
+    properties:
+      hibernate:
+        format_sql: false
+    database: PostgreSQL
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+  flyway:
+    baseline-on-migrate: true
+    # En producción, flyway validará y migrará.
+
+application:
+  security:
+    jwt:
+      secret-key: ${JWT_SECRET} # Debe inyectarse como variable de entorno
+      expiration: ${JWT_EXPIRATION:8640000}
+
+logging:
+  level:
+    root: INFO
+    com.ansicode: INFO # Ajustar según necesidad, pero DEBUG fuera de prod

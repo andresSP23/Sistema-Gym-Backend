@@ -11,6 +11,7 @@ import com.ansicode.SistemaAdministracionGym.handler.BusinessErrorCodes;
 import com.ansicode.SistemaAdministracionGym.handler.BussinessException;
 import com.ansicode.SistemaAdministracionGym.movimientodinero.MovimientoDineroCreateRequest;
 import com.ansicode.SistemaAdministracionGym.movimientodinero.MovimientoDineroService;
+import com.ansicode.SistemaAdministracionGym.enums.CategoriaGasto;
 import com.ansicode.SistemaAdministracionGym.sucursal.SucursalRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -159,8 +160,24 @@ public class GastoService {
         }
     }
 
-    public PageResponse<GastoResponse> findAll(Pageable pageable) {
-        Page<Gasto> page = repository.findAll(pageable);
+    public PageResponse<GastoResponse> findAll(
+            String nombre,
+            LocalDate desde,
+            LocalDate hasta,
+            EstadoGasto estado,
+            CategoriaGasto categoria,
+            MetodoPago metodoPago,
+            Pageable pageable) {
+
+        org.springframework.data.jpa.domain.Specification<Gasto> spec = org.springframework.data.jpa.domain.Specification
+                .where(GastoSpecifications.nombre(nombre))
+                .and(GastoSpecifications.fechaDesde(desde))
+                .and(GastoSpecifications.fechaHasta(hasta))
+                .and(GastoSpecifications.estado(estado))
+                .and(GastoSpecifications.categoria(categoria))
+                .and(GastoSpecifications.metodoPago(metodoPago));
+
+        Page<Gasto> page = repository.findAll(spec, pageable);
         List<GastoResponse> content = page.getContent().stream()
                 .map(mapper::toResponse)
                 .toList();

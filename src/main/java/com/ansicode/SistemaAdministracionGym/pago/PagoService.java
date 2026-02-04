@@ -19,6 +19,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -276,17 +277,25 @@ public class PagoService {
             LocalDateTime hasta,
             TipoOperacionPago tipoOperacion,
             MetodoPago metodo,
+            Long clienteId,
+            EstadoPago estado,
+            String documento,
+            String nombre,
             Pageable pageable) {
         if (desde != null && hasta != null && desde.isAfter(hasta)) {
             throw new BussinessException(BusinessErrorCodes.PAGO_RANGO_FECHAS_INVALIDO);
         }
 
-        Page<Pago> page = pagoRepository.buscarPagos(
-                desde,
-                hasta,
-                tipoOperacion,
-                metodo,
-                pageable);
+        Specification<Pago> spec = Specification.where(PagoSpecifications.fechaDesde(desde))
+                .and(PagoSpecifications.fechaHasta(hasta))
+                .and(PagoSpecifications.tipoOperacion(tipoOperacion))
+                .and(PagoSpecifications.metodo(metodo))
+                .and(PagoSpecifications.clienteId(clienteId))
+                .and(PagoSpecifications.estado(estado))
+                .and(PagoSpecifications.documento(documento))
+                .and(PagoSpecifications.nombre(nombre));
+
+        Page<Pago> page = pagoRepository.findAll(spec, pageable);
 
         return PageResponse.<PagoResponse>builder()
                 .content(

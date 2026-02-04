@@ -56,7 +56,7 @@ class MantenimientoServiceTest {
         when(mapper.toResponse(any(Mantenimiento.class))).thenReturn(new MantenimientoResponse());
 
         // Act
-        service.create(request);
+        service.create(request, Mockito.mock(org.springframework.security.core.Authentication.class));
 
         // Assert
         // Verify Next Maintenance is set in created record
@@ -92,7 +92,7 @@ class MantenimientoServiceTest {
         when(mapper.toResponse(any(Mantenimiento.class))).thenReturn(new MantenimientoResponse());
 
         // Act
-        service.create(request);
+        service.create(request, Mockito.mock(org.springframework.security.core.Authentication.class));
 
         // Assert
         Assertions.assertNull(mantenimientoEntity.getProximoMantenimientoSugerido());

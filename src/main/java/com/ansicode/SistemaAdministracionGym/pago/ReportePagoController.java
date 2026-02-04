@@ -26,23 +26,19 @@ public class ReportePagoController {
     @GetMapping("/excel")
     public ResponseEntity<Resource> exportarExcel(
 
-            @RequestParam(required = false)
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-            LocalDateTime desde,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime desde,
 
-            @RequestParam(required = false)
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-            LocalDateTime hasta,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime hasta,
 
-            @RequestParam(required = false)
-            TipoOperacionPago tipoOperacion,
+            @RequestParam(required = false) TipoOperacionPago tipoOperacion,
 
-            @RequestParam(required = false)
-            MetodoPago metodo,
+            @RequestParam(required = false) MetodoPago metodo,
 
-            @RequestParam(required = false)
-            EstadoPago estado
-    ) {
-        return reportePagoExcelService.exportar(desde, hasta, tipoOperacion, metodo, estado);
+            @RequestParam(required = false) Long clienteId,
+            @RequestParam(required = false) EstadoPago estado,
+            @RequestParam(required = false) String documento,
+            @RequestParam(required = false) String nombre) {
+        return reportePagoExcelService.exportar(desde, hasta, tipoOperacion, metodo, clienteId, estado, documento,
+                nombre);
     }
 }

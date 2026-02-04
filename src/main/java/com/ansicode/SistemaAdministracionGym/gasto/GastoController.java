@@ -35,11 +35,17 @@ public class GastoController {
 
     @GetMapping
     public ResponseEntity<PageResponse<GastoResponse>> findAll(
+            @RequestParam(required = false) String nombre,
+            @RequestParam(required = false) java.time.LocalDate desde,
+            @RequestParam(required = false) java.time.LocalDate hasta,
+            @RequestParam(required = false) com.ansicode.SistemaAdministracionGym.enums.EstadoGasto estado,
+            @RequestParam(required = false) com.ansicode.SistemaAdministracionGym.enums.CategoriaGasto categoria,
+            @RequestParam(required = false) com.ansicode.SistemaAdministracionGym.enums.MetodoPago metodo,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
         // Orden por defecto: fechaGasto descendente
         Pageable pageable = PageRequest.of(page, size, Sort.by("fechaGasto").descending());
-        return ResponseEntity.ok(service.findAll(pageable));
+        return ResponseEntity.ok(service.findAll(nombre, desde, hasta, estado, categoria, metodo, pageable));
     }
 
     @PostMapping("/{id}/pagar")

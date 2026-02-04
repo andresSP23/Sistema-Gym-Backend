@@ -27,11 +27,13 @@ public class AuthFlowIntegrationTest {
     @Test
     public void shouldRegisterAndAuthenticateUser() throws Exception {
         // 1. Register
-        RegistrationRequest registerRequest = new RegistrationRequest();
-        registerRequest.setNombre("Integration");
-        registerRequest.setApellido("Test");
-        registerRequest.setEmail("integration@test.com");
-        registerRequest.setPassword("password123");
+        // 1. Register
+        RegistrationRequest registerRequest = RegistrationRequest.builder()
+                .nombre("Integration")
+                .apellido("Test")
+                .email("integration@test.com")
+                .password("password123")
+                .build();
         // Asumiendo que el request tiene estos campos basados en el análisis de
         // AuthenticationService
         // Nota: RegistrationRequest no fue visualizado completo, asumo campos estándar.

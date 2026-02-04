@@ -26,8 +26,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-
-
 @Service
 @RequiredArgsConstructor
 public class ReportePagoService {
@@ -42,14 +40,27 @@ public class ReportePagoService {
             LocalDateTime hasta,
             TipoOperacionPago tipoOperacion,
             MetodoPago metodo,
-            EstadoPago estado
-    ) {
+            Long clienteId,
+            EstadoPago estado,
+            String documento,
+            String nombre) {
 
         if (desde != null && hasta != null && desde.isAfter(hasta)) {
             throw new BussinessException(BusinessErrorCodes.REPORTE_PAGOS_RANGO_FECHAS_INVALIDO);
         }
 
-        List<Pago> pagos = pagoRepository.buscarPagosReporte(desde, hasta, tipoOperacion, metodo, estado);
+        org.springframework.data.jpa.domain.Specification<Pago> spec = org.springframework.data.jpa.domain.Specification
+                .where(PagoSpecifications.fechaDesde(desde))
+                .and(PagoSpecifications.fechaHasta(hasta))
+                .and(PagoSpecifications.tipoOperacion(tipoOperacion))
+                .and(PagoSpecifications.metodo(metodo))
+                .and(PagoSpecifications.clienteId(clienteId))
+                .and(PagoSpecifications.estado(estado))
+                .and(PagoSpecifications.documento(documento))
+                .and(PagoSpecifications.nombre(nombre));
+
+        List<Pago> pagos = pagoRepository.findAll(spec, org.springframework.data.domain.Sort
+                .by(org.springframework.data.domain.Sort.Direction.DESC, "fechaPago"));
 
         byte[] bytes = generarExcel(pagos, desde, hasta, tipoOperacion, metodo, estado);
 
@@ -59,8 +70,7 @@ public class ReportePagoService {
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
                 .contentType(MediaType.parseMediaType(
-                        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-                ))
+                        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
                 .body(new ByteArrayResource(bytes));
     }
 
@@ -70,11 +80,10 @@ public class ReportePagoService {
             LocalDateTime hasta,
             TipoOperacionPago tipoOperacion,
             MetodoPago metodo,
-            EstadoPago estado
-    ) {
+            EstadoPago estado) {
 
         try (Workbook wb = new XSSFWorkbook();
-             ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+                ByteArrayOutputStream out = new ByteArrayOutputStream()) {
 
             // ===== Styles =====
             CellStyle titleStyle = createTitleStyle(wb);
@@ -122,8 +131,7 @@ public class ReportePagoService {
             CellStyle textStyle,
             CellStyle moneyStyle,
             CellStyle intStyle,
-            CellStyle totalStyle
-    ) {
+            CellStyle totalStyle) {
 
         int rowIdx = 0;
 
@@ -142,7 +150,8 @@ public class ReportePagoService {
 
         rowIdx = addFiltroLine(sheet, rowIdx, "Desde", desde != null ? desde.format(DTF) : "Todos", textStyle);
         rowIdx = addFiltroLine(sheet, rowIdx, "Hasta", hasta != null ? hasta.format(DTF) : "Todos", textStyle);
-        rowIdx = addFiltroLine(sheet, rowIdx, "Tipo Operación", tipoOperacion != null ? tipoOperacion.name() : "Todos", textStyle);
+        rowIdx = addFiltroLine(sheet, rowIdx, "Tipo Operación", tipoOperacion != null ? tipoOperacion.name() : "Todos",
+                textStyle);
         rowIdx = addFiltroLine(sheet, rowIdx, "Método", metodo != null ? metodo.name() : "Todos", textStyle);
         rowIdx = addFiltroLine(sheet, rowIdx, "Estado", estado != null ? estado.name() : "Todos", textStyle);
 
@@ -194,7 +203,8 @@ public class ReportePagoService {
         Map<MetodoPago, Summary> porMetodo = new LinkedHashMap<>();
         for (Pago p : pagos) {
             MetodoPago mp = p.getMetodo();
-            if (mp == null) continue;
+            if (mp == null)
+                continue;
             porMetodo.computeIfAbsent(mp, k -> new Summary()).add(p.getMonto());
         }
 
@@ -222,7 +232,8 @@ public class ReportePagoService {
         Map<TipoOperacionPago, Summary> porOperacion = new LinkedHashMap<>();
         for (Pago p : pagos) {
             TipoOperacionPago top = p.getTipoOperacion();
-            if (top == null) continue;
+            if (top == null)
+                continue;
             porOperacion.computeIfAbsent(top, k -> new Summary()).add(p.getMonto());
         }
 
@@ -247,10 +258,10 @@ public class ReportePagoService {
         tf.setCellValue(totalMonto.doubleValue());
         tf.setCellStyle(totalStyle);
         sheet.addMergedRegion(new org.apache.poi.ss.util.CellRangeAddress(
-                totalRow.getRowNum(), totalRow.getRowNum(), 1, 2
-        ));
+                totalRow.getRowNum(), totalRow.getRowNum(), 1, 2));
 
-        for (int i = 0; i <= 5; i++) sheet.autoSizeColumn(i);
+        for (int i = 0; i <= 5; i++)
+            sheet.autoSizeColumn(i);
     }
 
     private int addFiltroLine(Sheet sheet, int rowIdx, String label, String value, CellStyle style) {
@@ -277,8 +288,7 @@ public class ReportePagoService {
             CellStyle headerStyle,
             CellStyle textStyle,
             CellStyle dateStyle,
-            CellStyle moneyStyle
-    ) {
+            CellStyle moneyStyle) {
 
         int rowIdx = 0;
 
@@ -289,7 +299,7 @@ public class ReportePagoService {
         sheet.addMergedRegion(new org.apache.poi.ss.util.CellRangeAddress(0, 0, 0, 12));
 
         Row header = sheet.createRow(rowIdx++);
-        String[] cols = new String[]{
+        String[] cols = new String[] {
                 "ID", "Fecha Pago", "Estado", "Método", "Moneda", "Monto",
                 "Efectivo Recibido", "Cambio", "Ref. Transacción",
                 "Tipo Operación", "Tipo Comprobante",
@@ -339,7 +349,7 @@ public class ReportePagoService {
 
             String nombreCliente = p.getCliente() != null
                     ? ((p.getCliente().getNombres() != null ? p.getCliente().getNombres() : "") + " " +
-                    (p.getCliente().getApellidos() != null ? p.getCliente().getApellidos() : "")).trim()
+                            (p.getCliente().getApellidos() != null ? p.getCliente().getApellidos() : "")).trim()
                     : "";
             createCell(r, 11, nombreCliente, textStyle);
 
@@ -355,7 +365,8 @@ public class ReportePagoService {
         totalCell.setCellValue(totalMonto.doubleValue());
         totalCell.setCellStyle(createTotalMoneyStyle(sheet.getWorkbook()));
 
-        for (int i = 0; i < cols.length; i++) sheet.autoSizeColumn(i);
+        for (int i = 0; i < cols.length; i++)
+            sheet.autoSizeColumn(i);
     }
 
     // ===================== Styles helpers =====================
@@ -461,7 +472,8 @@ public class ReportePagoService {
 
         void add(BigDecimal monto) {
             count++;
-            if (monto != null) total = total.add(monto);
+            if (monto != null)
+                total = total.add(monto);
         }
     }
 }

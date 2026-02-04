@@ -60,11 +60,12 @@ public class BeansConfig {
   public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration config = new CorsConfiguration();
     config.setAllowCredentials(true);
-    // Restringir a orígenes confiables (Frontend)
-    config.setAllowedOrigins(Arrays.asList("http://localhost:4200"));
+    // Permitir todos los orígenes para desarrollo y Swagger UI
+    config.setAllowedOriginPatterns(Arrays.asList("*"));
     config.setAllowedHeaders(Arrays.asList("*"));
     config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
     config.addExposedHeader("Content-Disposition");
+    config.setMaxAge(3600L);
 
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
     source.registerCorsConfiguration("/**", config);

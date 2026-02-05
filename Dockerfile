@@ -24,7 +24,7 @@ COPY --from=build /app/target/*.jar app.jar
 RUN chown -R spring:spring /app
 
 # Switch to non-root user
-USER spring
+# USER spring
 
 # Expose port
 EXPOSE 8080

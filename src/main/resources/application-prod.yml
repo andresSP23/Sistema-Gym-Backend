@@ -37,5 +37,5 @@ logging:
 
 app:
   storage:
-    comprobantes-dir: /tmp/storage/comprobantes
-    contratos-dir: /tmp/uploads/contratos
+    comprobantes-dir: /data/comprobantes
+    contratos-dir: /data/contratos

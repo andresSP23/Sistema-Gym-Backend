@@ -37,7 +37,8 @@ public class ContratoService {
     private final ContratoMapper contratoMapper;
     private final ClienteRepository clienteRepository;
     private final com.ansicode.SistemaAdministracionGym.contrato.plantilla.PlantillaContratoRepository plantillaContratoRepository;
-    private final String uploadDir = "uploads/contratos/";
+    @org.springframework.beans.factory.annotation.Value("${app.storage.contratos-dir:uploads/contratos/}")
+    private String uploadDir;
 
     @Transactional
     public ContratoResponse create(ContratoRequest request) {

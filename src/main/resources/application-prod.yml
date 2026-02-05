@@ -34,3 +34,8 @@ logging:
   level:
     root: INFO
     com.ansicode: INFO # Ajustar según necesidad, pero DEBUG fuera de prod
+
+app:
+  storage:
+    comprobantes-dir: /tmp/storage/comprobantes
+    contratos-dir: /tmp/uploads/contratos

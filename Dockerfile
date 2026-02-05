@@ -1,24 +1,33 @@
-# Stage 1: Build
-FROM maven:3.9.6-eclipse-temurin-21-alpine AS build
+# Build Stage
+FROM maven:3.9-eclipse-temurin-21-alpine AS build
 WORKDIR /app
 COPY pom.xml .
 COPY src ./src
-# Construir el JAR saltando tests para agilizar el build en este paso (los tests deberían correrse antes en CI)
 RUN mvn clean package -DskipTests
 
-# Stage 2: Runtime
+# Run Stage
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
-# Crear usuario no root para seguridad
-RUN addgroup -S spring && adduser -S spring -G spring
-USER spring:spring
 
-# Copiar el JAR desde el stage de build
+# Create a non-root user
+RUN addgroup -S spring && adduser -S spring -G spring
+
+# Create the /data directory and give permissions to the spring user
+RUN mkdir -p /data/comprobantes /data/contratos && \
+    chown -R spring:spring /data && \
+    chmod -R 755 /data
+
+# Copy the jar
 COPY --from=build /app/target/*.jar app.jar
 
-# Configurar variables de entorno por defecto (pueden sobreescribirse)
-ENV PORT=8080
+# Give permissions to the app directory
+RUN chown -R spring:spring /app
+
+# Switch to non-root user
+USER spring
+
+# Expose port
 EXPOSE 8080
 
-# Usar perfil 'prod' por defecto
-ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=prod", "app.jar"]
+# Run the app
+ENTRYPOINT ["java", "-jar", "app.jar"]

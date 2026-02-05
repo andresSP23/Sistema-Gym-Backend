@@ -3,7 +3,6 @@ package com.ansicode.SistemaAdministracionGym.banco.movimiento;
 import com.ansicode.SistemaAdministracionGym.common.PageResponse;
 import com.ansicode.SistemaAdministracionGym.enums.ConceptoMovimientoBanco;
 import com.ansicode.SistemaAdministracionGym.enums.TipoMovimientoBanco;
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +29,6 @@ public class MovimientoBancoController {
      * Orden por defecto: más reciente primero (fecha DESC, id DESC)
      */
     @GetMapping
-    @Operation(summary = "Listar movimientos bancarios", description = "Lista movimientos con filtros y ordenamiento DESC")
     public ResponseEntity<PageResponse<MovimientoBancoResponse>> listarMovimientos(
             @PathVariable Long bancoId,
             @RequestParam(required = false) TipoMovimientoBanco tipo,
@@ -48,7 +46,6 @@ public class MovimientoBancoController {
      * Crea un movimiento bancario manual.
      */
     @PostMapping
-    @Operation(summary = "Crear movimiento manual", description = "Registra un movimiento bancario manual")
     public ResponseEntity<MovimientoBancoResponse> crearMovimiento(
             @PathVariable Long bancoId,
             @Valid @RequestBody MovimientoBancoRequest request) {

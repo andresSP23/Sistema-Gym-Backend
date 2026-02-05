@@ -2,8 +2,6 @@ package com.ansicode.SistemaAdministracionGym.equipamiento;
 
 import com.ansicode.SistemaAdministracionGym.common.PageResponse;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,8 +22,6 @@ public class EquipamientoController {
 
     @PostMapping("/crear")
     @PreAuthorize("hasRole('ADMINISTRADOR')")
-    @Operation(summary = "Crear equipamiento", description = "Registra un nuevo equipamiento del gimnasio.")
-    @ApiResponse(responseCode = "200", description = "Equipamiento creado exitosamente")
     public ResponseEntity<EquipamientoResponse> create(
             @RequestBody @Valid EquipamientoRequest request,
             org.springframework.security.core.Authentication connectedUser) {
@@ -34,9 +30,6 @@ public class EquipamientoController {
 
     @PutMapping("/actualizar/{id}")
     @PreAuthorize("hasRole('ADMINISTRADOR')")
-    @Operation(summary = "Actualizar equipamiento", description = "Actualiza la información de un equipamiento existente.")
-    @ApiResponse(responseCode = "200", description = "Equipamiento actualizado exitosamente")
-    @ApiResponse(responseCode = "404", description = "Equipamiento no encontrado")
     public ResponseEntity<EquipamientoResponse> update(
             @PathVariable Long id,
             @RequestBody @Valid EquipamientoRequest request) {
@@ -45,9 +38,6 @@ public class EquipamientoController {
 
     @GetMapping("/buscar-por-id/{id}")
     @PreAuthorize("hasRole('ADMINISTRADOR') or hasRole('ENTRENADOR')")
-    @Operation(summary = "Buscar equipamiento por ID", description = "Obtiene los detalles de un equipamiento por ID.")
-    @ApiResponse(responseCode = "200", description = "Equipamiento encontrado")
-    @ApiResponse(responseCode = "404", description = "Equipamiento no encontrado")
     public ResponseEntity<EquipamientoResponse> findById(
             @PathVariable Long id) {
         return ResponseEntity.ok(equipamientoService.findById(id));
@@ -55,8 +45,6 @@ public class EquipamientoController {
 
     @GetMapping("/listar")
     @PreAuthorize("hasRole('ADMINISTRADOR') or hasRole('ENTRENADOR')")
-    @Operation(summary = "Listar equipamientos", description = "Obtiene una lista paginada de todos los equipamientos del gimnasio.")
-    @ApiResponse(responseCode = "200", description = "Lista de equipamientos obtenida exitosamente")
     public ResponseEntity<PageResponse<EquipamientoResponse>> findAll(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
@@ -66,8 +54,6 @@ public class EquipamientoController {
 
     @DeleteMapping("/eliminar/{id}")
     @PreAuthorize("hasRole('ADMINISTRADOR')")
-    @Operation(summary = "Eliminar equipamiento", description = "Elimina un equipamiento del sistema.")
-    @ApiResponse(responseCode = "204", description = "Equipamiento eliminado exitosamente")
     public ResponseEntity<Void> delete(
             @PathVariable Long id) {
         equipamientoService.delete(id);

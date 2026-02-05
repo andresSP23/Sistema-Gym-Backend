@@ -3,8 +3,6 @@ package com.ansicode.SistemaAdministracionGym.pago;
 import com.ansicode.SistemaAdministracionGym.common.PageResponse;
 import com.ansicode.SistemaAdministracionGym.enums.MetodoPago;
 import com.ansicode.SistemaAdministracionGym.enums.TipoOperacionPago;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,15 +26,11 @@ public class PagoController {
         private final PagoService service;
 
         @PostMapping
-        @Operation(summary = "Registrar pago", description = "Registra una nueva transacción de pago.")
-        @ApiResponse(responseCode = "200", description = "Pago registrado exitosamente")
         public PagoResponse registrarPago(@Valid @RequestBody PagoRequest request, Authentication connectedUser) {
                 return service.registrarPago(request, connectedUser);
         }
 
         @GetMapping("/listar")
-        @Operation(summary = "Buscar pagos", description = "Obtiene una lista paginada de pagos con filtros opcionales.")
-        @ApiResponse(responseCode = "200", description = "Pagos obtenidos exitosamente")
         public ResponseEntity<PageResponse<PagoResponse>> findAll(
 
                         @RequestParam(name = "page", defaultValue = "0", required = false) int page,

@@ -1,8 +1,6 @@
 package com.ansicode.SistemaAdministracionGym.categoriaproducto;
 
 import com.ansicode.SistemaAdministracionGym.common.PageResponse;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,8 +17,6 @@ public class CategoriaProductoController {
 
         // ===================== CREATE =====================
         @PostMapping("/crear")
-        @Operation(summary = "Crear categoría de producto", description = "Registra una nueva categoría de producto.")
-        @ApiResponse(responseCode = "200", description = "Categoría creada exitosamente")
         public ResponseEntity<CategoriaProductoResponse> create(
                         @RequestBody @Valid CategoriaProductoRequest request) {
                 return ResponseEntity.ok(
@@ -29,8 +25,6 @@ public class CategoriaProductoController {
 
         // ===================== FIND ALL (PAGE) =====================
         @GetMapping("/listar")
-        @Operation(summary = "Listar categorías de productos", description = "Obtiene una lista paginada de categorías de productos.")
-        @ApiResponse(responseCode = "200", description = "Categorías obtenidas exitosamente")
         public ResponseEntity<PageResponse<CategoriaProductoResponse>> findAll(
                         Pageable pageable) {
                 return ResponseEntity.ok(
@@ -39,9 +33,6 @@ public class CategoriaProductoController {
 
         // ===================== FIND BY ID =====================
         @GetMapping("/buscar-por-id/{id}")
-        @Operation(summary = "Buscar categoría por ID", description = "Obtiene una categoría de producto por su ID único.")
-        @ApiResponse(responseCode = "200", description = "Categoría encontrada")
-        @ApiResponse(responseCode = "404", description = "Categoría no encontrada")
         public ResponseEntity<CategoriaProductoResponse> findById(
                         @PathVariable Long id) {
                 return ResponseEntity.ok(
@@ -50,9 +41,6 @@ public class CategoriaProductoController {
 
         // ===================== UPDATE =====================
         @PutMapping("/actualizar/{id}")
-        @Operation(summary = "Actualizar categoría de producto", description = "Actualiza una categoría de producto existente.")
-        @ApiResponse(responseCode = "200", description = "Categoría actualizada exitosamente")
-        @ApiResponse(responseCode = "404", description = "Categoría no encontrada")
         public ResponseEntity<CategoriaProductoResponse> update(
                         @PathVariable Long id,
                         @RequestBody @Valid CategoriaProductoRequest request) {
@@ -62,8 +50,6 @@ public class CategoriaProductoController {
 
         // ===================== DELETE (LOGICAL) =====================
         @DeleteMapping("/eliminar/{id}")
-        @Operation(summary = "Eliminar categoría de producto", description = "Elimina lógicamente una categoría de producto.")
-        @ApiResponse(responseCode = "204", description = "Categoría eliminada exitosamente")
         public ResponseEntity<Void> delete(
                         @PathVariable Long id) {
                 categoriaProductoService.delete(id);

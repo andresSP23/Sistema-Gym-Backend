@@ -1,8 +1,6 @@
 package com.ansicode.SistemaAdministracionGym.movimientodinero;
 
 import com.ansicode.SistemaAdministracionGym.common.PageResponse;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -25,8 +23,6 @@ public class MovimientoDineroController {
     private final MovimientoDineroService movimientoDineroService;
 
     @GetMapping("/listar")
-    @Operation(summary = "Listar movimientos de dinero", description = "Obtiene una lista paginada de movimientos de dinero con filtros opcionales.")
-    @ApiResponse(responseCode = "200", description = "Movimientos de dinero obtenidos exitosamente")
     public PageResponse<MovimientoDineroResponse> listarTodos(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,

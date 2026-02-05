@@ -1,8 +1,6 @@
 package com.ansicode.SistemaAdministracionGym.gasto;
 
 import com.ansicode.SistemaAdministracionGym.common.PageResponse;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,8 +20,6 @@ public class GastoController {
     private final GastoService service;
 
     @PostMapping("/crear")
-    @Operation(summary = "Crear nuevo gasto", description = "Registra un nuevo gasto en el sistema.")
-    @ApiResponse(responseCode = "200", description = "Gasto creado exitosamente")
     public ResponseEntity<GastoResponse> create(
             @RequestBody @Valid GastoRequest request,
             Authentication connectedUser) {
@@ -31,9 +27,6 @@ public class GastoController {
     }
 
     @PutMapping("/actualizar/{id}")
-    @Operation(summary = "Actualizar gasto", description = "Actualiza un gasto existente por ID.")
-    @ApiResponse(responseCode = "200", description = "Gasto actualizado exitosamente")
-    @ApiResponse(responseCode = "404", description = "Gasto no encontrado")
     public ResponseEntity<GastoResponse> update(
             @PathVariable Long id,
             @RequestBody @Valid GastoRequest request) {
@@ -41,8 +34,6 @@ public class GastoController {
     }
 
     @GetMapping("/listar")
-    @Operation(summary = "Buscar gastos", description = "Obtiene una lista paginada de gastos con filtros opcionales.")
-    @ApiResponse(responseCode = "200", description = "Gastos obtenidos exitosamente")
     public ResponseEntity<PageResponse<GastoResponse>> findAll(
             @RequestParam(required = false) String nombre,
             @RequestParam(required = false) java.time.LocalDate desde,
@@ -58,9 +49,6 @@ public class GastoController {
     }
 
     @PostMapping("/{id}/pagar")
-    @Operation(summary = "Pagar gasto", description = "Marca un gasto como pagado.")
-    @ApiResponse(responseCode = "200", description = "Gasto pagado exitosamente")
-    @ApiResponse(responseCode = "404", description = "Gasto no encontrado")
     public ResponseEntity<GastoResponse> pagar(
             @PathVariable Long id,
             @RequestBody @Valid PagarGastoRequest request,
@@ -69,8 +57,6 @@ public class GastoController {
     }
 
     @DeleteMapping("/eliminar/{id}")
-    @Operation(summary = "Eliminar gasto", description = "Elimina un registro de gasto por ID.")
-    @ApiResponse(responseCode = "204", description = "Gasto eliminado exitosamente")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.delete(id);
         return ResponseEntity.noContent().build();

@@ -1,7 +1,8 @@
 spring:
-  profiles:
-    active:
-      - dev
+  # profiles:
+  #   active:
+  #     - dev # Comentado para que Railway pueda activar el perfil 'prod' dinámicamente
+
 
   servlet:
     multipart:

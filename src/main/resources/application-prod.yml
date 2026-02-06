@@ -16,7 +16,7 @@ spring:
       max-lifetime: 1800000 # 30 minutos (evita errores de firewall)
   jpa:
     hibernate:
-      ddl-auto: validate # Production mode: validate schema matches code
+      ddl-auto: create # CAMBIAR A 'validate' DESPUÉS DEL PRIMER ARRANQUE EXITOSO
     show-sql: false      # Desactivar logs de SQL en producción por performance y seguridad
     properties:
       hibernate:

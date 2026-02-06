@@ -4,10 +4,11 @@ server:
 
 spring:
   datasource:
-    # Usamos variables estándar de Spring para que Railway las inyecte sin líos
-    url: ${SPRING_DATASOURCE_URL}
-    username: ${SPRING_DATASOURCE_USERNAME}
-    password: ${SPRING_DATASOURCE_PASSWORD}
+    # Spring Boot detectará automáticamente SPRING_DATASOURCE_URL, etc.
+    # Pero aquí nos aseguramos de que tengan defaults o usen variables comunes de Railway.
+    url: ${SPRING_DATASOURCE_URL:${DATABASE_URL:}}
+    username: ${SPRING_DATASOURCE_USERNAME:}
+    password: ${SPRING_DATASOURCE_PASSWORD:}
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 10 # Optimizado para DBs compartidas (ej. Railway Starter)
@@ -17,7 +18,7 @@ spring:
       max-lifetime: 1800000 # 30 minutos (evita errores de firewall)
   jpa:
     hibernate:
-      ddl-auto: create # CAMBIAR A 'validate' DESPUÉS DEL PRIMER ARRANQUE EXITOSO
+      ddl-auto: create # IMPORTANTE: Evita que se borren los datos. Flyway maneja el esquema.
     show-sql: false      # Desactivar logs de SQL en producción por performance y seguridad
     properties:
       hibernate:

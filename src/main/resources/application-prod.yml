@@ -1,25 +1,25 @@
 server:
   port: ${PORT:8080}
-
+  servlet:
+    context-path: /api/v1/
 
 spring:
   datasource:
-    # Spring Boot detectará automáticamente SPRING_DATASOURCE_URL, etc.
-    # Pero aquí nos aseguramos de que tengan defaults o usen variables comunes de Railway.
-    url: ${SPRING_DATASOURCE_URL:${DATABASE_URL:}}
-    username: ${SPRING_DATASOURCE_USERNAME:}
-    password: ${SPRING_DATASOURCE_PASSWORD:}
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
     hikari:
-      maximum-pool-size: 10 # Optimizado para DBs compartidas (ej. Railway Starter)
-      minimum-idle: 2       # Mantener conexiones listas
-      idle-timeout: 300000  # 5 minutos
-      connection-timeout: 20000 # 20 segundos
-      max-lifetime: 1800000 # 30 minutos (evita errores de firewall)
+      maximum-pool-size: 10
+      minimum-idle: 2
+      idle-timeout: 300000
+      connection-timeout: 20000
+      max-lifetime: 1800000
+  
   jpa:
     hibernate:
-      ddl-auto: create # IMPORTANTE: Evita que se borren los datos. Flyway maneja el esquema.
-    show-sql: false      # Desactivar logs de SQL en producción por performance y seguridad
+      ddl-auto: none # Flyway maneja las migraciones, evitamos borrar datos accidentalmente
+    show-sql: false
     properties:
       hibernate:
         format_sql: false
@@ -30,18 +30,29 @@ spring:
     enabled: true
     baseline-on-migrate: true
     baseline-version: 1
-    # En producción, flyway validará y migrará.
+
+  mail:
+    host: ${SPRING_MAIL_HOST:smtp.gmail.com}
+    port: ${SPRING_MAIL_PORT:587}
+    username: ${SPRING_MAIL_USERNAME:}
+    password: ${SPRING_MAIL_PASSWORD:}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
 application:
   security:
     jwt:
-      secret-key: ${JWT_SECRET} # Debe inyectarse como variable de entorno
-      expiration: ${JWT_EXPIRATION:8640000}
+      secret-key: ${JWT_SECRET}
+      expiration: ${JWT_EXPIRATION:86400000} # 24 horas por defecto
 
 logging:
   level:
     root: INFO
-    com.ansicode: INFO # Ajustar según necesidad, pero DEBUG fuera de prod
+    com.ansicode: INFO
 
 app:
   storage:

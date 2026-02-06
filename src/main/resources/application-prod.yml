@@ -18,7 +18,7 @@ spring:
   
   jpa:
     hibernate:
-      ddl-auto: none # Flyway maneja las migraciones, evitamos borrar datos accidentalmente
+      ddl-auto: create # Flyway maneja las migraciones, evitamos borrar datos accidentalmente
     show-sql: false
     properties:
       hibernate:

@@ -4,10 +4,10 @@ server:
 
 spring:
   datasource:
-    # Usamos directamente las variables que Railway crea solo
-    url: jdbc:${DATABASE_URL}
-    username: ${POSTGRES_USER:postgres}
-    password: ${POSTGRES_PASSWORD}
+    # Construimos la URL usando las variables base de Railway para máxima compatibilidad
+    url: jdbc:postgresql://${PGHOST:localhost}:${PGPORT:5432}/${PGDATABASE:sistema_gym}
+    username: ${PGUSER:postgres}
+    password: ${PGPASSWORD:postgres}
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 10 # Optimizado para DBs compartidas (ej. Railway Starter)

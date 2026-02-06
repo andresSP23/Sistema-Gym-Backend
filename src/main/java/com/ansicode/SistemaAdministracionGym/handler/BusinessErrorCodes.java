@@ -250,6 +250,7 @@ public enum BusinessErrorCodes {
 
         // BANCO (4100-4199)
         BANCO_NOT_FOUND(4100, HttpStatus.NOT_FOUND, "Banco no encontrado"),
+        BANCO_SALDO_INSUFICIENTE(4101, HttpStatus.BAD_REQUEST, "Fondos insuficientes en la cuenta bancaria"),
 
         // CONTRATO (4000-4099)
         CONTRATO_NOT_FOUND(4000, HttpStatus.NOT_FOUND, "Contrato no encontrado"),

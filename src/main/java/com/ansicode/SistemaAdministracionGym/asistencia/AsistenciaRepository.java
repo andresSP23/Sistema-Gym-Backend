@@ -7,15 +7,15 @@ import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDateTime;
 
-public interface AsistenciaRepository  extends JpaRepository<Asistencia, Long> {
-    boolean existsByClienteIdAndFechaEntradaBetween(
-            Long clienteId,
-            LocalDateTime inicio,
-            LocalDateTime fin
-    );
+public interface AsistenciaRepository extends JpaRepository<Asistencia, Long> {
+        boolean existsByClienteIdAndFechaEntradaBetween(
+                        Long clienteId,
+                        LocalDateTime inicio,
+                        LocalDateTime fin);
 
-    Page<Asistencia> findByClienteId(
-            Long clienteId,
-            Pageable pageable
-    );
+        Page<Asistencia> findByClienteId(
+                        Long clienteId,
+                        Pageable pageable);
+
+        java.util.List<Asistencia> findTop10ByOrderByFechaEntradaDesc();
 }

@@ -81,10 +81,15 @@ public class ContratoController {
     @PreAuthorize("hasRole('ADMINISTRADOR') or hasRole('CAJERO')")
     public ResponseEntity<byte[]> generarPdf(@PathVariable Long id) {
         byte[] pdfBytes = contratoService.generarContratoPdf(id);
+        String filename = contratoService.generarNombreArchivoPdf(id);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_PDF);
-        headers.setContentDispositionFormData("inline", "contrato_" + id + ".pdf");
+        org.springframework.http.ContentDisposition contentDisposition = org.springframework.http.ContentDisposition
+                .builder("inline")
+                .filename(filename)
+                .build();
+        headers.setContentDisposition(contentDisposition);
 
         return ResponseEntity.ok()
                 .headers(headers)

@@ -22,6 +22,7 @@ public class DashboardService {
     private final DetalleVentaRepositoryDashboard detalleRepo;
     private final BancoRepositoryDashboard bancoRepo;
     private final MovimientoBancoRepositoryDashboard movBancoRepo;
+    private final com.ansicode.SistemaAdministracionGym.asistencia.AsistenciaRepository asistenciaRepo;
 
     // ✅ Inyecta Clock (configúralo en un @Bean con tu ZoneId)
     private final Clock clock;
@@ -109,6 +110,17 @@ public class DashboardService {
         return detalleRepo.topVendidos(tipo, r.desde(), r.hastaExclusivo(), safeLimit)
                 .stream()
                 .map(x -> new TopVendidoResponse(x.getNombre(), x.getCantidad(), nz(x.getTotal())))
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<DashboardAsistenciaResponse> ultimasAsistencias() {
+        return asistenciaRepo.findTop10ByOrderByFechaEntradaDesc()
+                .stream()
+                .map(a -> new DashboardAsistenciaResponse(
+                        a.getId(),
+                        a.getCliente().getNombreCompleto(),
+                        a.getFechaEntrada()))
                 .toList();
     }
 

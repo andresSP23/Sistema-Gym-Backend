@@ -24,4 +24,9 @@ public interface VentaRepository extends JpaRepository<Venta, Long> {
     @Query("SELECT v FROM Venta v WHERE v.id = :id")
     java.util.Optional<Venta> findByIdWithDetails(@Param("id") Long id);
 
+    @org.springframework.data.jpa.repository.EntityGraph(attributePaths = { "detalles", "cliente", "sucursal",
+            "cajeroUsuario" })
+    @Override
+    Page<Venta> findAll(Pageable pageable);
+
 }

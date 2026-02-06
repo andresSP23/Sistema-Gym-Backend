@@ -8,7 +8,7 @@ spring:
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: update # Mantener update por ahora mientras se construye V1 completa
+      ddl-auto: update # Revertido a update tras la recreación inicial
     show-sql: true
     properties:
       hibernate:
@@ -17,6 +17,7 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
 
   flyway:
+    enabled: true # Reactivado
     baseline-on-migrate: true
     baseline-version: 1
 

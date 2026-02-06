@@ -34,6 +34,10 @@ public class Sucursal extends AuditedEntity {
     @Column(nullable = false, unique = true, length = 20)
     private String codigoSucursal;
 
+    @Column(nullable = false)
+    @lombok.Builder.Default
+    private Long ultimoNumeroFactura = 0L;
+
     // Ubicación
     private String direccion;
     private String ciudad;

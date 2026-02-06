@@ -224,6 +224,9 @@ public class ClienteSuscripcionService {
         }
 
         clienteSuscripcionRepository.save(cs);
+
+        // Cancelar contrato asociado
+        contratoService.cancelarPorSuscripcion(cs.getId());
     }
 
     @Transactional

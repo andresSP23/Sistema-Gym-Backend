@@ -3,6 +3,8 @@ package com.ansicode.SistemaAdministracionGym.banco;
 import com.ansicode.SistemaAdministracionGym.banco.movimiento.MovimientoBanco;
 import com.ansicode.SistemaAdministracionGym.banco.movimiento.MovimientoBancoRepository;
 import com.ansicode.SistemaAdministracionGym.enums.TipoMovimientoBanco;
+import com.ansicode.SistemaAdministracionGym.handler.BusinessErrorCodes;
+import com.ansicode.SistemaAdministracionGym.handler.BussinessException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,12 +36,15 @@ public class BancoService {
     public void registrarMovimiento(Long bancoId, TipoMovimientoBanco tipo, BigDecimal monto, String descripcion,
             String referencia, com.ansicode.SistemaAdministracionGym.enums.ConceptoMovimientoBanco concepto,
             com.ansicode.SistemaAdministracionGym.enums.OrigenMovimientoBanco origen) {
-        Banco banco = bancoRepository.findById(bancoId)
+        Banco banco = bancoRepository.findByIdWithLock(bancoId)
                 .orElseThrow(() -> new RuntimeException("Banco no encontrado"));
 
         if (tipo == TipoMovimientoBanco.INGRESO) {
             banco.setSaldo(banco.getSaldo().add(monto));
         } else {
+            if (banco.getSaldo().compareTo(monto) < 0) {
+                throw new BussinessException(BusinessErrorCodes.BANCO_SALDO_INSUFICIENTE);
+            }
             banco.setSaldo(banco.getSaldo().subtract(monto));
         }
         bancoRepository.save(banco);

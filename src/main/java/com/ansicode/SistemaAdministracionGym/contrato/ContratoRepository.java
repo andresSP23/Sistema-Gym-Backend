@@ -8,4 +8,6 @@ import java.util.Optional;
 public interface ContratoRepository extends JpaRepository<Contrato, Long>, JpaSpecificationExecutor<Contrato> {
 
     Optional<Contrato> findTopByClienteIdOrderByCreatedAtDesc(Integer clienteId);
+
+    Optional<Contrato> findBySuscripcionId(Long suscripcionId);
 }

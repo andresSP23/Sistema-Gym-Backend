@@ -35,3 +35,7 @@ build/
 application-dev.yml
 *.log
 *.txt
+
+### Application Data ###
+storage/
+uploads/

@@ -1,22 +1,32 @@
 package com.ansicode.SistemaAdministracionGym.security;
 
 import com.ansicode.SistemaAdministracionGym.user.UserRepository;
+import com.github.benmanes.caffeine.cache.Caffeine;
+import com.github.benmanes.caffeine.cache.LoadingCache;
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.concurrent.TimeUnit;
+
 @Service
-@RequiredArgsConstructor
-public class UserDetailsServiceImpl  implements UserDetailsService {
+public class UserDetailsServiceImpl implements UserDetailsService {
 
+    private final LoadingCache<String, UserDetails> userCache;
 
-    private final UserRepository userRepository;
+    public UserDetailsServiceImpl(UserRepository userRepository) {
+        this.userCache = Caffeine.newBuilder()
+                .expireAfterWrite(5, TimeUnit.MINUTES)
+                .maximumSize(1000)
+                .build(email -> userRepository.findByEmail(email)
+                        .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado")));
+    }
+
     @Override
-    @Transactional //con esto cargamos el usuario y los roles o los permisos del usuario
+    @Transactional
     public UserDetails loadUserByUsername(String userEmail) throws UsernameNotFoundException {
-        return userRepository.findByEmail(userEmail).orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
+        return userCache.get(userEmail);
     }
 }

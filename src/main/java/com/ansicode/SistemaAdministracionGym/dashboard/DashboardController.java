@@ -56,4 +56,9 @@ public class DashboardController {
         return ResponseEntity.ok(dashboardService.topVendidos(tipo, desde, hasta, limit));
     }
 
+    @GetMapping("/ultimas-asistencias")
+    public ResponseEntity<List<DashboardAsistenciaResponse>> ultimasAsistencias() {
+        return ResponseEntity.ok(dashboardService.ultimasAsistencias());
+    }
+
 }

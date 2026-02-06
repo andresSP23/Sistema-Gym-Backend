@@ -135,6 +135,15 @@ public class ContratoService {
     }
 
     @Transactional
+    public void cancelarPorSuscripcion(Long suscripcionId) {
+        contratoRepository.findBySuscripcionId(suscripcionId)
+                .ifPresent(contrato -> {
+                    contrato.setEstadoContrato(EstadoContrato.CANCELADO);
+                    contratoRepository.save(contrato);
+                });
+    }
+
+    @Transactional
     public Contrato generarContratoAutomatico(
             com.ansicode.SistemaAdministracionGym.clientesuscripcion.ClienteSuscripcion suscripcion) {
         // Buscar plantilla activa
@@ -168,6 +177,25 @@ public class ContratoService {
                 .replace("{{PRECIO}}", suscripcion.getServicio().getPrecio().toString());
 
         return texto;
+    }
+
+    public String generarNombreArchivoPdf(Long contratoId) {
+        ContratoResponse contrato = findById(contratoId);
+        String filename = "contrato.pdf";
+
+        if (contrato != null && contrato.getClienteNombre() != null) {
+            String cleanName = contrato.getClienteNombre().trim().toLowerCase()
+                    .replaceAll("[^a-z0-9]", "_")
+                    .replaceAll("_+", "_");
+
+            String date = LocalDateTime.now().toLocalDate().toString();
+            if (contrato.getFechaGeneracion() != null) {
+                date = contrato.getFechaGeneracion().toLocalDate().toString();
+            }
+
+            filename = cleanName + "_" + date + ".pdf";
+        }
+        return filename;
     }
 
     public byte[] generarContratoPdf(Long contratoId) {
@@ -211,7 +239,7 @@ public class ContratoService {
             // Firmas
             doc.add(new Paragraph("__________________________             __________________________")
                     .setTextAlignment(TextAlignment.CENTER));
-            doc.add(new Paragraph("Firma del Socio                                   Firma del Administrador")
+            doc.add(new Paragraph("Firma del Cliente                                   Firma del Empleado")
                     .setTextAlignment(TextAlignment.CENTER));
 
             doc.close();

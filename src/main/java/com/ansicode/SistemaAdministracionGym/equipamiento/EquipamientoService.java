@@ -28,6 +28,7 @@ public class EquipamientoService {
     private final EquipamientoMapper equipamientoMapper;
     private final BancoService bancoService;
     private final MovimientoDineroService movimientoDineroService;
+    private final com.ansicode.SistemaAdministracionGym.sucursal.SucursalRepository sucursalRepository;
 
     @Transactional
     public EquipamientoResponse create(EquipamientoRequest request, Authentication connectedUser) {
@@ -74,16 +75,23 @@ public class EquipamientoService {
                         com.ansicode.SistemaAdministracionGym.enums.ConceptoMovimientoBanco.COMPRA_EQUIPAMIENTO,
                         com.ansicode.SistemaAdministracionGym.enums.OrigenMovimientoBanco.MANUAL);
             } else if (request.getMetodoPago() == MetodoPago.OTRO) {
-                if (request.getSucursalId() == null) {
-                    throw new BussinessException(BusinessErrorCodes.VALIDATION_ERROR);
+                Long sucursalId = request.getSucursalId();
+                if (sucursalId == null) {
+                    // Fallback: usar la primera sucursal activa si no se envió ninguna
+                    // Esto permite registrar gastos "externos" sin obligar al usuario a elegir
+                    // sucursal en el frontend
+                    sucursalId = sucursalRepository.findFirstByIsVisibleTrue()
+                            .map(com.ansicode.SistemaAdministracionGym.sucursal.Sucursal::getId)
+                            .orElseThrow(() -> new BussinessException(BusinessErrorCodes.SUCURSAL_NOT_FOUND));
                 }
+
                 MovimientoDineroCreateRequest movRequest = new MovimientoDineroCreateRequest();
                 movRequest.setTipo(TipoMovimientoDinero.EGRESO);
                 movRequest.setConcepto(ConceptoMovimientoDinero.COMPRA_ACTIVO);
                 movRequest.setMetodo(MetodoPago.OTRO);
                 movRequest.setMonto(request.getCosto());
                 movRequest.setDescripcion(descripcion + " (EXTERNO)");
-                movRequest.setSucursalId(request.getSucursalId());
+                movRequest.setSucursalId(sucursalId);
 
                 movimientoDineroService.crearMovimiento(movRequest, connectedUser);
             }

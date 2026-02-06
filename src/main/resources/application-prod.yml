@@ -18,9 +18,9 @@ spring:
   
   jpa:
     hibernate:
-      ddl-auto: create # Flyway maneja las migraciones, evitamos borrar datos accidentalmente
+      ddl-auto: none # Una vez inicializado, usamos 'none' para seguridad absoluta
     show-sql: false
-    properties:
+    properties:   
       hibernate:
         format_sql: false
     database: PostgreSQL

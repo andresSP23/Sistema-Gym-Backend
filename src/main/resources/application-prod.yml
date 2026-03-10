@@ -18,9 +18,9 @@ spring:
   
   jpa:
     hibernate:
-      ddl-auto: none # Desactivado para acelerar el arranque (las tablas ya existen)
+      ddl-auto: none
     show-sql: false
-    open-in-view: false # Mejora el rendimiento y evita warnings
+    open-in-view: false
     properties:   
       hibernate:
         format_sql: false
@@ -48,7 +48,7 @@ application:
   security:
     jwt:
       secret-key: ${JWT_SECRET}
-      expiration: ${JWT_EXPIRATION:86400000} # 24 horas por defecto
+      expiration: ${JWT_EXPIRATION:86400000}
 
 logging:
   level:
@@ -62,7 +62,7 @@ management:
         include: health, info
   endpoint:
     health:
-      show-details: when_authorized
+      show-details: always  # ← cambiado de "when_authorized"
 
 app:
   storage:

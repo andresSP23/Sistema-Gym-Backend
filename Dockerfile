@@ -1,7 +1,12 @@
 # Build Stage
 FROM maven:3.9-eclipse-temurin-21-alpine AS build
 WORKDIR /app
+
+# Copy only pom.xml first to cache dependencies
 COPY pom.xml .
+RUN mvn dependency:go-offline -B
+
+# Copy source and build
 COPY src ./src
 RUN mvn clean package -DskipTests
 
@@ -30,5 +35,5 @@ RUN chown -R spring:spring /app
 EXPOSE 8080
 
 # Run the app
-# Limit memory for Render free tier (512MB)
-ENTRYPOINT ["java", "-XX:MaxRAMPercentage=75.0", "-jar", "app.jar"]
+# Limit memory for Render free tier (512MB) and optimize for fast startup
+ENTRYPOINT ["java", "-XX:MaxRAMPercentage=75.0", "-XX:+TieredCompilation", "-XX:TieredStopAtLevel=1", "-jar", "app.jar"]

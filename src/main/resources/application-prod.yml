@@ -63,8 +63,6 @@ management:
   endpoint:
     health:
       show-details: always
-
-management:
   health:
     mail:
       enabled: false # Desactivamos la verificación de correo en el health check para evitar el timeout de 120s

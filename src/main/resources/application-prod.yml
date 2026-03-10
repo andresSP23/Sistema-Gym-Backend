@@ -18,7 +18,7 @@ spring:
   
   jpa:
     hibernate:
-      ddl-auto: none # Una vez inicializado, usamos 'none' para seguridad absoluta
+      ddl-auto: update # Permitir que Hibernate cree las tablas iniciales que faltan
     show-sql: false
     properties:   
       hibernate:

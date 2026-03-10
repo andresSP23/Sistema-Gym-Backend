@@ -24,6 +24,7 @@ spring:
 
 
 
+
 application:
   security:
     jwt:

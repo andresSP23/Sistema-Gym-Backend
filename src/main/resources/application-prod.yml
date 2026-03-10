@@ -18,8 +18,9 @@ spring:
   
   jpa:
     hibernate:
-      ddl-auto: update # Permitir que Hibernate cree las tablas iniciales que faltan
+      ddl-auto: none # Desactivamos ddl-auto ahora que las tablas ya existen para acelerar el arranque
     show-sql: false
+    open-in-view: false # Mejora el rendimiento y evita warnings
     properties:   
       hibernate:
         format_sql: false

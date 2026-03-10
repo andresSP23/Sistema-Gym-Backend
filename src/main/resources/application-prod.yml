@@ -62,7 +62,12 @@ management:
         include: health, info
   endpoint:
     health:
-      show-details: always  # ← cambiado de "when_authorized"
+      show-details: always
+
+management:
+  health:
+    mail:
+      enabled: false # Desactivamos la verificación de correo en el health check para evitar el timeout de 120s
 
 app:
   storage:

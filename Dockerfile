@@ -30,4 +30,5 @@ RUN chown -R spring:spring /app
 EXPOSE 8080
 
 # Run the app
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# Limit memory for Render free tier (512MB)
+ENTRYPOINT ["java", "-XX:MaxRAMPercentage=75.0", "-jar", "app.jar"]

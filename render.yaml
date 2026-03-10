@@ -21,14 +21,6 @@ services:
       - key: DB_USERNAME
         fromDatabase:
           name: gimnasio-db
-          property: port
-      - key: DB_NAME
-        fromDatabase:
-          name: gimnasio-db
-          property: database
-      - key: DB_USERNAME
-        fromDatabase:
-          name: gimnasio-db
           property: user
       - key: DB_PASSWORD
         fromDatabase:

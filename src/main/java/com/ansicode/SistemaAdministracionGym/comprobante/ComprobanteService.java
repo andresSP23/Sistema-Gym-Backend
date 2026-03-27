@@ -42,6 +42,7 @@ public class ComprobanteService {
         @Value("${app.storage.comprobantes-dir:storage/comprobantes}")
         private String comprobantesDir;
 
+        @Transactional
         public Comprobante generarFacturaPdf(Venta venta) {
 
                 if (venta == null) {

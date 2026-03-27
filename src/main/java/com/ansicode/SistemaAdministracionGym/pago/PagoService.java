@@ -259,6 +259,9 @@ public class PagoService {
             if (venta.getCliente() != null) {
                 Hibernate.initialize(venta.getCliente());
             }
+            if (venta.getCajeroUsuario() != null) {
+                Hibernate.initialize(venta.getCajeroUsuario());
+            }
 
             return savedPago;
         });

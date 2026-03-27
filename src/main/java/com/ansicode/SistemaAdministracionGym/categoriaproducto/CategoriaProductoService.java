@@ -3,7 +3,7 @@ package com.ansicode.SistemaAdministracionGym.categoriaproducto;
 import com.ansicode.SistemaAdministracionGym.common.PageResponse;
 import com.ansicode.SistemaAdministracionGym.handler.BusinessErrorCodes;
 import com.ansicode.SistemaAdministracionGym.handler.BussinessException;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -32,6 +32,7 @@ public class CategoriaProductoService {
         return categoriaProductoMapper.toResponse(categoria);
     }
 
+    @Transactional(readOnly = true)
     public PageResponse<CategoriaProductoResponse> findAll(Pageable pageable) {
 
         Page<CategoriaProducto> page = categoriaProductoRepository.findAll(pageable);
@@ -52,6 +53,7 @@ public class CategoriaProductoService {
                 .build();
     }
 
+    @Transactional(readOnly = true)
     public CategoriaProductoResponse findById(Long id) {
 
         CategoriaProducto categoria = categoriaProductoRepository.findById(id)

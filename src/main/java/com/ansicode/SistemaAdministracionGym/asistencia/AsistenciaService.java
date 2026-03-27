@@ -14,7 +14,7 @@ import com.ansicode.SistemaAdministracionGym.pago.Pago;
 import com.ansicode.SistemaAdministracionGym.pago.PagoRepository;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -88,6 +88,7 @@ public class AsistenciaService {
     }
 
 
+    @Transactional(readOnly = true)
     public PageResponse<AsistenciaResponse> listarPorCliente(Long clienteId, Pageable pageable) {
 
         Page<Asistencia> page = asistenciaRepository.findByClienteId(clienteId, pageable);

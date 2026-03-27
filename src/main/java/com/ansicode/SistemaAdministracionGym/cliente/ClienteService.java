@@ -5,7 +5,7 @@ import com.ansicode.SistemaAdministracionGym.enums.EstadoMembresia;
 import com.ansicode.SistemaAdministracionGym.handler.BusinessErrorCodes;
 import com.ansicode.SistemaAdministracionGym.handler.BussinessException;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;

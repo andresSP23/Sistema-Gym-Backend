@@ -74,12 +74,14 @@ public class ContratoService {
         return contratoMapper.toContratoResponse(contratoRepository.save(contrato));
     }
 
+    @Transactional(readOnly = true)
     public ContratoResponse findById(Long id) {
         return contratoRepository.findById(id)
                 .map(contratoMapper::toContratoResponse)
                 .orElseThrow(() -> new BussinessException(BusinessErrorCodes.CONTRATO_NOT_FOUND));
     }
 
+    @Transactional(readOnly = true)
     public PageResponse<ContratoResponse> findAll(Pageable pageable) {
         Page<Contrato> page = contratoRepository.findAll(pageable);
         List<ContratoResponse> content = page.getContent().stream()
@@ -179,6 +181,7 @@ public class ContratoService {
         return texto;
     }
 
+    @Transactional(readOnly = true)
     public String generarNombreArchivoPdf(Long contratoId) {
         ContratoResponse contrato = findById(contratoId);
         String filename = "contrato.pdf";
@@ -198,6 +201,7 @@ public class ContratoService {
         return filename;
     }
 
+    @Transactional(readOnly = true)
     public byte[] generarContratoPdf(Long contratoId) {
         Contrato contrato = contratoRepository.findById(contratoId)
                 .orElseThrow(() -> new BussinessException(BusinessErrorCodes.CONTRATO_NOT_FOUND));

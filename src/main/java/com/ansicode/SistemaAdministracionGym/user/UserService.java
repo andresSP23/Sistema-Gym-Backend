@@ -6,7 +6,7 @@ import com.ansicode.SistemaAdministracionGym.handler.BussinessException;
 import com.ansicode.SistemaAdministracionGym.role.Role;
 import com.ansicode.SistemaAdministracionGym.role.RoleRepository;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.SecondaryRow;
 import org.springframework.data.domain.Page;
@@ -59,6 +59,7 @@ public class UserService {
         return userMapper.toResponse(user);
     }
 
+    @Transactional(readOnly = true)
     public PageResponse<UserResponse> findAll(Pageable pageable) {
 
         Page<User> page = userRepository.findAll(pageable);
@@ -79,6 +80,7 @@ public class UserService {
                 .build();
     }
 
+    @Transactional(readOnly = true)
     public UserResponse findById(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));

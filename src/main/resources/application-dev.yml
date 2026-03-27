@@ -16,10 +16,7 @@ spring:
     database: PostgreSQL
     database-platform: org.hibernate.dialect.PostgreSQLDialect
 
-  flyway:
-    enabled: true # Reactivado
-    baseline-on-migrate: true
-    baseline-version: 1
+
 
 
 

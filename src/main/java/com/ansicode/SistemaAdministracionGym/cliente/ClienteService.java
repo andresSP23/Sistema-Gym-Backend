@@ -71,6 +71,7 @@ public class ClienteService {
         return clienteMapper.toClienteResponse(cliente);
     }
 
+    @Transactional(readOnly = true)
     public PageResponse<ClienteResponse> findAll(Pageable pageable) {
 
         Page<Cliente> page = clienteRepository.findAllByIsVisibleTrue(pageable);
@@ -90,12 +91,14 @@ public class ClienteService {
                 .build();
     }
 
+    @Transactional(readOnly = true)
     public ClienteResponse findById(Long id) {
         Cliente cliente = clienteRepository.findById(id)
                 .orElseThrow(() -> new BussinessException(BusinessErrorCodes.CLIENTE_NOT_FOUND));
         return clienteMapper.toClienteResponse(cliente);
     }
 
+    @Transactional(readOnly = true)
     public ClienteResponse findByCedula(String cedula) {
         Cliente cliente = clienteRepository.findByCedulaAndIsVisibleTrue(cedula)
                 .orElseThrow(() -> new BussinessException(BusinessErrorCodes.CLIENTE_NOT_FOUND));

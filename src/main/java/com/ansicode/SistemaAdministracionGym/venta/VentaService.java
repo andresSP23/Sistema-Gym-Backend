@@ -216,6 +216,7 @@ public class VentaService {
         return s == null ? "" : s;
     }
 
+    @Transactional(readOnly = true)
     public VentaResponse findById(Long id) {
         return ventaRepository.findById(id)
                 .map(ventaMapper::toResponse)

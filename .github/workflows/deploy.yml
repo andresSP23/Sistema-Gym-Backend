@@ -87,6 +87,11 @@ jobs:
             docker rm ${{ env.CONTAINER_NAME }} 2>/dev/null || true
 
             # Run new container
+            # -------------------------------------------------------------
+            # TEMPORAL: Limpiar la base de datos de Flyway (SE BORRARÁ DESPUÉS)
+            # -------------------------------------------------------------
+            docker run --rm -e PGPASSWORD=${{ secrets.DB_PASSWORD }} postgres:16 psql -h ${{ secrets.DB_HOST }} -p 5432 -U ${{ secrets.DB_USERNAME }} -d ${{ secrets.DB_NAME }} -c "DROP SCHEMA public CASCADE; CREATE SCHEMA public; GRANT ALL ON SCHEMA public TO ${{ secrets.DB_USERNAME }};" || true
+            
             docker run -d \
               --name ${{ env.CONTAINER_NAME }} \
               --restart unless-stopped \

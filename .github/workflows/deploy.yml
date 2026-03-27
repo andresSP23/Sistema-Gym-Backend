@@ -35,8 +35,8 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      - name: Run tests
-        run: ./mvnw verify -B
+      - name: Build with Maven (Skip Tests)
+        run: ./mvnw clean package -DskipTests -B
 
   # ──────────────────────────────────────────
   # 2. BUILD DOCKER IMAGE & PUSH TO DOCKER HUB

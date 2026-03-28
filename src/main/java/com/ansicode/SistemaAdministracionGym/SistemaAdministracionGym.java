@@ -21,6 +21,7 @@ import java.util.List;
 @EnableAsync
 @EnableScheduling
 
+// v2.1.0 - Implementación de RBAC completada
 public class SistemaAdministracionGym {
 
 	public static void main(String[] args) {

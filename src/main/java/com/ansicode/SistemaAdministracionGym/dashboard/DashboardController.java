@@ -17,12 +17,12 @@ import java.util.List;
 @RequestMapping("dashboard")
 @RequiredArgsConstructor
 @Tag(name = "DashBoard")
-@PreAuthorize("hasRole('ADMINISTRADOR')")
 public class DashboardController {
 
     private final DashboardService dashboardService;
 
     @GetMapping("/resumen")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'CAJERO')")
     public ResponseEntity<DashBoardResumenResponse> resumen(
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime desde,
 
@@ -31,6 +31,7 @@ public class DashboardController {
     }
 
     @GetMapping("/ingresos-diarios")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'CAJERO')")
     public ResponseEntity<List<SerieResponse>> ingresosDiarios(
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime desde,
 
@@ -39,6 +40,7 @@ public class DashboardController {
     }
 
     @GetMapping("/egresos-diarios")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'CAJERO')")
     public ResponseEntity<List<SerieResponse>> egresosDiarios(
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime desde,
 
@@ -47,6 +49,7 @@ public class DashboardController {
     }
 
     @GetMapping("/top-vendidos")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'CAJERO')")
     public ResponseEntity<List<TopVendidoResponse>> topVendidos(
             @RequestParam String tipo, // PRODUCTO | SERVICIO
 
@@ -59,6 +62,7 @@ public class DashboardController {
     }
 
     @GetMapping("/ultimas-asistencias")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'CAJERO', 'ENTRENADOR')")
     public ResponseEntity<List<DashboardAsistenciaResponse>> ultimasAsistencias() {
         return ResponseEntity.ok(dashboardService.ultimasAsistencias());
     }

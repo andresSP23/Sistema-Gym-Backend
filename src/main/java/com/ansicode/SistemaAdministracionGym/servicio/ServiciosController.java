@@ -30,7 +30,7 @@ public class ServiciosController {
     }
 
     @GetMapping("/listar")
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'CAJERO')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'CAJERO', 'ENTRENADOR')")
     public ResponseEntity<PageResponse<ServiciosResponse>> findAll(
             @RequestParam(name = "suscripcion") Boolean suscripcion,
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
@@ -40,7 +40,7 @@ public class ServiciosController {
     }
 
     @GetMapping("/buscar-por-id/{id}")
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'CAJERO')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'CAJERO', 'ENTRENADOR')")
     public ResponseEntity<ServiciosResponse> findById(
             @PathVariable Long id) {
         return ResponseEntity.ok(serviciosService.findById(id));
@@ -63,7 +63,7 @@ public class ServiciosController {
     }
 
     @GetMapping("/combo")
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'CAJERO')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'CAJERO', 'ENTRENADOR')")
     public ResponseEntity<List<ServiciosResponse>> combo(
             @RequestParam(name = "suscripcion") Boolean suscripcion) {
         return ResponseEntity.ok(serviciosService.combo(suscripcion));

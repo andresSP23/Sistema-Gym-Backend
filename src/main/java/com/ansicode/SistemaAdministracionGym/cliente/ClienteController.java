@@ -27,7 +27,7 @@ public class ClienteController {
     }
 
     @GetMapping("/listar")
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'CAJERO')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'CAJERO', 'ENTRENADOR')")
     public ResponseEntity<PageResponse<ClienteResponse>> findAll(
 
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
@@ -37,13 +37,13 @@ public class ClienteController {
     }
 
     @GetMapping("/buscar-por-id/{id}")
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'CAJERO')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'CAJERO', 'ENTRENADOR')")
     public ClienteResponse findById(@PathVariable Long id) {
         return clienteService.findById(id);
     }
 
     @GetMapping("/by-cedula/{cedula}")
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'CAJERO')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'CAJERO', 'ENTRENADOR')")
     public ClienteResponse findByCedula(@PathVariable String cedula) {
         return clienteService.findByCedula(cedula);
     }

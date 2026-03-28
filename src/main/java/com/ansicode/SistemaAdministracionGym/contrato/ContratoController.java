@@ -44,7 +44,7 @@ public class ContratoController {
     }
 
     @GetMapping("/buscar-por-id/{id}")
-    @PreAuthorize("hasRole('ADMINISTRADOR') or hasRole('CAJERO')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'CAJERO', 'ENTRENADOR')")
     public ResponseEntity<ContratoResponse> findById(
             @PathVariable Long id) {
         return ResponseEntity.ok(contratoService.findById(id));
@@ -55,7 +55,7 @@ public class ContratoController {
      * Orden por defecto: más reciente primero (createdAt DESC, id DESC)
      */
     @GetMapping("/findAll")
-    @PreAuthorize("hasRole('ADMINISTRADOR') or hasRole('CAJERO')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'CAJERO', 'ENTRENADOR')")
     public ResponseEntity<PageResponse<ContratoResponse>> findAll(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
@@ -78,7 +78,7 @@ public class ContratoController {
     }
 
     @GetMapping("/{id}/pdf")
-    @PreAuthorize("hasRole('ADMINISTRADOR') or hasRole('CAJERO')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'CAJERO', 'ENTRENADOR')")
     public ResponseEntity<byte[]> generarPdf(@PathVariable Long id) {
         byte[] pdfBytes = contratoService.generarContratoPdf(id);
         String filename = contratoService.generarNombreArchivoPdf(id);
@@ -97,7 +97,7 @@ public class ContratoController {
     }
 
     @GetMapping("/{id}/preview")
-    @PreAuthorize("hasRole('ADMINISTRADOR') or hasRole('CAJERO')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'CAJERO', 'ENTRENADOR')")
     public ResponseEntity<String> preview(@PathVariable Long id) {
         // Obtenemos response normal que ya tiene el contenido
         ContratoResponse response = contratoService.findById(id);

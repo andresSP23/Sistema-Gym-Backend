@@ -20,14 +20,14 @@ public class ClienteController {
     private final ClienteService clienteService;
 
     @PostMapping("/crear")
-    @PreAuthorize("hasRole('ADMINISTRADOR')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'CAJERO')")
     public ClienteResponse create(
             @Valid @RequestBody ClienteRequest request) {
         return clienteService.create(request);
     }
 
-    // @PreAuthorize("hasAnyRole('ADMIN','USER')")
     @GetMapping("/listar")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'CAJERO')")
     public ResponseEntity<PageResponse<ClienteResponse>> findAll(
 
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
@@ -37,19 +37,19 @@ public class ClienteController {
     }
 
     @GetMapping("/buscar-por-id/{id}")
-    // PreAuthorize("hasAnyRole('ADMIN','USER')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'CAJERO')")
     public ClienteResponse findById(@PathVariable Long id) {
         return clienteService.findById(id);
     }
 
     @GetMapping("/by-cedula/{cedula}")
-    // @PreAuthorize("hasAnyRole('ADMIN','USER')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'CAJERO')")
     public ClienteResponse findByCedula(@PathVariable String cedula) {
         return clienteService.findByCedula(cedula);
     }
 
     @PutMapping("/actualizar/{id}")
-    @PreAuthorize("hasRole('ADMINISTRADOR')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'CAJERO')")
     public ClienteResponse update(
             @PathVariable Long id,
             @Valid @RequestBody ClienteRequest request) {

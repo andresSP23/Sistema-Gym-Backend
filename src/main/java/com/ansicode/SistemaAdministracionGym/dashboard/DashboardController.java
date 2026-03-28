@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.List;
 @RequestMapping("dashboard")
 @RequiredArgsConstructor
 @Tag(name = "DashBoard")
+@PreAuthorize("hasRole('ADMINISTRADOR')")
 public class DashboardController {
 
     private final DashboardService dashboardService;

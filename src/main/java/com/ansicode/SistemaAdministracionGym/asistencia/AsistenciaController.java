@@ -8,6 +8,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -20,12 +22,14 @@ public class AsistenciaController {
 
     // 1) Registrar asistencia por cédula
     @PostMapping("/registrar-por-cedula")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'CAJERO', 'ENTRENADOR')")
     public ResponseEntity<AsistenciaResponse> registrarPorCedula(
             @RequestBody @Valid AsistenciaRequest request) {
         return ResponseEntity.ok(asistenciaService.registrarPorCedula(request));
     }
 
     @GetMapping("/cliente/{clienteId}")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'CAJERO', 'ENTRENADOR')")
     public ResponseEntity<PageResponse<AsistenciaResponse>> listarPorCliente(
             @PathVariable Long clienteId,
             @RequestParam(defaultValue = "0") int page,

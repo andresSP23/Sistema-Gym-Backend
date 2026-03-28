@@ -13,6 +13,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -26,11 +27,13 @@ public class PagoController {
         private final PagoService service;
 
         @PostMapping
+        @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'CAJERO')")
         public PagoResponse registrarPago(@Valid @RequestBody PagoRequest request, Authentication connectedUser) {
                 return service.registrarPago(request, connectedUser);
         }
 
         @GetMapping("/listar")
+        @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'CAJERO')")
         public ResponseEntity<PageResponse<PagoResponse>> findAll(
 
                         @RequestParam(name = "page", defaultValue = "0", required = false) int page,

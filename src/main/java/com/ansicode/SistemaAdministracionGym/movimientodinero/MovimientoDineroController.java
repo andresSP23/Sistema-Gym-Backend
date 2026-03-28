@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.time.LocalDateTime;
 
@@ -23,6 +24,7 @@ public class MovimientoDineroController {
     private final MovimientoDineroService movimientoDineroService;
 
     @GetMapping("/listar")
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     public PageResponse<MovimientoDineroResponse> listarTodos(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,

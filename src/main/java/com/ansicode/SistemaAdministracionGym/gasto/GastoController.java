@@ -8,6 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,6 +21,7 @@ public class GastoController {
     private final GastoService service;
 
     @PostMapping("/crear")
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     public ResponseEntity<GastoResponse> create(
             @RequestBody @Valid GastoRequest request,
             Authentication connectedUser) {
@@ -27,6 +29,7 @@ public class GastoController {
     }
 
     @PutMapping("/actualizar/{id}")
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     public ResponseEntity<GastoResponse> update(
             @PathVariable Long id,
             @RequestBody @Valid GastoRequest request) {
@@ -34,6 +37,7 @@ public class GastoController {
     }
 
     @GetMapping("/listar")
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     public ResponseEntity<PageResponse<GastoResponse>> findAll(
             @RequestParam(required = false) String nombre,
             @RequestParam(required = false) java.time.LocalDate desde,
@@ -49,6 +53,7 @@ public class GastoController {
     }
 
     @PostMapping("/{id}/pagar")
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     public ResponseEntity<GastoResponse> pagar(
             @PathVariable Long id,
             @RequestBody @Valid PagarGastoRequest request,
@@ -57,6 +62,7 @@ public class GastoController {
     }
 
     @DeleteMapping("/eliminar/{id}")
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.delete(id);
         return ResponseEntity.noContent().build();

@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,6 +20,7 @@ public class VentaController {
     private final VentaService ventaService;
 
     @PostMapping("/crear-venta-servicio")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'CAJERO')")
     public ResponseEntity<VentaResponse> crearVentaServicio(
             @RequestBody @Valid CrearVentaServicioRequest request,
             Authentication connectedUser) {
@@ -26,6 +28,7 @@ public class VentaController {
     }
 
     @PostMapping("/crear-venta-productos")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'CAJERO')")
     public ResponseEntity<VentaResponse> crearVentaProductos(
             @RequestBody @Valid CrearVentaProductoRequest request,
             Authentication connectedUser) {
@@ -33,6 +36,7 @@ public class VentaController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'CAJERO')")
     public ResponseEntity<VentaResponse> obtenerPorId(@PathVariable Long id) {
         return ResponseEntity.ok(ventaService.findById(id));
     }

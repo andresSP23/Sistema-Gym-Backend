@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.data.domain.Pageable;
@@ -25,12 +26,13 @@ public class UserController {
 
     @PostMapping("/crear")
     @ResponseStatus(HttpStatus.CREATED)
-    @org.springframework.security.access.prepost.PreAuthorize("hasRole('ADMINISTRADOR')")
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     public UserResponse create(@RequestBody @Valid UserRequest request, Authentication connectedUser) {
         return userService.create(request, connectedUser);
     }
 
     @GetMapping("/listar")
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     public ResponseEntity<PageResponse<UserResponse>> findAll(
 
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
@@ -40,11 +42,13 @@ public class UserController {
     }
 
     @GetMapping("/buscar-por-id/{id}")
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     public UserResponse findById(@PathVariable Long id) {
         return userService.findById(id);
     }
 
     @PatchMapping("/actualizar/{id}")
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     public ResponseEntity<UserResponse> updateUser(
             @PathVariable Long id,
             @Valid @RequestBody UserUpdateRequest request,
@@ -55,7 +59,7 @@ public class UserController {
 
     @DeleteMapping("/eliminar/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @org.springframework.security.access.prepost.PreAuthorize("hasRole('ADMINISTRADOR')")
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     public void delete(@PathVariable Long id) {
         userService.delete(id);
     }

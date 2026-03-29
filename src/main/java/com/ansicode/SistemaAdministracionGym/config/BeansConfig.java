@@ -3,6 +3,7 @@ package com.ansicode.SistemaAdministracionGym.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.auditing.DateTimeProvider;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -17,8 +18,10 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 import java.time.Clock;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Arrays;
+import java.util.Optional;
 
 @Configuration
 @RequiredArgsConstructor
@@ -43,6 +46,11 @@ public class BeansConfig {
   @Bean
   public Clock clock() {
     return Clock.system(ZoneId.of("America/Guayaquil"));
+  }
+
+  @Bean("auditingDateTimeProvider")
+  public DateTimeProvider dateTimeProvider(Clock clock) {
+    return () -> Optional.of(LocalDateTime.now(clock));
   }
 
   @Bean

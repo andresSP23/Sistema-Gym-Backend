@@ -13,12 +13,12 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("categorias-producto")
 @Tag(name = "Categoria Producto")
 @RequiredArgsConstructor
-@PreAuthorize("hasRole('ADMINISTRADOR')")
 public class CategoriaProductoController {
         private final CategoriaProductoService categoriaProductoService;
 
         // ===================== CREATE =====================
         @PostMapping("/crear")
+        @PreAuthorize("hasRole('ADMINISTRADOR')")
         public ResponseEntity<CategoriaProductoResponse> create(
                         @RequestBody @Valid CategoriaProductoRequest request) {
                 return ResponseEntity.ok(
@@ -27,6 +27,7 @@ public class CategoriaProductoController {
 
         // ===================== FIND ALL (PAGE) =====================
         @GetMapping("/listar")
+        @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'CAJERO')")
         public ResponseEntity<PageResponse<CategoriaProductoResponse>> findAll(
                         Pageable pageable) {
                 return ResponseEntity.ok(
@@ -35,6 +36,7 @@ public class CategoriaProductoController {
 
         // ===================== FIND BY ID =====================
         @GetMapping("/buscar-por-id/{id}")
+        @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'CAJERO')")
         public ResponseEntity<CategoriaProductoResponse> findById(
                         @PathVariable Long id) {
                 return ResponseEntity.ok(
@@ -43,6 +45,7 @@ public class CategoriaProductoController {
 
         // ===================== UPDATE =====================
         @PutMapping("/actualizar/{id}")
+        @PreAuthorize("hasRole('ADMINISTRADOR')")
         public ResponseEntity<CategoriaProductoResponse> update(
                         @PathVariable Long id,
                         @RequestBody @Valid CategoriaProductoRequest request) {
@@ -52,6 +55,7 @@ public class CategoriaProductoController {
 
         // ===================== DELETE (LOGICAL) =====================
         @DeleteMapping("/eliminar/{id}")
+        @PreAuthorize("hasRole('ADMINISTRADOR')")
         public ResponseEntity<Void> delete(
                         @PathVariable Long id) {
                 categoriaProductoService.delete(id);

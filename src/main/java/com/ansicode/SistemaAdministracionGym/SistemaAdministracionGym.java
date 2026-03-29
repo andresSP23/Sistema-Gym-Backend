@@ -17,7 +17,9 @@ import java.time.LocalDate;
 import java.util.List;
 
 @SpringBootApplication
-@EnableJpaAuditing(auditorAwareRef = "auditorAware")
+@EnableJpaAuditing(auditorAwareRef = "auditorAware",
+dateTimeProviderRef = "auditingDateTimeProvider"
+)
 @EnableAsync
 @EnableScheduling
 

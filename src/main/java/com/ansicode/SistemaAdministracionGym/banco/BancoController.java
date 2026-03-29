@@ -23,7 +23,7 @@ public class BancoController {
     }
 
     @GetMapping({ "", "/todos" })
-    @PreAuthorize("hasRole('ADMINISTRADOR')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'CAJERO')")
     public ResponseEntity<List<BancoResponse>> findAll() {
         return ResponseEntity.ok(service.findAll());
     }

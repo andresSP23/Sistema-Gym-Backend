@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.TimeZone;
 
 @SpringBootApplication
 @EnableJpaAuditing(auditorAwareRef = "auditorAware",
@@ -26,8 +27,15 @@ dateTimeProviderRef = "auditingDateTimeProvider"
 // v2.1.0 - Implementación de RBAC completada
 public class SistemaAdministracionGym {
 
+
 	public static void main(String[] args) {
+		TimeZone.setDefault(TimeZone.getTimeZone("America/Guayaquil"));
+
 		SpringApplication.run(SistemaAdministracionGym.class, args);
+
+
+
+
 	}
 
 	@Bean
